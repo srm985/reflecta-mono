@@ -26,9 +26,13 @@ jobs:
       - name: Install
         run: npm install
 
+      # Lint
+      - name: Lint
+        run: npm run lint
+
       # Build the website
       - name: Build
-        run: npm run build:deploy
+        run: npm run build:production
 
       - name: Deploy
         uses: appleboy/scp-action@master
