@@ -1,0 +1,406 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "airbnb",
+        "airbnb-typescript"
+    ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "sort-destructure-keys"
+    ],
+    "rules": {
+        "@typescript-eslint/comma-dangle": [
+            "error",
+            "never"
+        ],
+        "@typescript-eslint/indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "@typescript-eslint/no-explicit-any": "error",
+        "array-bracket-newline": [
+            "error",
+            {
+                "minItems": 1
+            }
+        ],
+        "array-element-newline": [
+            "error",
+            {
+                "minItems": 1
+            }
+        ],
+        "arrow-parens": [
+            "error",
+            "always"
+        ],
+        "comma-dangle": [
+            "error",
+            "never"
+        ],
+        "curly": [
+            "error",
+            "all"
+        ],
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "./*.js",
+                    "./scripts/*.js"
+                ]
+            }
+        ],
+        "import/order": [
+            "error",
+            {
+                "alphabetize": {
+                    "caseInsensitive": false,
+                    "order": "asc"
+                },
+                "groups": [
+                    "external",
+                    "builtin",
+                    "parent"
+                ],
+                "newlines-between": "always",
+                "pathGroups": [
+                    {
+                        "group": "parent",
+                        "pattern": "./views/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../views/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../views/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./modules/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../modules/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../modules/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../modules/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./components/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../components/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../components/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../components/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./HOCs/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../HOCs/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../HOCs/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../HOCs/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./config",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../**/config",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../components/**/config",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../components/**/config",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./utils/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../utils/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../utils/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../utils/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./routes",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../routes",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../routes",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../routes",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./constants",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../constants",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../constants",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../constants",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./assets/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../assets/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../assets/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../assets/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./assets/icons/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../assets/icons/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../assets/icons/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "../../../assets/icons/*",
+                        "position": "after"
+                    }
+                ]
+            }
+        ],
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "linebreak-style": [
+            0
+        ],
+        "lines-between-class-members": [
+            "error",
+            "always",
+            {
+                "exceptAfterSingleLine": true
+            }
+        ],
+        "max-len": [
+            0
+        ],
+        "no-empty": [
+            "error",
+            {
+                "allowEmptyCatch": true
+            }
+        ],
+        "no-multiple-empty-lines": [
+            "error",
+            {
+                "max": 1
+            }
+        ],
+        "no-plusplus": [
+            "error",
+            {
+                "allowForLoopAfterthoughts": true
+            }
+        ],
+        "no-underscore-dangle": [
+            0
+        ],
+        "object-curly-newline": [
+            "error",
+            {
+                "minProperties": 1
+            }
+        ],
+        "object-property-newline": [
+            "error",
+            {
+                "allowMultiplePropertiesPerLine": false
+            }
+        ],
+        "react/function-component-definition": [
+            "error",
+            {
+                "namedComponents": "arrow-function",
+                "unnamedComponents": "arrow-function"
+            }
+        ],
+        "react/jsx-curly-brace-presence": [
+            "error",
+            {
+                "children": "ignore",
+                "props": "always"
+            }
+        ],
+        "react/jsx-filename-extension": [
+            "error",
+            {
+                "extensions": [
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        ],
+        "react/jsx-indent": [
+            "error",
+            4
+        ],
+        "react/jsx-indent-props": [
+            "error",
+            4
+        ],
+        "react/jsx-max-props-per-line": [
+            "error",
+            {
+                "maximum": 1
+            }
+        ],
+        "react/jsx-one-expression-per-line": [
+            0
+        ],
+        "react/jsx-props-no-spreading": [
+            0
+        ],
+        "react/jsx-sort-props": [
+            "error",
+            {
+                "ignoreCase": true
+            }
+        ],
+        "react/jsx-uses-react": "off",
+        "react/no-did-update-set-state": [
+            0
+        ],
+        "react/no-unescaped-entities": [
+            0
+        ],
+        "react/react-in-jsx-scope": "off",
+        "sort-destructure-keys/sort-destructure-keys": [
+            2,
+            {
+                "caseSensitive": false
+            }
+        ],
+        "sort-imports": [
+            "error",
+            {
+                "ignoreDeclarationSort": true
+            }
+        ],
+        "sort-keys": [
+            "error",
+            "asc",
+            {
+                "caseSensitive": false,
+                "natural": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,105 @@
+{
+  "author": "Sean McQuay",
+  "bugs": {
+    "url": "https://github.com/srm985/reflecta-ui/issues"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "description": "Journaling application UI meant to help offer analysis and insights into journal entries.",
+  "devDependencies": {
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.4",
+    "@storybook/addon-essentials": "^7.0.2",
+    "@storybook/addon-interactions": "^7.0.2",
+    "@storybook/addon-links": "^7.0.2",
+    "@storybook/blocks": "^7.0.2",
+    "@storybook/react": "^7.0.2",
+    "@storybook/react-webpack5": "^7.0.2",
+    "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "autoprefixer": "^10.4.14",
+    "clean-webpack-plugin": "^4.0.0",
+    "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.3",
+    "current-git-branch": "^1.1.0",
+    "eslint": "^8.37.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-sort-destructure-keys": "^1.5.0",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0",
+    "onchange": "^7.1.0",
+    "postcss": "^8.4.21",
+    "postcss-loader": "^7.2.4",
+    "sass": "^1.60.0",
+    "sass-loader": "^13.2.2",
+    "storybook": "^7.0.2",
+    "style-loader": "^3.3.2",
+    "stylelint": "^15.4.0",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-standard-scss": "^7.0.1",
+    "stylelint-declaration-block-no-ignored-properties": "^2.7.0",
+    "stylelint-order": "^6.0.3",
+    "stylelint-scss": "^4.6.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.3",
+    "webpack": "^5.78.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.13.2"
+  },
+  "homepage": "https://github.com/srm985/reflecta-ui#readme",
+  "keywords": [
+    "journal",
+    "journaling"
+  ],
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ],
+    "*.ts": [
+      "eslint --fix"
+    ],
+    "*.tsx": [
+      "eslint --fix"
+    ]
+  },
+  "main": "index.(ts|tsx)",
+  "name": "reflecta-ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srm985/reflecta-ui.git"
+  },
+  "scripts": {
+    "build:develop": "npm run config:develop webpack",
+    "build:production": "npm run config:production webpack",
+    "build:storybook": "storybook build",
+    "config:local": "cross-env NODE_ENV=development BASE_URL=http://localhost:3100 LOCAL_STORAGE_TOKEN=884zGdCWYBEFQdeM5X7e",
+    "config:production": "cross-env NODE_ENV=production BASE_URL=https://reflecta.app.com LOCAL_STORAGE_TOKEN=MWwbrdnKMGqkpe6QD9XL",
+    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --open --config ./webpack.config.js --mode=development --port 3000\" \"npm:watch --silent\"",
+    "lint": "concurrently --raw \"npm:lint:js --silent\" \"npm:lint:scss --silent\"",
+    "lint:fix": "concurrently --raw \"eslint . --ext .ts,.tsx,.js --fix\" \"stylelint src/**/*.scss  --color --allow-empty-input --fix\"",
+    "lint:js": "eslint . --ext .ts,.tsx,.js",
+    "lint:scss": "stylelint src/**/*.scss --color --allow-empty-input",
+    "pre-commit": "cross-env FORCE_COLOR=true lint-staged",
+    "pre-push": "node ./scripts/branchCheck.js",
+    "prepare": "husky install",
+    "start": "npm run develop",
+    "storybook": "storybook dev -p 6006",
+    "update": "npm update --save/--save-dev",
+    "watch": "concurrently --raw \"npm:watch:js --silent\" \"npm:watch:scss --silent\"",
+    "watch:js": "onchange --delay 500 \"src/**/*.(ts|tsx)\" -- npm run lint:js --silent",
+    "watch:scss": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent"
+  },
+  "version": "1.0.0"
+}

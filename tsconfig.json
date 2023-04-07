@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "allowJs": false,
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "alwaysStrict": true,
+        "jsx": "react-jsx",
+        "module": "ES2022",
+        "moduleResolution": "nodenext",
+        "noEmitOnError": false,
+        "noErrorTruncation": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "outDir": "./dist",
+        "removeComments": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "ES6"
+    },
+    "include": [
+        ".storybook/**/*",
+        "./**/*"
+    ]
+}
