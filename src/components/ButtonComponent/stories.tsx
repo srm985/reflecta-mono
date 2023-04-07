@@ -13,9 +13,6 @@ type Story = StoryObj<typeof ButtonComponent>;
 
 export const Primary: Story = {
     render: () => (
-        <ButtonComponent
-            label={'Button'}
-            primary
-        />
+        <ButtonComponent />
     )
 };
