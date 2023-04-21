@@ -24,7 +24,8 @@
         "project": "./tsconfig.json"
     },
     "plugins": [
-        "sort-destructure-keys"
+        "sort-destructure-keys",
+        "spellcheck"
     ],
     "rules": {
         "@typescript-eslint/comma-dangle": [
@@ -310,6 +311,7 @@
                 "allowEmptyCatch": true
             }
         ],
+        "no-extra-boolean-cast": "error",
         "no-multiple-empty-lines": [
             "error",
             {
@@ -412,6 +414,29 @@
             {
                 "caseSensitive": false,
                 "natural": true
+            }
+        ],
+        "spellcheck/spell-checker": [
+            "error",
+            {
+                "comments": true,
+                "identifiers": true,
+                "lang": "en_US",
+                "strings": true,
+                "templates": true,
+                "skipWords": [
+                    "bugfix",
+                    "favicon",
+                    "fullhash",
+                    "hotfix",
+                    "ico",
+                    "matchers",
+                    "postcss",
+                    "tsx",
+                    "webpack",
+                    "Webpack",
+                    "webpack5"
+                ]
             }
         ]
     }
