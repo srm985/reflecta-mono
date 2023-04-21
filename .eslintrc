@@ -8,6 +8,18 @@
         "airbnb",
         "airbnb-typescript"
     ],
+    "overrides": [
+        {
+            "files": [
+                "scripts/**/*.js"
+            ],
+            "rules": {
+                "no-console": [
+                    0
+                ]
+            }
+        }
+    ],
     "parserOptions": {
         "project": "./tsconfig.json"
     },

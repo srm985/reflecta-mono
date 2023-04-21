@@ -42,13 +42,14 @@
     "onchange": "^7.1.0",
     "postcss": "^8.4.21",
     "postcss-loader": "^7.2.4",
+    "prettier": "^2.8.7",
     "sass": "^1.60.0",
     "sass-loader": "^13.2.2",
     "storybook": "^7.0.2",
     "style-loader": "^3.3.2",
     "stylelint": "^15.4.0",
     "stylelint-config-rational-order": "^0.1.2",
-    "stylelint-config-standard-scss": "^7.0.1",
+    "stylelint-config-standard-scss": "^8.0.0",
     "stylelint-declaration-block-no-ignored-properties": "^2.7.0",
     "stylelint-order": "^6.0.3",
     "stylelint-scss": "^4.6.0",
@@ -72,6 +73,10 @@
     ],
     "*.tsx": [
       "eslint --fix"
+    ],
+    "*.scss": [
+      "prettier --write",
+      "stylelint --fix"
     ]
   },
   "main": "index.(ts|tsx)",
@@ -91,6 +96,7 @@
     "lint:fix": "concurrently --raw \"eslint . --ext .ts,.tsx,.js --fix\" \"stylelint src/**/*.scss  --color --allow-empty-input --fix\"",
     "lint:js": "eslint . --ext .ts,.tsx,.js",
     "lint:scss": "stylelint src/**/*.scss --color --allow-empty-input",
+    "prettier": "prettier --write \"src/**/*.scss\"",
     "pre-commit": "cross-env FORCE_COLOR=true lint-staged",
     "pre-push": "node ./scripts/branchCheck.js",
     "prepare": "husky install",
@@ -99,6 +105,7 @@
     "update": "npm update --save/--save-dev",
     "watch": "concurrently --raw \"npm:watch:js --silent\" \"npm:watch:scss --silent\"",
     "watch:js": "onchange --delay 500 \"src/**/*.(ts|tsx)\" -- npm run lint:js --silent",
+    "watch:prettier": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent",
     "watch:scss": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent"
   },
   "version": "1.0.0"
