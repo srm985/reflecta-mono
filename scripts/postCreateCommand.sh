@@ -10,3 +10,7 @@ export NVM_DIR="$HOME/.nvm"
 source ~/.bashrc
 
 nvm install 18
+
+npm install -g npm@latest
+
+npm install

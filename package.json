@@ -50,7 +50,7 @@
     "style-loader": "^3.3.2",
     "stylelint": "^15.4.0",
     "stylelint-config-rational-order": "^0.1.2",
-    "stylelint-config-standard-scss": "^8.0.0",
+    "stylelint-config-standard-scss": "^9.0.0",
     "stylelint-declaration-block-no-ignored-properties": "^2.7.0",
     "stylelint-order": "^6.0.3",
     "stylelint-scss": "^4.6.0",
