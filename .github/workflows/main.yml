@@ -45,5 +45,5 @@ jobs:
           source: "./dist/*"
           strip_components: 1
           target: ${{ secrets.DEPLOYMENT_LOCATION }}
-          timeout: "60s"
+          timeout: "120s"
           username: ${{ secrets.USERNAME }}
