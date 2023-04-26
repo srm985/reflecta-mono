@@ -3,13 +3,13 @@ name: CI/CD - Reflecta UI
 on:
   push:
     branches: [main]
-    paths: [packages/reflecta-ui/**]
+    paths: [packages/reflecta-ui/]
   pull_request:
     branches: [main]
-    paths: [packages/reflecta-ui/**]
+    paths: [packages/reflecta-ui/]
   workflow_dispatch:
     branches: [main]
-    paths: [packages/reflecta-ui/**]
+    paths: [packages/reflecta-ui/]
 
 jobs:
   build:
