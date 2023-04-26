@@ -22,11 +22,8 @@
         "strict": true,
         "target": "ES6"
     },
-    "exclude": [
-        "./dist/**/*"
-    ],
     "include": [
-        ".storybook/**/*",
-        "./**/*"
+        "./.eslintrc.js",
+        "**/*"
     ]
 }

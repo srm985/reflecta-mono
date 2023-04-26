@@ -1,0 +1,90 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "airbnb",
+        "airbnb-typescript",
+        "../../.eslintrc.js"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "scripts/**/*.js"
+            ],
+            "rules": {
+                "no-console": [
+                    0
+                ]
+            }
+        }
+    ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "sort-destructure-keys",
+        "spellcheck"
+    ],
+    "rules": {
+        "react/function-component-definition": [
+            "error",
+            {
+                "namedComponents": "arrow-function",
+                "unnamedComponents": "arrow-function"
+            }
+        ],
+        "react/jsx-curly-brace-presence": [
+            "error",
+            {
+                "children": "ignore",
+                "props": "always"
+            }
+        ],
+        "react/jsx-filename-extension": [
+            "error",
+            {
+                "extensions": [
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        ],
+        "react/jsx-indent": [
+            "error",
+            4
+        ],
+        "react/jsx-indent-props": [
+            "error",
+            4
+        ],
+        "react/jsx-max-props-per-line": [
+            "error",
+            {
+                "maximum": 1
+            }
+        ],
+        "react/jsx-one-expression-per-line": [
+            0
+        ],
+        "react/jsx-props-no-spreading": [
+            0
+        ],
+        "react/jsx-sort-props": [
+            "error",
+            {
+                "ignoreCase": true
+            }
+        ],
+        "react/jsx-uses-react": "off",
+        "react/no-did-update-set-state": [
+            0
+        ],
+        "react/no-unescaped-entities": [
+            0
+        ],
+        "react/react-in-jsx-scope": "off"
+    }
+}

@@ -28,11 +28,11 @@ jobs:
 
       # Lint
       - name: Lint
-        run: npm run lint
+        run: npm run lint --workspaces
 
       # Build the website
       - name: Build
-        run: npm run build:production
+        run: npm run build:production --workspaces
 
       - name: Deploy
         uses: appleboy/scp-action@master
