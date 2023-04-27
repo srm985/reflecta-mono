@@ -31,11 +31,11 @@ jobs:
 
       # Lint
       - name: Lint
-        run: npm run lint --workspaces reflecta-ui
+        run: npm run lint -w reflecta-ui
 
       # Build Reflecta UI
       - name: Build
-        run: npm run build:production --workspaces reflecta-ui
+        run: npm run build:production -w reflecta-ui
 
       # Deploy Reflecta UI
       - name: Deploy

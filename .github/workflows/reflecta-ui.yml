@@ -31,4 +31,4 @@ jobs:
 
       # Lint
       - name: Lint
-        run: npm run lint --workspaces reflecta-ui
+        run: npm run lint -w reflecta-ui
