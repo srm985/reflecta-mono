@@ -46,7 +46,7 @@ jobs:
           port: ${{ secrets.PORT }}
           rm: true
           source: "./packages/reflecta-ui/dist/*"
-          strip_components: 2
+          strip_components: 3
           target: ${{ secrets.DEPLOYMENT_LOCATION }}
           timeout: "120s"
           username: ${{ secrets.USERNAME }}
