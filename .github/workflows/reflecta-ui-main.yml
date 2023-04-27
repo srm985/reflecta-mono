@@ -1,4 +1,4 @@
-name: CI/CD - Reflecta UI
+name: Reflecta UI - Production Build & Deploy
 
 on:
   push:
@@ -25,18 +25,19 @@ jobs:
         with:
           node-version: '18.x'
 
-      # Install Packages
+      # Install Node Modules
       - name: Install
         run: npm install
 
       # Lint
       - name: Lint
-        run: npm run lint --workspaces
+        run: npm run lint --workspaces reflecta-ui
 
-      # Build the website
+      # Build Reflecta UI
       - name: Build
-        run: npm run build:production --workspaces
+        run: npm run build:production --workspaces reflecta-ui
 
+      # Deploy Reflecta UI
       - name: Deploy
         uses: appleboy/scp-action@master
         with:

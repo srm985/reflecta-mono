@@ -1,0 +1,38 @@
+name: Reflecta UI - Develop Build & Deploy
+
+on:
+  push:
+    branches: [develop]
+    paths: [packages/reflecta-ui/**]
+  pull_request:
+    branches: [develop]
+    paths: [packages/reflecta-ui/**]
+  workflow_dispatch:
+    branches: [develop]
+    paths: [packages/reflecta-ui/**]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '18.x'
+
+      # Install Node Modules
+      - name: Install
+        run: npm install
+
+      # Lint
+      - name: Lint
+        run: npm run lint --workspaces reflecta-ui
+
+      # Build Reflecta UI
+      - name: Build
+        run: npm run build:develop --workspaces reflecta-ui
