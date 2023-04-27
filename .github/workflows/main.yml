@@ -50,3 +50,4 @@ jobs:
           target: ${{ secrets.DEPLOYMENT_LOCATION }}
           timeout: "120s"
           username: ${{ secrets.USERNAME }}
+          overwrite: true
