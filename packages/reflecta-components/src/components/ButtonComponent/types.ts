@@ -1,3 +1,3 @@
 export interface IButtonComponent {
-    label:string;
+    label: string;
 }

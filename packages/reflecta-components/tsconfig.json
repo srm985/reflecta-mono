@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "declaration": true,
-        "rootDir": "./src"
+        "jsx": "react-jsx",
+        "outDir": "./declarations"
     },
     "exclude": [
         "./dist/**/*"

@@ -31,6 +31,8 @@ module.exports = async () => {
         [`./${directoryName}`]: `${COMPONENT_ROOT}/${directoryName}`
     }));
 
+    const declarationsList = directoriesList.map((componentName) => `declare module 'reflecta-components-module-federation/${componentName}';`);
+
     const plugins = [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
@@ -47,7 +49,14 @@ module.exports = async () => {
             exposes: componentsList,
             filename: 'remoteEntry.js',
             name: 'reflecta_components'
-        })
+        }),
+        {
+            apply: (compiler) => {
+                compiler.hooks.afterEmit.tap('GenerateModuleDeclarationPlugin', async () => {
+                    await fs.writeFile('./declarations/index.d.ts', declarationsList.join('\n'));
+                });
+            }
+        }
     ];
 
     const entry = './src/index.tsx';

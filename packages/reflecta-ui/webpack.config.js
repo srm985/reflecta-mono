@@ -29,7 +29,7 @@ module.exports = () => {
         }),
         new webpack.container.ModuleFederationPlugin({
             remotes: {
-                'reflecta-components': 'reflecta_components@http://localhost:3003/remoteEntry.js'
+                'reflecta-components-module-federation': 'reflecta_components@http://localhost:3003/remoteEntry.js'
             }
         })
     ];

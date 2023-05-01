@@ -1,8 +1,6 @@
-import React from 'react';
-
 import {
     IButtonComponent
-} from './interfaces';
+} from './types';
 
 import './style.scss';
 

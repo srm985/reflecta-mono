@@ -1,4 +1,8 @@
 {
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "outDir": "./dist"
+    },
     "exclude": [
         "./dist/**/*"
     ],
@@ -6,6 +10,7 @@
     "include": [
         "src/**/*",
         "src/*",
-        "./*.js"
+        "./*.js",
+        "./*.ts"
     ]
 }

@@ -9,10 +9,10 @@
         "airbnb-typescript",
         "../../.eslintrc.js"
     ],
-    "root": true,
     "parserOptions": {
         "project": "./tsconfig.json"
     },
+    "root": true,
     "rules": {
         "import/no-extraneous-dependencies": [
             "error",
@@ -76,6 +76,9 @@
             0
         ],
         "react/no-unescaped-entities": [
+            0
+        ],
+        "react/prop-types": [
             0
         ],
         "react/react-in-jsx-scope": "off"
