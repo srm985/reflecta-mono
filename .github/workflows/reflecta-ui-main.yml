@@ -29,6 +29,10 @@ jobs:
       - name: Install
         run: npm install
 
+      # Build Dependencies
+      - name: Build Dependencies
+        run: npm run build:production -w reflecta-components
+
       # Lint
       - name: Lint
         run: npm run lint -w reflecta-ui
