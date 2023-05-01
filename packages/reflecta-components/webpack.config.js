@@ -4,9 +4,10 @@ const {
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
+const fs = require('fs/promises');
 const path = require('path');
 
-module.exports = () => {
+module.exports = async () => {
     const {
         env: {
             BASE_URL,
@@ -14,6 +15,21 @@ module.exports = () => {
             NODE_ENV
         }
     } = process;
+
+    const COMPONENT_ROOT = './src/components';
+
+    const results = await fs.readdir(COMPONENT_ROOT, {
+        withFileTypes: true
+    });
+
+    const directoriesList = results.filter((result) => result.isDirectory()).map((result) => result.name);
+
+    console.log('Found the following components to export:');
+    console.log(directoriesList.join('\n'));
+
+    const componentsList = directoriesList.map((directoryName) => ({
+        [`./${directoryName}`]: `${COMPONENT_ROOT}/${directoryName}`
+    }));
 
     const plugins = [
         new CleanWebpackPlugin(),
@@ -28,9 +44,9 @@ module.exports = () => {
             'process.env.LOCAL_STORAGE_TOKEN': JSON.stringify(LOCAL_STORAGE_TOKEN)
         }),
         new webpack.container.ModuleFederationPlugin({
-            remotes: {
-                'reflecta-components': 'reflecta_components@http://localhost:3003/remoteEntry.js'
-            }
+            exposes: componentsList,
+            filename: 'remoteEntry.js',
+            name: 'reflecta_components'
         })
     ];
 
@@ -47,8 +63,8 @@ module.exports = () => {
             rules: [
                 {
                     exclude: /node_modules/,
-                    test: /\.tsx?$/i,
-                    use: 'ts-loader'
+                    loader: 'ts-loader',
+                    test: /\.tsx?$/i
                 },
                 {
                     test: /\.scss$/i,

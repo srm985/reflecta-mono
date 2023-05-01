@@ -2,10 +2,9 @@
   "author": "Sean McQuay",
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "reflecta-components": "^1.0.0"
+    "react-dom": "^18.2.0"
   },
-  "description": "Journaling application UI meant to help offer analysis and insights into journal entries.",
+  "description": "Reflecta UI component library managed via storybook and exposed via Webpack module federation.",
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
@@ -61,12 +60,12 @@
     ]
   },
   "main": "index.(ts|tsx)",
-  "name": "reflecta-ui",
+  "name": "reflecta-components",
   "scripts": {
     "build:production": "npm run config:production webpack",
     "config:local": "cross-env NODE_ENV=development BASE_URL=http://localhost:3100 LOCAL_STORAGE_TOKEN=884zGdCWYBEFQdeM5X7e",
     "config:production": "cross-env NODE_ENV=production BASE_URL=https://reflecta.app.com LOCAL_STORAGE_TOKEN=MWwbrdnKMGqkpe6QD9XL",
-    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --open --config ./webpack.config.js --mode=development --port 3000\" \"npm:watch --silent\"",
+    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --open --config ./webpack.config.js --mode=development --port 3003\" \"npm:watch --silent\"",
     "lint": "concurrently --raw \"npm:lint:js --silent\" \"npm:lint:scss --silent\"",
     "lint:fix": "concurrently --raw \"eslint . --ext .ts,.tsx,.js --fix\" \"stylelint src/**/*.scss  --color --allow-empty-input --fix\"",
     "lint:js": "eslint . --ext .ts,.tsx,.js",

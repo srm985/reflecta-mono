@@ -1,4 +1,9 @@
 {
+    "compilerOptions": {
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "rootDir": "./src"
+    },
     "exclude": [
         "./dist/**/*"
     ],

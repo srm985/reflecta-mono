@@ -10,8 +10,8 @@ module.exports = {
     overrides: [
         {
             files: [
-                'scripts/**/*.js',
-                '.eslintrc.js'
+                './scripts/**/*.js',
+                './*.js'
             ],
             rules: {
                 'no-console': [
@@ -173,6 +173,7 @@ module.exports = {
                 identifiers: true,
                 lang: 'en_US',
                 skipWords: [
+                    'bootstrap',
                     'bugfix',
                     'favicon',
                     'fullhash',
@@ -180,6 +181,7 @@ module.exports = {
                     'ico',
                     'matchers',
                     'postcss',
+                    'reflecta',
                     'tsx',
                     'webpack',
                     'Webpack',

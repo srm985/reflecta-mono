@@ -1,5 +1,12 @@
-import ButtonComponent from './components/ButtonComponent';
+// import ButtonComponent from 'reflecta-components/ButtonComponent';
 
-const App = () => (<ButtonComponent />);
+// import {} from 'reflecta-components';
+
+const App = () => (
+    <div>
+        <p>hello</p>
+        {/* <ButtonComponent label/> */}
+    </div>
+);
 
 export default App;

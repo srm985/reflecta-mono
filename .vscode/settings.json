@@ -1,0 +1,21 @@
+{
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "eslint.codeActionsOnSave.mode": "all",
+    "eslint.debug": true,
+    "eslint.enable": true,
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "eslint.workingDirectories": [
+        "packages/reflecta-components",
+        "packages/reflecta-ui"
+    ]
+}
