@@ -111,7 +111,7 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: build
+    needs: [build-mf, build-storybook]
     runs-on: ubuntu-latest
     environment: production
 

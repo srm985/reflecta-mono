@@ -5,7 +5,7 @@ import {
 
 export default {
     component: ButtonComponent,
-    title: 'Button'
+    title: 'ButtonComponent'
 };
 
 const Template = (args: IButtonComponent) => <ButtonComponent {...args} />;
