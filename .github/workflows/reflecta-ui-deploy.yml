@@ -77,8 +77,8 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: components-bundle
-          path: ./packages/reflecta-components/dist/
+          name: component-declarations
+          path: ./packages/reflecta-components/declarations/
 
   build:
     name: Build
@@ -98,8 +98,8 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: components-bundle
-          path: ./packages/reflecta-components/dist/
+          name: component-declarations
+          path: ./packages/reflecta-components/declarations/
 
       - name: Display structure of downloaded files
         run: ls -R
