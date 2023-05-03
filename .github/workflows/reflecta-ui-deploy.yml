@@ -94,10 +94,6 @@ jobs:
         with:
           node-version: '18.x'
 
-      # Install Node Modules
-      - name: Install
-        run: npm ci
-
       # Download Artifacts
       - name: Download Artifacts
         uses: actions/download-artifact@v3
@@ -108,12 +104,17 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
+      # Install Node Modules
+      - name: Install
+        run: npm ci
+
       # Build Reflecta UI
       - name: Build
         run: npm run build -w reflecta-ui
         env:
-          NODE_ENV: ${{ vars.NODE_ENV}}
-          WEBPACK_SERVER_PORT_ui: ${{ env.WEBPACK_SERVER_PORT_UI}}
+          FEDERATED_COMPONENTS_URL: ${{ vars.FEDERATED_COMPONENTS_URL }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          WEBPACK_SERVER_PORT_ui: ${{ env.WEBPACK_SERVER_PORT_UI }}
 
       # Upload Artifacts
       - name: Upload Artifacts

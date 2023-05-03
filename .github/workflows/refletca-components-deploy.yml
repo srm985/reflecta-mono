@@ -71,8 +71,8 @@ jobs:
       - name: Build
         run: npm run build -w reflecta-components
         env:
-          NODE_ENV: ${{ vars.NODE_ENV}}
-          WEBPACK_SERVER_PORT_COMPONENTS: ${{ env.WEBPACK_SERVER_PORT_COMPONENTS}}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          WEBPACK_SERVER_PORT_COMPONENTS: ${{ env.WEBPACK_SERVER_PORT_COMPONENTS }}
 
       # Upload Artifacts
       - name: Upload Artifacts
