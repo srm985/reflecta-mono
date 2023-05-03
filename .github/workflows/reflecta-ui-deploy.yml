@@ -34,6 +34,7 @@ jobs:
 
       # Build Reflecta UI
       - name: Build
+        environment: production
         env:
           FEDERATED_COMPONENTS_URL: ${{ vars.FEDERATED_COMPONENTS_URL }}
           NODE_ENV: ${{ vars.NODE_ENV}}
@@ -45,6 +46,7 @@ jobs:
 
       # Deploy Reflecta UI
       - name: Deploy
+        environment: production
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}

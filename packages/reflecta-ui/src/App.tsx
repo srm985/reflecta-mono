@@ -2,7 +2,7 @@ import ButtonComponent from './components/remote/ButtonComponent';
 
 const App = () => (
     <div>
-        <p>hello NEW8</p>
+        <p>hello NEW9</p>
         <ButtonComponent label={'hey! foo'} />
     </div>
 );

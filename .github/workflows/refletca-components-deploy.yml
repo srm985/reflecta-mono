@@ -30,6 +30,7 @@ jobs:
 
       # Build Reflecta Components
       - name: Build
+        environment: production
         run: npm run build -w reflecta-components
         env:
           NODE_ENV: ${{ vars.NODE_ENV}}
@@ -37,6 +38,7 @@ jobs:
 
       # Deploy Reflecta Components
       - name: Deploy
+        environment: production
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
