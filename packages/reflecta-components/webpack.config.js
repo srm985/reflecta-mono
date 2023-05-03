@@ -10,9 +10,8 @@ const path = require('path');
 module.exports = async () => {
     const {
         env: {
-            BASE_URL,
-            LOCAL_STORAGE_TOKEN,
-            NODE_ENV
+            NODE_ENV,
+            WEBPACK_SERVER_PORT_COMPONENTS
         }
     } = process;
 
@@ -41,10 +40,6 @@ module.exports = async () => {
             path: path.join(__dirname, '../dist/'),
             template: './src/index.html'
         }),
-        new webpack.DefinePlugin({
-            'process.env.BASE_URL': JSON.stringify(BASE_URL),
-            'process.env.LOCAL_STORAGE_TOKEN': JSON.stringify(LOCAL_STORAGE_TOKEN)
-        }),
         new webpack.container.ModuleFederationPlugin({
             exposes: componentsList,
             filename: 'remoteEntry.js',
@@ -64,7 +59,8 @@ module.exports = async () => {
     return ({
         devServer: {
             historyApiFallback: true,
-            hot: true
+            hot: true,
+            port: WEBPACK_SERVER_PORT_COMPONENTS
         },
         entry,
         mode: NODE_ENV,

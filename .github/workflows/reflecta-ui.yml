@@ -4,9 +4,6 @@ on:
   push:
     branches: ['*', '!develop', '!main']
     paths: [packages/reflecta-ui/**]
-  pull_request:
-    branches: ['*', '!develop', '!main']
-    paths: [packages/reflecta-ui/**]
   workflow_dispatch:
     branches: ['*', '!develop', '!main']
     paths: [packages/reflecta-ui/**]
@@ -16,12 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
+      - uses: actions/checkout@v3
 
       - name: Use NodeJS 18.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
@@ -31,7 +26,7 @@ jobs:
 
       # Build Dependencies
       - name: Build Dependencies
-        run: npm run build:production -w reflecta-components
+        run: npm run build -w reflecta-components
 
       # Lint
       - name: Lint

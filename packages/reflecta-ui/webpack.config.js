@@ -1,6 +1,7 @@
 const {
     CleanWebpackPlugin
 } = require('clean-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
@@ -9,13 +10,16 @@ const path = require('path');
 module.exports = () => {
     const {
         env: {
-            BASE_URL,
-            LOCAL_STORAGE_TOKEN,
-            NODE_ENV
+            FEDERATED_COMPONENTS_URL,
+            NODE_ENV,
+            WEBPACK_SERVER_PORT_UI
         }
     } = process;
 
     const plugins = [
+        new Dotenv({
+            systemvars: true
+        }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             // favicon: './src/assets/icons/favicon.ico',
@@ -23,13 +27,9 @@ module.exports = () => {
             path: path.join(__dirname, '../dist/'),
             template: './src/index.html'
         }),
-        new webpack.DefinePlugin({
-            'process.env.BASE_URL': JSON.stringify(BASE_URL),
-            'process.env.LOCAL_STORAGE_TOKEN': JSON.stringify(LOCAL_STORAGE_TOKEN)
-        }),
         new webpack.container.ModuleFederationPlugin({
             remotes: {
-                'reflecta-components-module-federation': 'reflecta_components@http://localhost:3003/remoteEntry.js'
+                'reflecta-components-module-federation': FEDERATED_COMPONENTS_URL
             }
         })
     ];
@@ -39,7 +39,8 @@ module.exports = () => {
     return ({
         devServer: {
             historyApiFallback: true,
-            hot: true
+            hot: true,
+            port: WEBPACK_SERVER_PORT_UI
         },
         entry,
         mode: NODE_ENV,
