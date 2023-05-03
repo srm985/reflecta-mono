@@ -9,7 +9,8 @@ on:
     paths: [packages/reflecta-components/**]
 
 jobs:
-  build:
+  lint-scss:
+    name: Lint SCSS
     runs-on: ubuntu-latest
 
     steps:
@@ -22,8 +23,28 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm install
+        run: npm ci
 
-      # Lint
+      # Lint SCSS
       - name: Lint
-        run: npm run lint -w reflecta-components
+        run: npm run lint:scss -w reflecta-components
+
+  lint-js:
+    name: Lint JavaScript/TypeScript
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      # Install Node Modules
+      - name: Install
+        run: npm ci
+
+      # Lint JavaScript/TypeScript
+      - name: Lint
+        run: npm run lint:js -w reflecta-components
