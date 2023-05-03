@@ -52,6 +52,7 @@ jobs:
   build-components:
     name: Build Components
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - uses: actions/checkout@v3
