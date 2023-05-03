@@ -43,7 +43,7 @@ jobs:
           rm: true
           source: "./packages/reflecta-components/dist/*"
           strip_components: 3
-          target: ${{ envs.DEPLOYMENT_LOCATION_COMPONENTS }}
+          target: ${{ env.DEPLOYMENT_LOCATION_COMPONENTS }}
           timeout: "120s"
           username: ${{ secrets.USERNAME }}
           overwrite: true
