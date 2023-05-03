@@ -18,7 +18,7 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
             className={displayName}
             type={'button'}
         >
-            {`FOO5:${label}`}
+            {`FOO6:${label}`}
         </button>
     );
 };

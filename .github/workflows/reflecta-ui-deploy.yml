@@ -36,9 +36,9 @@ jobs:
       - name: Build
         run: npm run build -w reflecta-ui
         env:
-          FEDERATED_COMPONENTS_URL: ${{ env.FEDERATED_COMPONENTS_URL }}
-          NODE_ENV: ${{ env.NODE_ENV}}
-          WEBPACK_SERVER_PORT_COMPONENTS: ${{ env.WEBPACK_SERVER_PORT_COMPONENTS}}
+          FEDERATED_COMPONENTS_URL: ${{ vars.FEDERATED_COMPONENTS_URL }}
+          NODE_ENV: ${{ vars.NODE_ENV}}
+          WEBPACK_SERVER_PORT_COMPONENTS: ${{ vars.WEBPACK_SERVER_PORT_COMPONENTS}}
 
       # Deploy Reflecta UI
       - name: Deploy
@@ -51,7 +51,7 @@ jobs:
           rm: true
           source: "./packages/reflecta-ui/dist/*"
           strip_components: 3
-          target: ${{ env.DEPLOYMENT_LOCATION_COMPONENTS }}
+          target: ${{ vars.DEPLOYMENT_LOCATION_COMPONENTS }}
           timeout: "120s"
           username: ${{ secrets.USERNAME }}
           overwrite: true
