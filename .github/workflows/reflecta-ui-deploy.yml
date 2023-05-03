@@ -39,10 +39,7 @@ jobs:
           FEDERATED_COMPONENTS_URL: ${{ vars.FEDERATED_COMPONENTS_URL }}
           NODE_ENV: ${{ vars.NODE_ENV}}
           WEBPACK_SERVER_PORT_COMPONENTS: ${{ vars.WEBPACK_SERVER_PORT_COMPONENTS}}
-        run: |
-          ECHO ${{ env.FEDERATED_COMPONENTS_URL }}
-          ECHO ${{ vars.FEDERATED_COMPONENTS_URL }}
-          npm run build -w reflecta-ui
+        run: npm run build -w reflecta-ui
 
       # Deploy Reflecta UI
       - name: Deploy
