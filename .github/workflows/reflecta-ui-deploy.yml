@@ -9,7 +9,79 @@ on:
     paths: [packages/reflecta-ui/**]
 
 jobs:
+  lint-scss:
+    name: Lint SCSS
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      # Install Node Modules
+      - name: Install
+        run: npm ci
+
+      # Lint SCSS
+      - name: Lint
+        run: npm run lint:scss -w reflecta-ui
+
+  lint-js:
+    name: Lint JavaScript/TypeScript
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      # Install Node Modules
+      - name: Install
+        run: npm ci
+
+      # Lint JavaScript/TypeScript
+      - name: Lint
+        run: npm run lint:js -w reflecta-ui
+
+  build-components:
+    name: Build Components
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      # Install Node Modules
+      - name: Install
+        run: npm ci
+
+      # Build Reflecta ui
+      - name: Build
+        run: npm run build -w reflecta-components
+        env:
+          NODE_ENV: ${{ vars.NODE_ENV}}
+          WEBPACK_SERVER_PORT_ui: ${{ env.WEBPACK_SERVER_PORT_COMPONENTS}}
+
+      # Upload Artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ./packages/reflecta-components/dist/
+          path: ./packages/reflecta-components/dist/
+
   build:
+    name: Build
+    needs: [lint-scss, lint-js, build-components]
     runs-on: ubuntu-latest
     environment: production
 
@@ -23,25 +95,46 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm install
+        run: npm ci
 
-      # Build Dependencies
-      - name: Build Dependencies
-        run: npm run build -w reflecta-components
+      # Download Artifacts
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
 
-      # Lint
-      - name: Lint
-        run: npm run lint -w reflecta-ui
+      - name: Display structure of downloaded files
+        run: ls -R
 
       # Build Reflecta UI
       - name: Build
-        env:
-          FEDERATED_COMPONENTS_URL: ${{ vars.FEDERATED_COMPONENTS_URL }}
-          NODE_ENV: ${{ vars.NODE_ENV}}
-          WEBPACK_SERVER_PORT_COMPONENTS: ${{ vars.WEBPACK_SERVER_PORT_COMPONENTS}}
         run: npm run build -w reflecta-ui
+        env:
+          NODE_ENV: ${{ vars.NODE_ENV}}
+          WEBPACK_SERVER_PORT_ui: ${{ env.WEBPACK_SERVER_PORT_UI}}
 
-      # Deploy Reflecta UI
+      # Upload Artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle
+          path: ./packages/reflecta-ui/dist/
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Download Artifacts
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      # Deploy Reflecta ui
       - name: Deploy
         uses: appleboy/scp-action@master
         with:
@@ -50,9 +143,9 @@ jobs:
           passphrase: ${{ secrets.KEY_PASSPHRASE }}
           port: ${{ secrets.PORT }}
           rm: true
-          source: "./packages/reflecta-ui/dist/*"
-          strip_components: 3
-          target: ${{ vars.DEPLOYMENT_LOCATION_COMPONENTS }}
+          source: "./bundle/*"
+          strip_ui: 1
+          target: ${{ vars.DEPLOYMENT_LOCATION_UI }}
           timeout: "120s"
           username: ${{ secrets.USERNAME }}
           overwrite: true
