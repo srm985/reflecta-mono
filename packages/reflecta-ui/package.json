@@ -64,7 +64,7 @@
   "main": "index.(ts|tsx)",
   "name": "reflecta-ui",
   "scripts": {
-    "build": "npm run webpack",
+    "build": "webpack",
     "config:local": "cross-env FEDERATED_COMPONENTS_URL=reflecta_components@http://localhost:3003/remoteEntry.js NODE_ENV=development WEBPACK_SERVER_PORT_UI=3000",
     "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --open --config ./webpack.config.js --mode=development\" \"npm:watch --silent\"",
     "lint": "concurrently --raw \"npm:lint:js --silent\" \"npm:lint:scss --silent\"",
