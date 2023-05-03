@@ -12,6 +12,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      FEDERATED_COMPONENTS_URL: ${{ env.FEDERATED_COMPONENTS_URL }}
+      NODE_ENV: ${{ env.NODE_ENV}}
+      WEBPACK_SERVER_PORT_COMPONENTS: ${{ env.WEBPACK_SERVER_PORT_COMPONENTS}}
+
     steps:
       - uses: actions/checkout@v3
 
