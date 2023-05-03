@@ -51,7 +51,7 @@ jobs:
       - name: Lint
         run: npm run lint:js -w reflecta-components
 
-  build-components:
+  build:
     name: Build
     needs: [lint-scss, lint-js]
     runs-on: ubuntu-latest
@@ -84,7 +84,7 @@ jobs:
           path: ./packages/reflecta-components/dist/
 
 
-  build:
+  deploy:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
