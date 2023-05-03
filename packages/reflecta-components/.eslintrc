@@ -17,7 +17,8 @@
             "error",
             {
                 "devDependencies": [
-                    "./*.js"
+                    "./*.js",
+                    "./.storybook/*"
                 ]
             }
         ],

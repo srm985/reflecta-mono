@@ -49,8 +49,8 @@ jobs:
       - name: Lint
         run: npm run lint:js -w reflecta-components
 
-  build:
-    name: Build
+  build-mf:
+    name: Build Module Federation Bundle
     needs: [lint-scss, lint-js]
     runs-on: ubuntu-latest
     environment: production
@@ -80,6 +80,34 @@ jobs:
         with:
           name: bundle
           path: ./packages/reflecta-components/dist/
+
+  build-storybook:
+    name: Build Storybook
+    needs: [lint-scss, lint-js]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      # Install Node Modules
+      - name: Install
+        run: npm ci
+
+      # Build Storybook Bundle
+      - name: Build
+        run: npm run build:storybook -w reflecta-components
+
+      # Upload Artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle
+          path: ./packages/reflecta-components/storybook-static/
 
   deploy:
     name: Deploy

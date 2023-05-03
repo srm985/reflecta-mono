@@ -173,6 +173,7 @@ module.exports = {
                 identifiers: true,
                 lang: 'en_US',
                 skipWords: [
+                    'autodocs',
                     'bootstrap',
                     'bugfix',
                     'favicon',
