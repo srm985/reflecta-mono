@@ -93,9 +93,6 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       # Deploy Reflecta Components
       - name: Deploy
         uses: appleboy/scp-action@master
