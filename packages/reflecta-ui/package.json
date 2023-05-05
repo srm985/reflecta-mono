@@ -61,7 +61,7 @@
       "eslint --fix"
     ]
   },
-  "main": "index.(ts|tsx)",
+  "main": "index.js",
   "name": "reflecta-ui",
   "scripts": {
     "build": "webpack",

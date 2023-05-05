@@ -1,3 +1,4 @@
 /declarations/
 /dist/
 !.storybook
+/storybook-static/

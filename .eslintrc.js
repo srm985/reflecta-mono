@@ -10,14 +10,14 @@ module.exports = {
     overrides: [
         {
             files: [
-                './scripts/**/*.js',
+                './scripts/*.js',
                 './*.js'
             ],
             rules: {
-                'no-console': [
+                'import/no-extraneous-dependencies': [
                     0
                 ],
-                'spellcheck/spell-checker': [
+                'no-console': [
                     0
                 ]
             }
@@ -27,8 +27,7 @@ module.exports = {
         project: './tsconfig.json'
     },
     plugins: [
-        'sort-destructure-keys',
-        'spellcheck'
+        'sort-destructure-keys'
     ],
 
     rules: {
@@ -67,15 +66,6 @@ module.exports = {
         curly: [
             'error',
             'all'
-        ],
-        'import/no-extraneous-dependencies': [
-            'error',
-            {
-                devDependencies: [
-                    './*.js',
-                    './scripts/*.js'
-                ]
-            }
         ],
         'import/order': [
             'error',
@@ -164,32 +154,6 @@ module.exports = {
             {
                 caseSensitive: false,
                 natural: true
-            }
-        ],
-        'spellcheck/spell-checker': [
-            'error',
-            {
-                comments: true,
-                identifiers: true,
-                lang: 'en_US',
-                skipWords: [
-                    'autodocs',
-                    'bootstrap',
-                    'bugfix',
-                    'favicon',
-                    'fullhash',
-                    'hotfix',
-                    'ico',
-                    'matchers',
-                    'postcss',
-                    'reflecta',
-                    'tsx',
-                    'webpack',
-                    'Webpack',
-                    'webpack5'
-                ],
-                strings: true,
-                templates: true
             }
         ]
     }

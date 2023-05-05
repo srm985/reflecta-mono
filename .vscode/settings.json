@@ -21,7 +21,8 @@
     "eslint.format.enable": true,
     "eslint.lintTask.enable": true,
     "eslint.workingDirectories": [
+        "packages/reflecta-backend",
         "packages/reflecta-components",
-        "packages/reflecta-ui"
+        "packages/reflecta-ui",
     ]
 }

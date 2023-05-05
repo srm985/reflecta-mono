@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "noUnusedParameters": false
+    },
+    "exclude": [
+        "./dist/**/*"
+    ],
+    "extends": "../../tsconfig.json",
+    "include": [
+        "src/**/*",
+        "src/*",
+        "./*.js"
+    ],
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node"
+    }
+}

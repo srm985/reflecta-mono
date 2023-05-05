@@ -1,0 +1,50 @@
+{
+  "author": "Sean McQuay",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "express-validator": "^7.0.1",
+    "helmet": "^6.1.5",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.2.4"
+  },
+  "description": "Journaling application backend meant to help offer analysis and insights into journal entries.",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/morgan": "^1.9.4",
+    "@types/node": "^20.0.0",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ],
+    "*.ts": [
+      "eslint --fix"
+    ]
+  },
+  "main": "index.js",
+  "name": "reflecta-backend",
+  "scripts": {
+    "build": "",
+    "config:local": "cross-env NODE_ENV=development",
+    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"nodemon -r dotenv/config ./src/app.ts\"",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "pre-commit": "cross-env FORCE_COLOR=true lint-staged",
+    "start": "npm run develop",
+    "update": "npm update --save/--save-dev",
+    "watch": "concurrently --raw \"npm:watch:js --silent\" \"npm:watch:scss --silent\"",
+    "watch:js": "onchange --delay 500 \"src/**/*.(ts|tsx)\" -- npm run lint:js --silent",
+    "watch:prettier": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent",
+    "watch:scss": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent"
+  },
+  "type": "module",
+  "version": "1.0.0"
+}
