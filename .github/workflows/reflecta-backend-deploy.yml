@@ -53,7 +53,7 @@ jobs:
       # Copy Packages Config
       - name: Copy Packages Config
         run: |
-          cp ./packages/reflecta-backend/package.json ./packages/reflecta-backend/dist/
+          cp ./package.json ./packages/reflecta-backend/dist/
           cp ./package-lock.json ./packages/reflecta-backend/dist/
 
       # Install Production Packages
