@@ -1,0 +1,30 @@
+name: Reflecta Backend - Lint
+
+on:
+  push:
+    branches: [main, develop]
+    paths: [packages/reflecta-backend/**]
+  workflow_dispatch:
+    branches: [main, develop]
+    paths: [packages/reflecta-backend/**]
+
+jobs:
+  lint:
+    name: Lint JavaScript/TypeScript
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use NodeJS 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      # Install Node Modules
+      - name: Install
+        run: npm ci
+
+      # Lint JavaScript/TypeScript
+      - name: Lint
+        run: npm run lint -w reflecta-backend

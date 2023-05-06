@@ -34,7 +34,7 @@
   "main": "index.js",
   "name": "reflecta-backend",
   "scripts": {
-    "build": "",
+    "build": "tsc",
     "config:local": "cross-env NODE_ENV=development",
     "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"nodemon -r dotenv/config ./src/app.ts\"",
     "lint": "eslint . --ext .ts,.js",
