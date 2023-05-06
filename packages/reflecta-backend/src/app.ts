@@ -9,6 +9,10 @@ import {
 
 import middleware from './middleware';
 
+import logger from './logger';
+
+import establishPool from './db';
+
 // Initialize App
 const app = express();
 
@@ -38,7 +42,26 @@ app.use(express.json());
 app.use(middleware);
 
 // Start Server
-const server = app.listen(SERVER_PORT || 3100, () => {
+const server = app.listen(SERVER_PORT || 3100, async () => {
+    const {
+        env: {
+            DATABASE_HOST = '',
+            DATABASE_NAME = '',
+            DATABASE_PORT = '',
+            DATABASE_USER = ''
+        }
+    } = process;
+
     // eslint-disable-next-line no-console
-    console.log(`Server started on port: ${(server.address() as AddressInfo).port}...`);
+    logger.info(`server started on port: ${(server.address() as AddressInfo).port}...`);
+
+    try {
+        const connection = await establishPool().getConnection();
+
+        logger.info('database connection established...');
+
+        connection.release();
+    } catch (error) {
+        logger.error(`unable to connect to database ${DATABASE_NAME} located at ${DATABASE_HOST}:${DATABASE_PORT} with user ${DATABASE_USER}...`);
+    }
 });

@@ -26,11 +26,6 @@
                 "pathGroups": [
                     {
                         "group": "parent",
-                        "pattern": "./*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
                         "pattern": "./controllers/*",
                         "position": "after"
                     },
@@ -132,6 +127,16 @@
                     {
                         "group": "parent",
                         "pattern": "./middleware",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./logger",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./db",
                         "position": "after"
                     },
                     {
