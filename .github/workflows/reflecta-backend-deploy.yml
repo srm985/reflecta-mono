@@ -29,8 +29,8 @@ jobs:
       - name: Lint
         run: npm run lint -w reflecta-backend
 
-  compile:
-    name: Compile TypeScript
+  bundle:
+    name: Bundle
     needs: [lint]
     runs-on: ubuntu-latest
 
@@ -50,6 +50,18 @@ jobs:
       - name: Build
         run: npm run build -w reflecta-backend
 
+      # Copy Packages Config
+      - name: Copy Packages Config
+        run: |
+          cp ./packages/reflecta-backend/package.json ./packages/reflecta-backend/dist/
+          cp ./package-lock.json ./packages/reflecta-backend/dist/
+
+      # Install Production Packages
+      - name: Install Production Packages
+        run: |
+          cd ./packages/reflecta-backend/dist/
+          npm ci --only-production
+
       # Upload Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -59,7 +71,7 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: [compile]
+    needs: [bundle]
     runs-on: ubuntu-latest
     environment: production
 
