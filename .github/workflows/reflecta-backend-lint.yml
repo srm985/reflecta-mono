@@ -2,10 +2,10 @@ name: Reflecta Backend - Lint
 
 on:
   push:
-    branches: [main, develop]
+    branches: ['*', '!develop', '!main']
     paths: [packages/reflecta-backend/**]
   workflow_dispatch:
-    branches: [main, develop]
+    branches: ['*', '!develop', '!main']
     paths: [packages/reflecta-backend/**]
 
 jobs:
