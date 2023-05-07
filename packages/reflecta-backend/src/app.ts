@@ -41,7 +41,7 @@ app.use(express.json());
 // }));
 app.use(middleware);
 
-console.log('foo1');
+console.log('foo12');
 
 // Start Server
 const server = app.listen(SERVER_PORT || 3100, async () => {

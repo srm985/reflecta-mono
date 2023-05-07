@@ -35,7 +35,6 @@
     "develop": "concurrently --raw \"npm start -w reflecta-components\" \"npm start -w reflecta-ui\"",
     "lint": "eslint ./*.js ./scripts/*.js && npm run lint --workspaces",
     "lint:fix": "eslint ./*.js ./scripts/*.js --fix && npm run lint:fix --workspaces",
-    "postinstall": "concurrently --raw --group \"cd packages/reflecta-ui/ && npm install --ignore-scripts\" \"cd packages/reflecta-components && npm install --ignore-scripts\"",
     "pre-commit": "cross-env FORCE_COLOR=true lint-staged && npm run pre-commit --workspaces",
     "pre-push": "node ./scripts/branchCheck.js",
     "prepare": "husky install",
