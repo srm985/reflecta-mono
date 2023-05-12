@@ -56,7 +56,9 @@ jobs:
 
       # Copy Packages
       - name: Copy Packages Config
-        run: cp -r ./node_modules/ ./packages/reflecta-backend/dist/
+        run: |
+          cp -r ./node_modules/ ./packages/reflecta-backend/dist/
+          cp ./packages/reflecta-backend/package.json ./packages/reflecta-backend/dist/
 
       # Upload Artifacts
       - name: Upload Artifacts

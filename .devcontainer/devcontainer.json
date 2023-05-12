@@ -8,14 +8,15 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"dbaeumer.vscode-eslint",
-				"streetsidesoftware.code-spell-checker",
-				"mrmlnc.vscode-csscomb",
-				"eamodio.gitlens",
 				"Asuka.insertnumbers",
-				"Tyriar.lorem-ipsum",
+				"dbaeumer.vscode-eslint",
 				"deerawan.vscode-faker",
-				"zengxingxin.sort-js-object-keys"
+				"eamodio.gitlens",
+				"GitHub.vscode-github-actions",
+				"mrmlnc.vscode-csscomb",
+				"streetsidesoftware.code-spell-checker",
+				"Tyriar.lorem-ipsum",
+				"zengxingxin.sort-js-object-keys",
 			]
 		}
 	}
