@@ -13,7 +13,8 @@
     "include": [
         "src/**/*",
         "src/*",
-        "./*.js"
+        "./*.js",
+        "static/*"
     ],
     "ts-node": {
         "esm": true,

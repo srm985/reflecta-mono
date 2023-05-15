@@ -6,6 +6,18 @@
     "extends": [
         "../../.eslintrc.js"
     ],
+    "overrides": [
+        {
+            "files": [
+                "./static/*"
+            ],
+            "rules": {
+                "import/no-extraneous-dependencies": [
+                    0
+                ]
+            }
+        }
+    ],
     "parserOptions": {
         "project": "./tsconfig.json"
     },

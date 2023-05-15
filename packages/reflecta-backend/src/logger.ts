@@ -9,8 +9,7 @@ import 'winston-daily-rotate-file';
 const {
     env: {
         LOGGING_DIRECTORY = '',
-        LOGGING_FILE_NAME = '',
-        NODE_ENV = ''
+        LOGGING_FILE_NAME = ''
     }
 } = process;
 
@@ -33,13 +32,11 @@ const logger: Logger = winston.createLogger({
     ]
 });
 
-if (NODE_ENV !== 'production') {
-    logger.add(new transports.Console({
-        format: format.combine(
-            format.colorize(),
-            format.simple()
-        )
-    }));
-}
+logger.add(new transports.Console({
+    format: format.combine(
+        format.colorize(),
+        format.simple()
+    )
+}));
 
 export default logger;
