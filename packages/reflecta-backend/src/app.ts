@@ -18,6 +18,7 @@ const app = express();
 
 const {
     env: {
+        CORS_ORIGIN,
         SERVER_PORT
     }
 } = process;
@@ -31,7 +32,8 @@ app.use(cors({
         'GET',
         'POST',
         'PUT'
-    ]
+    ],
+    origin: CORS_ORIGIN
 }));
 app.use(helmet());
 app.use(morgan('dev'));
@@ -40,8 +42,6 @@ app.use(express.json());
 //     extended: false
 // }));
 app.use(middleware);
-
-console.log('foo1234');
 
 // Start Server
 const server = app.listen(SERVER_PORT || 3100, async () => {

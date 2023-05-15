@@ -4,6 +4,7 @@ module.exports = {
     apps: [
         {
             env: {
+                CORS_ORIGIN: process.env.CORS_ORIGIN,
                 DATABASE_HOST: process.env.DATABASE_HOST,
                 DATABASE_NAME: process.env.DATABASE_NAME,
                 DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
