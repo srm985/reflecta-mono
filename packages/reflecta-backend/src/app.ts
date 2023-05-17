@@ -1,5 +1,7 @@
 import cors from 'cors';
-import express from 'express';
+import express, {
+    Application
+} from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
@@ -14,7 +16,7 @@ import logger from './logger';
 import establishPool from './db';
 
 // Initialize App
-const app = express();
+const app: Application = express();
 
 const {
     env: {
@@ -54,16 +56,17 @@ const server = app.listen(SERVER_PORT || 3100, async () => {
         }
     } = process;
 
-    // eslint-disable-next-line no-console
-    logger.info(`server started on port: ${(server.address() as AddressInfo).port}...`);
-
     try {
+        // eslint-disable-next-line no-console
+        logger.info(`server started on port: ${(server.address() as AddressInfo).port}...`);
+
         const connection = await establishPool().getConnection();
 
         logger.info('database connection established...');
 
         connection.release();
     } catch (error) {
+        console.log('error...', error);
         logger.error(`unable to connect to database ${DATABASE_NAME} located at ${DATABASE_HOST}:${DATABASE_PORT} with user ${DATABASE_USER}...`);
     }
 });

@@ -21,6 +21,18 @@ jobs:
         with:
           node-version: '18.x'
 
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List Node Modules States
+        continue-on-error: true
+        run: npm list
+
       # Install Node Modules
       - name: Install
         run: npm ci
@@ -41,6 +53,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List Node Modules States
+        continue-on-error: true
+        run: npm list
 
       # Install Node Modules
       - name: Install
