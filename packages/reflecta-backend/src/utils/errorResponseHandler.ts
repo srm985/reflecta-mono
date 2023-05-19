@@ -4,7 +4,7 @@ import {
 
 import logger from './logger';
 
-import CustomError from './customError';
+import CustomError from './CustomError';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const errorResponseHandler = (errorDetails: any, response: Response) => {
