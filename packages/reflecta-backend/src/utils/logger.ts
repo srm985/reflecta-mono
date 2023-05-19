@@ -6,12 +6,12 @@ import winston, {
 
 import 'winston-daily-rotate-file';
 
-const {
-    env: {
-        LOGGING_DIRECTORY = '',
-        LOGGING_FILE_NAME = ''
-    }
-} = process;
+// const {
+//     env: {
+//         LOGGING_DIRECTORY = '',
+//         LOGGING_FILE_NAME = ''
+//     }
+// } = process;
 
 const logger: Logger = winston.createLogger({
     format: format.combine(
@@ -23,13 +23,13 @@ const logger: Logger = winston.createLogger({
         }),
         format.splat(),
         format.json()
-    ),
-    transports: [
-        new winston.transports.DailyRotateFile({
-            dirname: LOGGING_DIRECTORY,
-            filename: `${LOGGING_FILE_NAME}-%DATE%.log`
-        })
-    ]
+    )
+    // transports: [
+    //     new winston.transports.DailyRotateFile({
+    //         dirname: LOGGING_DIRECTORY,
+    //         filename: `${LOGGING_FILE_NAME}-%DATE%.log`
+    //     })
+    // ]
 });
 
 logger.add(new transports.Console({

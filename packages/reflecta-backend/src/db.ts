@@ -3,7 +3,7 @@ import {
     createPool
 } from 'mysql2/promise';
 
-const establishPool = (): Pool => {
+const pool = (): Pool => {
     const {
         env: {
             DATABASE_HOST = '',
@@ -23,4 +23,4 @@ const establishPool = (): Pool => {
     });
 };
 
-export default establishPool;
+export default pool();

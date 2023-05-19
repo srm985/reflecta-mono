@@ -9,11 +9,11 @@ import {
     AddressInfo
 } from 'net';
 
+import logger from './utils/logger';
+
 import middleware from './middleware';
 
-import logger from './logger';
-
-import establishPool from './db';
+import pool from './db';
 
 // Initialize App
 const app: Application = express();
@@ -60,7 +60,7 @@ const server = app.listen(SERVER_PORT || 3100, async () => {
         // eslint-disable-next-line no-console
         logger.info(`server started on port: ${(server.address() as AddressInfo).port}...`);
 
-        const connection = await establishPool().getConnection();
+        const connection = await pool.getConnection();
 
         logger.info('database connection established...');
 
