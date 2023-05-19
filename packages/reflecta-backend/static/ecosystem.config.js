@@ -19,7 +19,7 @@ module.exports = {
             node_args: [
                 '--experimental-specifier-resolution=node'
             ],
-            script: '/var/www/api/app.js | node --input-type=module'
+            script: '/var/www/api/app.js'
         }
     ]
 };
