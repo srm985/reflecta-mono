@@ -38,6 +38,7 @@
         "declaration-block-no-duplicate-properties": true,
         "declaration-block-no-shorthand-property-overrides": true,
         "declaration-block-single-line-max-declarations": 1,
+        "declaration-empty-line-before": null,
         "font-family-name-quotes": "always-where-required",
         "font-family-no-duplicate-names": true,
         "font-family-no-missing-generic-family-keyword": true,
@@ -58,6 +59,7 @@
         "no-invalid-double-slash-comments": true,
         "no-unknown-animations": true,
         "number-max-precision": 4,
+        "order/properties-order": [],
         "plugin/declaration-block-no-ignored-properties": true,
         "plugin/rational-order": [
             true,

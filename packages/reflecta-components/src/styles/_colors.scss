@@ -16,27 +16,27 @@ $color-text: #444444; // Charcoal Haze
 
 :export {
     _1_primary: {
-        _1_colorprimary: $color-primary;
+        _1_color-primary: $color-primary;
     }
     _2_secondary: {
-        _1_colorsecondary: $color-secondary;
+        _1_color-secondary: $color-secondary;
     }
     _3_accent: {
-        _1_coloraccent: $color-accent;
+        _1_color-accent: $color-accent;
     }
     _4_success: {
-        _1_colorsuccess: $color-success;
+        _1_color-success: $color-success;
     }
     _5_warning: {
-        _1_colorwarning: $color-warning;
+        _1_color-warning: $color-warning;
     }
     _6_danger: {
-        _1_colordanger: $color-danger;
+        _1_color-danger: $color-danger;
     }
     _7_neutrals: {
-        _1_colorwhite: $color-white;
-        _2_colorgray: $color-gray;
-        _3_colortext: $color-text;
-        _4_colorblack: $color-black;
+        _1_color-white: $color-white;
+        _2_color-gray: $color-gray;
+        _3_color-text: $color-text;
+        _4_color-black: $color-black;
     }
 }
