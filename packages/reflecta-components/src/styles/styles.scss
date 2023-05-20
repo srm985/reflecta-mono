@@ -1,0 +1,27 @@
+@import './resets';
+@import './colors';
+@import './units';
+@import './fonts';
+
+// Global Variables
+$box-shadow-default:
+        (
+        $color-gray
+            $planck-length /
+            2
+    )
+    (
+        $planck-length /
+            2
+    )
+    $planck-length;
+
+body {
+    color: $color-text;
+    font-weight: 500;
+    font-size: 18px;
+    font-family: $font-family-default;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizelegibility;
+}

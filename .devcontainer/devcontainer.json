@@ -15,8 +15,9 @@
 				"GitHub.vscode-github-actions",
 				"mrmlnc.vscode-csscomb",
 				"streetsidesoftware.code-spell-checker",
+				"stylelint.vscode-stylelint",
 				"Tyriar.lorem-ipsum",
-				"zengxingxin.sort-js-object-keys",
+				"zengxingxin.sort-js-object-keys"
 			]
 		}
 	}

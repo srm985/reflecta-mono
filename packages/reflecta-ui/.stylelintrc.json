@@ -128,7 +128,7 @@
         "scss/media-feature-value-dollar-variable": "always",
         "scss/no-duplicate-dollar-variables": true,
         "scss/no-duplicate-mixins": true,
-        "scss/operator-no-newline-after": true,
+        "scss/operator-no-newline-after": null,
         "scss/operator-no-unspaced": true,
         "scss/selector-nest-combinators": "always",
         "selector-attribute-quotes": "always",

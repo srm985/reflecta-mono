@@ -1,0 +1,42 @@
+/* stylelint-disable color-no-hex */
+
+/* stylelint-disable selector-pseudo-class-no-unknown */
+
+/* stylelint-disable scss/declaration-nested-properties */
+$color-primary: #5da2d5; // Serene Sky
+$color-secondary: #b3d4e0; // Misty Morning
+$color-gray: #cfcfcf; // Whispering Ash
+$color-success: #59c48a; // Dewy Meadow
+$color-accent: #ff6f40; // Sun-Kissed Coral
+$color-white: #f5f5f5; // Ivory Cloud
+$color-warning: #fdcb5b; // Golden Glow
+$color-danger: #ff5050; // Sunset Blush
+$color-black: #333333; // Shadowed Slate
+$color-text: #444444; // Charcoal Haze
+
+:export {
+    _1_primary: {
+        _1_colorprimary: $color-primary;
+    }
+    _2_secondary: {
+        _1_colorsecondary: $color-secondary;
+    }
+    _3_accent: {
+        _1_coloraccent: $color-accent;
+    }
+    _4_success: {
+        _1_colorsuccess: $color-success;
+    }
+    _5_warning: {
+        _1_colorwarning: $color-warning;
+    }
+    _6_danger: {
+        _1_colordanger: $color-danger;
+    }
+    _7_neutrals: {
+        _1_colorwhite: $color-white;
+        _2_colorgray: $color-gray;
+        _3_colortext: $color-text;
+        _4_colorblack: $color-black;
+    }
+}

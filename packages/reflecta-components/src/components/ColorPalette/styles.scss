@@ -1,0 +1,51 @@
+@import '../../styles/styles';
+
+.ColorPaletteComponent {
+    width: 100%;
+    max-width: $planck-length *
+        80;
+}
+
+.ColorItemComponent {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $planck-length *
+        4;
+
+    &__group-colors-container {
+        display: flex;
+        width: 80%;
+    }
+
+    &__swatch-container {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        font-size: $font-size-xsmall;
+        text-align: center;
+
+        &:first-child {
+            &
+                > div {
+                border-top-left-radius: $planck-length;
+                border-bottom-left-radius: $planck-length;
+            }
+        }
+
+        &:last-child {
+            &
+                > div {
+                border-top-right-radius: $planck-length;
+                border-bottom-right-radius: $planck-length;
+            }
+        }
+    }
+
+    &__swatch {
+        width: 100%;
+        height: $planck-length *
+            7;
+        margin-bottom: $planck-length;
+        box-shadow: $box-shadow-default;
+    }
+}

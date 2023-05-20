@@ -2,7 +2,7 @@ import {
     IButtonComponent
 } from './types';
 
-import './style.scss';
+import './styles.scss';
 
 const ButtonComponent: React.FC<IButtonComponent> = (props) => {
     const {
