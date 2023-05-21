@@ -10,14 +10,14 @@ import {
     ValidationChain
 } from 'express-validator/src/chain';
 
-import UserController from '../../../controllers/UserController';
+import EnrollmentController from '../../../controllers/EnrollmentController';
 
 import errorResponseHandler from '../../../utils/errorResponseHandler';
 import validationResponseHandle from '../../../utils/validationResponseHandler';
 
 import RateLimiter from '../../RateLimiter';
 
-const userController = new UserController();
+const enrollmentController = new EnrollmentController();
 
 const rateLimiter = new RateLimiter();
 const router = express.Router();
@@ -58,7 +58,7 @@ router.post('/enroll', [
             }
         } = request;
 
-        await userController.enroll({
+        await enrollmentController.enroll({
             emailAddress,
             firstName,
             invitationToken,
@@ -66,7 +66,7 @@ router.post('/enroll', [
             password
         });
 
-        return response.send({}).status(200);
+        return response.sendStatus(201);
     } catch (error) {
         return errorResponseHandler(error, response);
     }

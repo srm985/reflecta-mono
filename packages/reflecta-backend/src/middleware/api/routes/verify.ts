@@ -3,33 +3,26 @@ import express, {
     Response
 } from 'express';
 import {
-    body,
+    query,
     validationResult
 } from 'express-validator';
-import {
-    ValidationChain
-} from 'express-validator/src/chain';
 
-import AuthenticationController from '../../../controllers/AuthenticationController';
+import EnrollmentController from '../../../controllers/EnrollmentController';
 
 import errorResponseHandler from '../../../utils/errorResponseHandler';
 import validationResponseHandle from '../../../utils/validationResponseHandler';
 
 import RateLimiter from '../../RateLimiter';
 
-const authenticationController = new AuthenticationController();
-
-const rateLimiter = new RateLimiter();
+const enrollmentController = new EnrollmentController();
+const rateLimiter = new RateLimiter(5, 60000);
 const router = express.Router();
 
-const inputValidations: ValidationChain[] = [
-    body('emailAddress').trim().isEmail().normalizeEmail()
-        .not()
-        .isEmpty(),
-    body('password').not().isEmpty()
+const inputValidations = [
+    query('enrollmentToken').trim().not().isEmpty()
 ];
 
-router.post('/login', [
+router.get('/verify', [
     rateLimiter.limited,
     ...inputValidations
 ], async (request: Request, response: Response) => {
@@ -41,17 +34,22 @@ router.post('/login', [
         return response.status(422).send(errorMessagesList);
     }
 
+    const {
+        query: {
+            enrollmentToken
+        }
+    } = request || {};
+
     try {
         const {
-            body: {
-                emailAddress,
-                password
+            env: {
+                BASE_URL_APPLICATION
             }
-        } = request;
+        } = process;
 
-        await authenticationController.login(emailAddress, password);
+        await enrollmentController.verifyEnrollmentToken(enrollmentToken as string);
 
-        return response.send({}).status(200);
+        return response.redirect(`${BASE_URL_APPLICATION}/login`);
     } catch (error) {
         return errorResponseHandler(error, response);
     }

@@ -1,4 +1,5 @@
 import {
+    OkPacket,
     RowDataPacket
 } from 'mysql2';
 
@@ -8,22 +9,24 @@ export interface UsersSchema {
     created_at: string;
     email_address: string;
     first_name: string;
-    is_active: string;
+    is_active: boolean;
+    is_admin: boolean;
     last_name: string;
     password: string;
     updated_at: string;
-    user_id: string;
+    user_id: number;
 }
 
 export interface UserDetails {
     createdAt?: string;
     emailAddress: string;
     firstName: string;
-    isActive?: string;
+    isActive?: boolean;
+    isAdmin?: boolean;
     lastName: string;
     password: string;
     updatedAt?: string;
-    userID?: string;
+    userID?: number;
 }
 
 class UsersModel {
@@ -50,7 +53,17 @@ class UsersModel {
         return !!userDetails;
     };
 
-    addUser = async (userDetails: UserDetails) => {
+    activateUser = async (userID: number) => {
+        const query = 'UPDATE ?? SET is_active = TRUE WHERE user_id = ?';
+        const values = [
+            this.TABLE_NAME,
+            userID
+        ];
+
+        await pool.query(query, values);
+    };
+
+    addUser = async (userDetails: UserDetails): Promise<number | undefined> => {
         const {
             emailAddress,
             firstName,
@@ -58,8 +71,8 @@ class UsersModel {
             password
         } = userDetails;
 
-        const query = 'INSERT INTO ?? (email_address, first_name, last_name, password, is_active) VALUES (?, ?, ?, ?, FALSE)';
-        const values = [
+        const query1 = 'INSERT INTO ?? (email_address, first_name, last_name, password, is_active) VALUES (?, ?, ?, ?, FALSE)';
+        const values1 = [
             this.TABLE_NAME,
             emailAddress,
             firstName,
@@ -67,7 +80,23 @@ class UsersModel {
             password
         ];
 
-        await pool.query(query, values);
+        await pool.query<OkPacket>(query1, values1);
+
+        const query2 = 'SELECT user_id as userID FROM ?? WHERE email_address = ?';
+        const values2 = [
+            this.TABLE_NAME,
+            emailAddress
+        ];
+
+        const [
+            [
+                {
+                    userID
+                }
+            ] = []
+        ] = await pool.query<UserDetails[] & RowDataPacket[][]>(query2, values2);
+
+        return userID;
     };
 }
 

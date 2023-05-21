@@ -20,7 +20,7 @@ const app: Application = express();
 
 const {
     env: {
-        CORS_ORIGIN,
+        BASE_URL_APPLICATION,
         SERVER_PORT
     }
 } = process;
@@ -35,7 +35,7 @@ app.use(cors({
         'POST',
         'PUT'
     ],
-    origin: CORS_ORIGIN
+    origin: BASE_URL_APPLICATION
 }));
 app.use(helmet());
 app.use(morgan('dev'));
@@ -66,7 +66,6 @@ const server = app.listen(SERVER_PORT || 3100, async () => {
 
         connection.release();
     } catch (error) {
-        console.log('error...', error);
         logger.error(`unable to connect to database ${DATABASE_NAME} located at ${DATABASE_HOST}:${DATABASE_PORT} with user ${DATABASE_USER}...`);
     }
 });

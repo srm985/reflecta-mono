@@ -1,8 +1,15 @@
-import jwt from 'jsonwebtoken';
+import jwt, {
+    JwtPayload
+} from 'jsonwebtoken';
 
 import logger from './logger';
 
-export interface TokenDetails {}
+export interface TokenData {
+    [key: string]: string | number | boolean
+}
+export interface TokenPayload extends JwtPayload {
+    data: TokenData
+}
 
 const ONE_WEEK_SECONDS = 604_800;
 
@@ -19,7 +26,7 @@ class JWT {
         this.DEFAULT_TOKEN_EXPIRATION_SECONDS = parseInt(DEFAULT_TOKEN_EXPIRATION_SECONDS, 10) || ONE_WEEK_SECONDS;
     }
 
-    generateToken = (payload: TokenDetails, secretKey: string, expirationTimeSeconds?: number): string | undefined => {
+    generateToken = (payload: TokenData, secretKey: string, expirationTimeSeconds?: number): string | undefined => {
         const tokenExpirationTime = Math.floor(Date.now() / 1000) + (expirationTimeSeconds || this.DEFAULT_TOKEN_EXPIRATION_SECONDS);
 
         try {
@@ -34,9 +41,9 @@ class JWT {
         return undefined;
     };
 
-    decodeToken = (token: string, secretKey: string): TokenDetails | undefined => {
+    decodeToken = (token: string, secretKey: string): TokenPayload | string | undefined => {
         try {
-            return jwt.verify(token, secretKey);
+            return jwt.verify(token, secretKey) as TokenPayload;
         } catch (error) {
             logger.error(error);
         }
