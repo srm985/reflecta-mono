@@ -2,52 +2,56 @@
 
 .ColorPaletteComponent {
     width: 100%;
-    max-width: $planck-length *
-        80;
+    max-width: #{$planck-length *
+        100};
 }
 
 .ColorItemComponent {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: $planck-length *
-        4;
-
     &__group-colors-container {
         display: flex;
-        width: 80%;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: $margin-large;
     }
 
     &__swatch-container {
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
+        justify-content: space-between;
+        width: 100%;
+        height: #{$planck-length *
+            20};
+        margin-right: $margin-medium;
+        padding: $padding-small;
+        overflow: hidden;
 
         font-size: $font-size-xsmall;
-        text-align: center;
 
-        &:first-child {
-            &
-                > div {
-                border-top-left-radius: $planck-length;
-                border-bottom-left-radius: $planck-length;
-            }
-        }
+        background-color: $color-neutral-100;
+        border-radius: $border-radius-medium;
+        box-shadow: $box-shadow-default;
 
-        &:last-child {
-            &
-                > div {
-                border-top-right-radius: $planck-length;
-                border-bottom-right-radius: $planck-length;
-            }
+        &:last-of-type {
+            margin-right: 0;
         }
     }
 
     &__swatch {
-        width: 100%;
-        height: $planck-length *
-            7;
-        margin-bottom: $planck-length;
+        width: calc(
+            100% +
+                #{$planck-length *
+                4}
+        );
+        height: 60%;
+        margin: -#{$margin-small} -#{$margin-small}
+            0;
 
-        box-shadow: $box-shadow-default;
+        border-bottom: solid
+            1px
+            $color-neutral-200;
+    }
+
+    p {
+        margin-bottom: $margin-small;
     }
 }

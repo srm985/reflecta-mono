@@ -13,7 +13,7 @@ export interface UsersSchema {
     is_admin: boolean;
     last_name: string;
     password: string;
-    updated_at: string;
+    updated_at: string | null;
     user_id: number;
 }
 
@@ -25,14 +25,14 @@ export interface UserDetails {
     isAdmin?: boolean;
     lastName: string;
     password: string;
-    updatedAt?: string;
+    updatedAt?: string | null;
     userID?: number;
 }
 
 class UsersModel {
     private readonly TABLE_NAME = 'users';
 
-    userDetailsByEmailAddress = async (emailAddress: string, isActiveUserOnly: boolean = false): Promise<UserDetails | undefined> => {
+    userDetailsByEmailAddress = async (emailAddress: string, isActiveUserOnly: boolean = false): Promise<UsersSchema | undefined> => {
         const query = 'SELECT * FROM ?? WHERE email_address = ?';
         const values = [
             this.TABLE_NAME,
@@ -42,7 +42,7 @@ class UsersModel {
 
         const [
             results = []
-        ] = await pool.query<UserDetails[] & RowDataPacket[][]>(query, values);
+        ] = await pool.query<UsersSchema[] & RowDataPacket[][]>(query, values);
 
         return results[0];
     };
@@ -97,6 +97,17 @@ class UsersModel {
         ] = await pool.query<UserDetails[] & RowDataPacket[][]>(query2, values2);
 
         return userID;
+    };
+
+    updatePassword = async (userID: number, password: string) => {
+        const query = 'UPDATE ?? SET password = ? WHERE user_id = ?';
+        const values = [
+            this.TABLE_NAME,
+            password,
+            userID
+        ];
+
+        await pool.query<OkPacket>(query, values);
     };
 }
 

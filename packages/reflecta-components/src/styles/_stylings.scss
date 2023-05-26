@@ -1,0 +1,18 @@
+// Border Radiuses
+$border-radius-small: #{$planck-length /
+    2};
+$border-radius-medium: #{$planck-length};
+$border-radius-large: #{$planck-length *
+    2};
+
+// Box Shadows
+$box-shadow-default: (
+        $planck-length /
+            2
+    )
+    (
+        $planck-length /
+            2
+    )
+    $planck-length
+    $color-neutral-300;

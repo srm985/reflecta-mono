@@ -2,24 +2,19 @@
 @import './colors';
 @import './units';
 @import './fonts';
+@import './spacings';
+@import './stylings';
 
-// Global Variables
-$box-shadow-default:
-        (
-        $planck-length /
-            2
-    )
-    (
-        $planck-length /
-            2
-    )
-    $planck-length;
+* {
+    box-sizing: border-box;
+}
 
 body {
-    color: $color-text;
+    color: $color-neutral-400;
     font-weight: 500;
     font-size: 18px;
     font-family: $font-family-default;
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizelegibility;

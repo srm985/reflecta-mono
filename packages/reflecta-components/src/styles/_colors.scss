@@ -3,40 +3,104 @@
 /* stylelint-disable selector-pseudo-class-no-unknown */
 
 /* stylelint-disable scss/declaration-nested-properties */
-$color-primary: #5da2d5; // Serene Sky
-$color-secondary: #b3d4e0; // Misty Morning
-$color-gray: #cfcfcf; // Whispering Ash
-$color-success: #59c48a; // Dewy Meadow
-$color-accent: #ff6f40; // Sun-Kissed Coral
-$color-white: #f5f5f5; // Ivory Cloud
-$color-warning: #fdcb5b; // Golden Glow
-$color-danger: #ff5050; // Sunset Blush
-$color-black: #333333; // Shadowed Slate
-$color-text: #444444; // Charcoal Haze
+
+// Midnight Orchid (Primary)
+$color-primary-100: #1f1db2;
+$color-primary-200: #1b1999;
+$color-primary-300: #161580;
+$color-primary-400: #121166;
+$color-primary-500: #0d0c4d;
+
+// Aquatic Breeze (Secondary)
+$color-secondary-100: #bff6ff;
+$color-secondary-200: #80eeff;
+$color-secondary-300: #00dcff;
+$color-secondary-400: #00a5bf;
+$color-secondary-500: #006e80;
+
+// Luminous Azure (Accent)
+$color-accent-100: #bfdfff;
+$color-accent-200: #80c0ff;
+$color-accent-300: #0081ff;
+$color-accent-400: #0061bf;
+$color-accent-500: #004180;
+
+// Enchanted Moss (Success)
+$color-success-100: #a6ffbd;
+$color-success-200: #76f497;
+$color-success-300: #32c95a;
+$color-success-400: #0b9c31;
+$color-success-500: #005918;
+
+// Gilded Radiance (Warning)
+$color-warning-100: #ffe69a;
+$color-warning-200: #fdd350;
+$color-warning-300: #e4b217;
+$color-warning-400: #b48a08;
+$color-warning-500: #997300;
+
+// Ember Glow (Danger)
+$color-danger-100: #ff9999;
+$color-danger-200: #eb4f4f;
+$color-danger-300: #cf2e2e;
+$color-danger-400: #9d0c0c;
+$color-danger-500: #660000;
+
+// Neutrals
+$color-neutral-100: #f0f0fc;
+$color-neutral-200: #ceced9;
+$color-neutral-300: #797980;
+$color-neutral-400: #303033;
+$color-neutral-500: #020203;
 
 :export {
-    _1_primary: {
-        _1_color-primary: $color-primary;
+    _1_primary-midnight-orchid: {
+        _1_color-primary-100: $color-primary-100;
+        _2_color-primary-200: $color-primary-200;
+        _3_color-primary-300: $color-primary-300;
+        _4_color-primary-400: $color-primary-400;
+        _5_color-primary-500: $color-primary-500;
     }
-    _2_secondary: {
-        _1_color-secondary: $color-secondary;
+    _2_secondary-aquatic-breeze: {
+        _1_color-secondary-100: $color-secondary-100;
+        _2_color-secondary-200: $color-secondary-200;
+        _3_color-secondary-300: $color-secondary-300;
+        _4_color-secondary-400: $color-secondary-400;
+        _5_color-secondary-500: $color-secondary-500;
     }
-    _3_accent: {
-        _1_color-accent: $color-accent;
+    _3_accent-luminous-azure: {
+        _1_color-accent-100: $color-accent-100;
+        _2_color-accent-200: $color-accent-200;
+        _3_color-accent-300: $color-accent-300;
+        _4_color-accent-400: $color-accent-400;
+        _5_color-accent-500: $color-accent-500;
     }
-    _4_success: {
-        _1_color-success: $color-success;
+    _4_success-enchanted-moss: {
+        _1_color-success-100: $color-success-100;
+        _2_color-success-200: $color-success-200;
+        _3_color-success-300: $color-success-300;
+        _4_color-success-400: $color-success-400;
+        _5_color-success-500: $color-success-500;
     }
-    _5_warning: {
-        _1_color-warning: $color-warning;
+    _5_warning-gilded-radiance: {
+        _1_color-warning-100: $color-warning-100;
+        _2_color-warning-200: $color-warning-200;
+        _3_color-warning-300: $color-warning-300;
+        _4_color-warning-400: $color-warning-400;
+        _5_color-warning-500: $color-warning-500;
     }
-    _6_danger: {
-        _1_color-danger: $color-danger;
+    _6_danger-ember-glow: {
+        _1_color-danger-100: $color-danger-100;
+        _2_color-danger-200: $color-danger-200;
+        _3_color-danger-300: $color-danger-300;
+        _4_color-danger-400: $color-danger-400;
+        _5_color-danger-500: $color-danger-500;
     }
-    _7_neutrals: {
-        _1_color-white: $color-white;
-        _2_color-gray: $color-gray;
-        _3_color-text: $color-text;
-        _4_color-black: $color-black;
+    _7_neutral: {
+        _1_color-neutral-100: $color-neutral-100;
+        _2_color-neutral-200: $color-neutral-200;
+        _3_color-neutral-300: $color-neutral-300;
+        _4_color-neutral-400: $color-neutral-400;
+        _5_color-neutral-500: $color-neutral-500;
     }
 }

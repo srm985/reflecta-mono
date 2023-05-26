@@ -49,9 +49,30 @@ router.post('/login', [
             }
         } = request;
 
-        await authenticationController.login(emailAddress, password);
+        const {
+            env: {
+                BASE_URL_APPLICATION = '',
+                COOKIE_EXPIRATION_SECONDS = '',
+                COOKIE_SAME_SITE_CONFIG,
+                COOKIE_STORAGE_NAME = '',
+                NODE_ENV = ''
+            }
+        } = process;
 
-        return response.send({}).status(200);
+        const {
+            tokenHeaderPayload,
+            tokenSignature
+        } = await authenticationController.login(emailAddress, password);
+
+        return response.cookie(COOKIE_STORAGE_NAME, tokenHeaderPayload, {
+            domain: BASE_URL_APPLICATION,
+            httpOnly: true,
+            maxAge: parseInt(COOKIE_EXPIRATION_SECONDS, 10) * 1000,
+            sameSite: COOKIE_SAME_SITE_CONFIG === 'lax' ? 'lax' : 'none',
+            secure: NODE_ENV !== 'develop'
+        }).status(200).send({
+            tokenSignature
+        });
     } catch (error) {
         return errorResponseHandler(error, response);
     }

@@ -43,7 +43,7 @@ class InvitationTokensModel {
     };
 
     isInvitationTokenValid = async (invitationToken: string, emailAddress: string): Promise<boolean> => {
-        const query = 'SELECT invitation_token as invitationToken FROM ?? WHERE invitation_token = ? AND email_address = ? AND is_active = TRUE';
+        const query = 'SELECT invitation_token FROM ?? WHERE invitation_token = ? AND email_address = ? AND is_active = TRUE';
         const values = [
             this.TABLE_NAME,
             invitationToken,

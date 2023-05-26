@@ -8,7 +8,7 @@ export interface EnrollmentTokensSchema {
     created_at: string;
     enrollment_token: string;
     is_active: string;
-    updated_at: string;
+    updated_at: string | null;
     user_id: number;
 }
 
@@ -16,7 +16,7 @@ export interface EnrollmentToken {
     createdAt: string;
     enrollmentToken: string;
     isActive: string;
-    updatedAt: string;
+    updatedAt: string | null;
     userID: number;
 }
 
@@ -43,7 +43,7 @@ class EnrollmentTokensModel {
     };
 
     isEnrollmentTokenValid = async (enrollmentToken: string): Promise<boolean> => {
-        const query = 'SELECT enrollment_token as enrollmentToken FROM ?? WHERE enrollment_token = ? AND is_active = TRUE';
+        const query = 'SELECT enrollment_token FROM ?? WHERE enrollment_token = ? AND is_active = TRUE';
         const values = [
             this.TABLE_NAME,
             enrollmentToken

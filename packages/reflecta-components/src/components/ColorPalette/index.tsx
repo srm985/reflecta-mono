@@ -24,8 +24,10 @@ const ColorItemComponent = (props: ColorGroupDetails) => {
                     backgroundColor: colorDetails.colorValue
                 }}
             />
-            <p>{colorDetails.colorName}</p>
-            <p>{colorDetails.colorValue.toUpperCase()}</p>
+            <div>
+                <p>{colorDetails.colorName}</p>
+                <p>{colorDetails.colorValue.toUpperCase()}</p>
+            </div>
         </div>
     ));
 
@@ -56,9 +58,12 @@ const ColorPaletteComponent = () => {
         colorDetails,
         colorValue
     ]) => {
-        const groupName: string = colorDetails.split('-')[0].split('_')[2];
+        const groupNameDetails: string[] = colorDetails.split('_')[2].split('-');
+        const groupName: string = `${capitalizeWord(groupNameDetails[0])}${groupNameDetails.length > 2 ? ` (${capitalizeWord(groupNameDetails[1])} ${capitalizeWord(groupNameDetails[2])})` : ''}`;
         const groupOrder: number = parseInt(colorDetails.split('-')[0].split('_')[1], 10) - 1;
-        const colorName: string = colorDetails.split('-')[1].split('_')[2];
+        const colorName: string = colorDetails.split('_')[4];
+
+        console.log(groupName);
 
         const {
             [groupOrder]: {
@@ -74,7 +79,7 @@ const ColorPaletteComponent = () => {
                     colorValue: colorValue as string
                 }
             ],
-            groupName: capitalizeWord(groupName)
+            groupName
         };
     });
 
