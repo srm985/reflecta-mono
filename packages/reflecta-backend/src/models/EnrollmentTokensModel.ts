@@ -42,22 +42,20 @@ class EnrollmentTokensModel {
         return false;
     };
 
-    isEnrollmentTokenValid = async (enrollmentToken: string): Promise<boolean> => {
-        const query = 'SELECT enrollment_token FROM ?? WHERE enrollment_token = ? AND is_active = TRUE';
+    enrollmentTokenByUserID = async (userID: number): Promise<EnrollmentTokensSchema | undefined> => {
+        const query = 'SELECT * FROM ?? WHERE user_id = ? AND is_active = TRUE';
         const values = [
             this.TABLE_NAME,
-            enrollmentToken
+            userID
         ];
 
         const [
-            results = []
+            [
+                tokenDetails
+            ] = []
         ] = await pool.query<EnrollmentTokensSchema[] & RowDataPacket[][]>(query, values);
 
-        if (results.length) {
-            return true;
-        }
-
-        return false;
+        return tokenDetails;
     };
 
     invalidateEnrollmentToken = async (enrollmentToken: string) => {

@@ -16,8 +16,12 @@ export interface EnrollingUserDetails {
     password: string;
 }
 
+export interface EnrollmentTokenPayload {
+    userID: number;
+}
+
 class EnrollmentController {
-    private readonly enrollmentTokensModels: EnrollmentTokensModel;
+    private readonly enrollmentTokensModel: EnrollmentTokensModel;
 
     private readonly invitationTokensModel: InvitationTokensModel;
 
@@ -33,15 +37,18 @@ class EnrollmentController {
 
     private readonly BASE_URL_APPLICATION: string;
 
+    private readonly SALT_ROUNDS_TOKEN: number;
+
     constructor() {
         const {
             env: {
                 BASE_URL_API = '',
-                BASE_URL_APPLICATION = ''
+                BASE_URL_APPLICATION = '',
+                SALT_ROUNDS_TOKEN = ''
             }
         } = process;
 
-        this.enrollmentTokensModels = new EnrollmentTokensModel();
+        this.enrollmentTokensModel = new EnrollmentTokensModel();
         this.invitationTokensModel = new InvitationTokensModel();
         this.usersModel = new UsersModel();
 
@@ -52,6 +59,7 @@ class EnrollmentController {
 
         this.BASE_URL_API = BASE_URL_API;
         this.BASE_URL_APPLICATION = BASE_URL_APPLICATION;
+        this.SALT_ROUNDS_TOKEN = parseInt(SALT_ROUNDS_TOKEN, 10);
     }
 
     inviteUser = async (invitedUserEmailAddress: string) => {
@@ -62,9 +70,7 @@ class EnrollmentController {
         } = process;
 
         // We prepare an invitation token tied to the invitee's email address
-        const invitationToken = this.jwt.generateToken({
-            invitedUserEmailAddress
-        }, JWT_SECRET_KEY_INVITATION_TOKEN);
+        const invitationToken = this.jwt.generateToken({}, JWT_SECRET_KEY_INVITATION_TOKEN);
 
         if (!invitationToken) {
             throw new CustomError({
@@ -73,8 +79,13 @@ class EnrollmentController {
             });
         }
 
+        console.log(invitationToken);
+
+        // Hash our token for secure storage
+        const hashedInvitationToken = await this.secret.hash(invitationToken, this.SALT_ROUNDS_TOKEN);
+
         // Store our invitation token in database
-        await this.invitationTokensModel.insertInvitationToken(invitedUserEmailAddress, invitationToken);
+        await this.invitationTokensModel.insertInvitationToken(invitedUserEmailAddress, hashedInvitationToken);
 
         // Send off a quick email which should include a link and the invitation token for our prospective user
         await this.mailService.sendInvitation({
@@ -98,12 +109,26 @@ class EnrollmentController {
             }
         } = process;
 
-        const isTokenValid = await this.invitationTokensModel.isInvitationTokenValid(invitationToken, emailAddress);
+        const tokenDetails = await this.invitationTokensModel.invitationTokenByEmail(emailAddress);
 
-        // We only allow enrollment if you were given an invitation
-        if (!isTokenValid) {
+        // Enrollment requires a valid and active invitation token
+        if (!tokenDetails) {
             throw new CustomError({
-                privateMessage: `Invalid invitation token: ${invitationToken}...`,
+                privateMessage: `Invitation token: ${invitationToken} not found or no longer valid...`,
+                statusCode: 401
+            });
+        }
+
+        const {
+            invitation_token: hashedInvitationToken
+        } = tokenDetails;
+
+        const doTokensMatch = await this.secret.doSecretsMatch(invitationToken, hashedInvitationToken);
+
+        // Our tokens are hashed so we'll check to ensure the provided token is correct
+        if (!doTokensMatch) {
+            throw new CustomError({
+                privateMessage: `Provided invitation token: ${invitationToken} is not correct for email address: ${emailAddress}...`,
                 statusCode: 401
             });
         }
@@ -150,14 +175,19 @@ class EnrollmentController {
             });
         }
 
+        console.log(enrollmentToken);
+
+        // Hash our token for secure storage
+        const hashedEnrollmentToken = await this.secret.hash(enrollmentToken, this.SALT_ROUNDS_TOKEN);
+
         // Invalidate the invitation token and send email verification email
         await Promise.all([
-            this.enrollmentTokensModels.insertEnrollmentToken(userID, enrollmentToken),
+            this.invitationTokensModel.invalidateInvitationToken(invitationToken),
+            this.enrollmentTokensModel.insertEnrollmentToken(userID, hashedEnrollmentToken),
             this.mailService.sendEmailConfirmation({
                 emailConfirmationURL: `${this.BASE_URL_API}/api/verify?enrollmentToken=${enrollmentToken}`,
                 to: emailAddress
-            }),
-            this.invitationTokensModel.invalidateInvitationToken(invitationToken)
+            })
         ]);
     };
 
@@ -168,17 +198,7 @@ class EnrollmentController {
             }
         } = process;
 
-        const isTokenValid = await this.enrollmentTokensModels.isEnrollmentTokenValid(enrollmentToken);
-
-        // Does this exist in our database and is it active
-        if (!isTokenValid) {
-            throw new CustomError({
-                privateMessage: `Invalid invitation token: ${enrollmentToken}...`,
-                statusCode: 401
-            });
-        }
-
-        const jwtDetails = this.jwt.decodeToken(enrollmentToken, JWT_SECRET_KEY_ENROLLMENT_TOKEN);
+        const jwtDetails = this.jwt.decodeToken<EnrollmentTokenPayload>(enrollmentToken, JWT_SECRET_KEY_ENROLLMENT_TOKEN);
 
         // We expect an object payload if it's valid
         if (!jwtDetails || typeof jwtDetails !== 'object') {
@@ -194,17 +214,33 @@ class EnrollmentController {
             }
         } = jwtDetails;
 
-        // Quick sanity check to make sure we're not getting a spoofed token or anything
-        if (typeof userID !== 'number') {
+        const tokenDetails = await this.enrollmentTokensModel.enrollmentTokenByUserID(userID);
+
+        // Enrollment requires a valid and active invitation token
+        if (!tokenDetails) {
             throw new CustomError({
-                privateMessage: `Invalid invitation token user ID: ${enrollmentToken}...`,
+                privateMessage: `Enrollment token: ${enrollmentToken} not found or no longer valid...`,
+                statusCode: 401
+            });
+        }
+
+        const {
+            enrollment_token: hashedEnrollmentToken
+        } = tokenDetails;
+
+        const doTokensMatch = await this.secret.doSecretsMatch(enrollmentToken, hashedEnrollmentToken);
+
+        // Our tokens are hashed so we'll check to ensure the provided token is correct
+        if (!doTokensMatch) {
+            throw new CustomError({
+                privateMessage: `Provided enrollment token: ${enrollmentToken} is not correct for user ID: ${userID}...`,
                 statusCode: 401
             });
         }
 
         // Activate our user and invalidate the activation token
         await Promise.all([
-            this.enrollmentTokensModels.invalidateEnrollmentToken(enrollmentToken),
+            this.enrollmentTokensModel.invalidateEnrollmentToken(enrollmentToken),
             this.usersModel.activateUser(userID)
         ]);
     };

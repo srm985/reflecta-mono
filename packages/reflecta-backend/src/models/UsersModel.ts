@@ -32,12 +32,12 @@ export interface UserDetails {
 class UsersModel {
     private readonly TABLE_NAME = 'users';
 
-    userDetailsByEmailAddress = async (emailAddress: string, isActiveUserOnly: boolean = false): Promise<UsersSchema | undefined> => {
-        const query = 'SELECT * FROM ?? WHERE email_address = ?';
+    userDetailsByEmailAddress = async (emailAddress: string, isActiveUser: boolean = true): Promise<UsersSchema | undefined> => {
+        const query = 'SELECT * FROM ?? WHERE email_address = ? AND is_active = ?';
         const values = [
             this.TABLE_NAME,
             emailAddress,
-            isActiveUserOnly
+            isActiveUser
         ];
 
         const [

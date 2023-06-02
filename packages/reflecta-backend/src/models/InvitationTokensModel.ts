@@ -42,23 +42,20 @@ class InvitationTokensModel {
         return false;
     };
 
-    isInvitationTokenValid = async (invitationToken: string, emailAddress: string): Promise<boolean> => {
-        const query = 'SELECT invitation_token FROM ?? WHERE invitation_token = ? AND email_address = ? AND is_active = TRUE';
+    invitationTokenByEmail = async (emailAddress: string): Promise<InvitationTokensSchema | undefined> => {
+        const query = 'SELECT * FROM ?? WHERE email_address = ? AND is_active = TRUE';
         const values = [
             this.TABLE_NAME,
-            invitationToken,
             emailAddress
         ];
 
         const [
-            results = []
+            [
+                tokenDetails
+            ] = []
         ] = await pool.query<InvitationTokensSchema[] & RowDataPacket[][]>(query, values);
 
-        if (results.length) {
-            return true;
-        }
-
-        return false;
+        return tokenDetails;
     };
 
     invalidateInvitationToken = async (invitationToken: string) => {

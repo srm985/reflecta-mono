@@ -4,10 +4,10 @@ import jwt, {
 
 import logger from './logger';
 
-export interface TokenData {
+export interface TokenDataDefault {
     [key: string]: string | number | boolean
 }
-export interface TokenPayload extends JwtPayload {
+export interface TokenPayload<TokenData> extends JwtPayload {
     data: TokenData
 }
 
@@ -26,7 +26,7 @@ class JWT {
         this.DEFAULT_TOKEN_EXPIRATION_SECONDS = parseInt(DEFAULT_TOKEN_EXPIRATION_SECONDS, 10) || ONE_WEEK_SECONDS;
     }
 
-    generateToken = (payload: TokenData, secretKey: string, expirationTimeSeconds?: number): string | undefined => {
+    generateToken = (payload: TokenDataDefault, secretKey: string, expirationTimeSeconds?: number): string | undefined => {
         const tokenExpirationTime = Math.floor(Date.now() / 1000) + (expirationTimeSeconds || this.DEFAULT_TOKEN_EXPIRATION_SECONDS);
 
         try {
@@ -41,9 +41,9 @@ class JWT {
         return undefined;
     };
 
-    decodeToken = (token: string, secretKey: string): TokenPayload | string | undefined => {
+    decodeToken = <TokenData>(token: string, secretKey: string): TokenPayload<TokenData> | string | undefined => {
         try {
-            return jwt.verify(token, secretKey) as TokenPayload;
+            return jwt.verify(token, secretKey) as TokenPayload<TokenData>;
         } catch (error) {
             logger.error(error);
         }
