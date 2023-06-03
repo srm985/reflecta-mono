@@ -10,17 +10,20 @@
         "../../.eslintrc.js"
     ],
     "overrides": [
-            {
-                "files": [
-                    "./*.js"
+        {
+            "files": [
+                "./*.js"
+            ],
+            "rules": {
+                "import/no-extraneous-dependencies": [
+                    0
                 ],
-                "rules": {
-                    "import/no-extraneous-dependencies": [
-                        0
-                    ]
-                }
+                "global-require": [
+                    0
+                ]
             }
-        ],
+        }
+    ],
     "parserOptions": {
         "project": "./tsconfig.json"
     },
@@ -218,6 +221,16 @@
                     {
                         "group": "parent",
                         "pattern": "../../../constants",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./withReducer",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./types",
                         "position": "after"
                     },
                     {

@@ -1,13 +1,9 @@
 // Paddings
-$padding-small: #{$planck-length};
-$padding-medium: #{$planck-length *
-    2};
-$padding-large: #{$planck-length *
-    4};
+$padding-small: $planck-length;
+$padding-medium: calc($planck-length * 2);
+$padding-large: calc($planck-length * 4);
 
 // Margins
-$margin-small: #{$planck-length};
-$margin-medium: #{$planck-length *
-    2};
-$margin-large: #{$planck-length *
-    4};
+$margin-small: $planck-length;
+$margin-medium: calc($planck-length * 2);
+$margin-large: calc($planck-length * 4);

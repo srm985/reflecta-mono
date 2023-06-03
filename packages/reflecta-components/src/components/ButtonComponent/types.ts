@@ -1,3 +1,6 @@
 export interface IButtonComponent {
-    label: string;
+    className?: string;
+    label?: string;
+    onClick?:() => void;
+    type?: 'submit' | 'reset' | 'button' | undefined;
 }

@@ -1,11 +1,16 @@
 const {
     CleanWebpackPlugin
 } = require('clean-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 const fs = require('fs/promises');
 const path = require('path');
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 module.exports = async () => {
     const {
@@ -33,6 +38,9 @@ module.exports = async () => {
     const declarationsList = directoriesList.map((componentName) => `declare module 'reflecta-components-module-federation/${componentName}';`);
 
     const plugins = [
+        new Dotenv({
+            systemvars: true
+        }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             // favicon: './src/assets/icons/favicon.ico',
@@ -48,7 +56,13 @@ module.exports = async () => {
         {
             apply: (compiler) => {
                 compiler.hooks.afterEmit.tap('GenerateModuleDeclarationPlugin', async () => {
-                    await fs.writeFile('./declarations/index.d.ts', declarationsList.join('\n'));
+                    const declarationsDirectory = './declarations';
+
+                    try {
+                        await fs.mkdir(declarationsDirectory);
+                    } catch (error) {}
+
+                    await fs.writeFile(`${declarationsDirectory}/index.d.ts`, declarationsList.join('\n'));
                 });
             }
         }

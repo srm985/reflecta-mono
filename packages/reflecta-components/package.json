@@ -25,6 +25,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
     "current-git-branch": "^1.1.0",
+    "dotenv": "^16.1.3",
     "eslint": "^8.37.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -72,8 +73,7 @@
   "scripts": {
     "build": "webpack",
     "build:storybook": "storybook build",
-    "config:local": "cross-env NODE_ENV=development WEBPACK_SERVER_PORT_COMPONENTS=3003",
-    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --open --config ./webpack.config.js --mode=development --port 3003\" \"npm:watch --silent\"",
+    "develop": "concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --config ./webpack.config.js --mode=development --port 3003\" \"npm:watch --silent\"",
     "lint": "concurrently --raw \"npm:lint:js --silent\" \"npm:lint:scss --silent\"",
     "lint:fix": "concurrently --raw \"eslint . --ext .ts,.tsx,.js --fix\" \"stylelint src/**/*  --color --allow-empty-input --fix\"",
     "lint:js": "eslint . --ext .ts,.tsx,.js",

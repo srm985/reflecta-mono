@@ -3,6 +3,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.2",
     "reflecta-components": "^1.0.0"
   },
   "description": "Journaling application UI meant to help offer analysis and insights into journal entries.",
@@ -19,6 +20,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
     "current-git-branch": "^1.1.0",
+    "dotenv": "^16.1.3",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.37.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -65,8 +67,7 @@
   "name": "reflecta-ui",
   "scripts": {
     "build": "webpack",
-    "config:local": "cross-env FEDERATED_COMPONENTS_URL=reflecta_components@http://localhost:3003/remoteEntry.js NODE_ENV=development WEBPACK_SERVER_PORT_UI=3000",
-    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --open --config ./webpack.config.js --mode=development\" \"npm:watch --silent\"",
+    "develop": "concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --open --config ./webpack.config.js\" \"npm:watch --silent\"",
     "lint": "concurrently --raw \"npm:lint:js --silent\" \"npm:lint:scss --silent\"",
     "lint:fix": "concurrently --raw \"eslint . --ext .ts,.tsx,.js --fix\" \"stylelint src/**/*  --color --allow-empty-input --fix\"",
     "lint:js": "eslint . --ext .ts,.tsx,.js",

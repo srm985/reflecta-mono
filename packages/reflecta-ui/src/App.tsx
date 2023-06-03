@@ -1,10 +1,26 @@
-import ButtonComponent from './components/remote/ButtonComponent';
+import {
+    BrowserRouter,
+    Route,
+    Routes
+} from 'react-router-dom';
+
+import ContainerComponent from './Components/HigherOrderComponents/ContainerComponent';
+import LoginView from './Views/LoginView';
 
 const App = () => (
-    <div>
-        <p>hello prod!</p>
-        <ButtonComponent label={'hey! foo'} />
-    </div>
+    <BrowserRouter>
+        <Routes>
+            <Route
+                element={<ContainerComponent />}
+                path={'/'}
+            >
+                <Route
+                    element={<LoginView />}
+                    path={'login'}
+                />
+            </Route>
+        </Routes>
+    </BrowserRouter>
 );
 
 export default App;

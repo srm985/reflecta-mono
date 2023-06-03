@@ -2,8 +2,7 @@
 
 .ColorPaletteComponent {
     width: 100%;
-    max-width: #{$planck-length *
-        100};
+    max-width: calc($planck-length * 100);
 }
 
 .ColorItemComponent {
@@ -19,8 +18,7 @@
         flex-direction: column;
         justify-content: space-between;
         width: 100%;
-        height: #{$planck-length *
-            20};
+        height: calc($planck-length * 20);
         margin-right: $margin-medium;
         padding: $padding-small;
         overflow: hidden;
@@ -37,18 +35,11 @@
     }
 
     &__swatch {
-        width: calc(
-            100% +
-                #{$planck-length *
-                4}
-        );
+        width: calc( 100% + ($planck-length * 4));
         height: 60%;
-        margin: -#{$margin-small} -#{$margin-small}
-            0;
+        margin: (-$margin-small) (-$margin-small) 0;
 
-        border-bottom: solid
-            1px
-            $color-neutral-200;
+        border-bottom: solid 1px $color-neutral-200;
     }
 
     p {

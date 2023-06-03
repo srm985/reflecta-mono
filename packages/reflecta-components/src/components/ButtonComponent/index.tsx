@@ -1,3 +1,5 @@
+import classNames from '../../utils/classNames';
+
 import {
     IButtonComponent
 } from './types';
@@ -6,19 +8,29 @@ import './styles.scss';
 
 const ButtonComponent: React.FC<IButtonComponent> = (props) => {
     const {
-        label
+        className,
+        label,
+        onClick,
+        type = 'button'
     } = props;
 
     const {
         displayName
     } = ButtonComponent;
 
+    const componentClassNames = classNames(
+        displayName,
+        className
+    );
+
     return (
         <button
-            className={displayName}
-            type={'button'}
+            className={componentClassNames}
+            onClick={onClick}
+            // eslint-disable-next-line react/button-has-type
+            type={type}
         >
-            {`prod2:${label}`}
+            {label}
         </button>
     );
 };
