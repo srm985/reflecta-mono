@@ -63,8 +63,6 @@ const ColorPaletteComponent = () => {
         const groupOrder: number = parseInt(colorDetails.split('-')[0].split('_')[1], 10) - 1;
         const colorName: string = colorDetails.split('_')[4];
 
-        console.log(groupName);
-
         const {
             [groupOrder]: {
                 groupColorsList = []
