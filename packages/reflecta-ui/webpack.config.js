@@ -5,6 +5,7 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
+const fs = require('fs/promises');
 const path = require('path');
 
 if (process.env.NODE_ENV !== 'production') {
@@ -20,6 +21,8 @@ module.exports = () => {
         }
     } = process;
 
+    const COMPONENT_REMOTE_NAME = 'reflecta-components-module-federation';
+
     const plugins = [
         new Dotenv({
             systemvars: true
@@ -33,9 +36,42 @@ module.exports = () => {
         }),
         new webpack.container.ModuleFederationPlugin({
             remotes: {
-                'reflecta-components-module-federation': FEDERATED_COMPONENTS_URL
+                COMPONENT_REMOTE_NAME: FEDERATED_COMPONENTS_URL
             }
-        })
+        }),
+        {
+            apply: (compiler) => {
+                compiler.hooks.afterEmit.tap('GenerateRemoteComponentDefinitions', async () => {
+                    const DECLARED_COMPONENTS_ROOT_DIRECTORY = '../reflecta-components/declarations/src/components';
+
+                    const results = await fs.readdir(DECLARED_COMPONENTS_ROOT_DIRECTORY, {
+                        withFileTypes: true
+                    });
+
+                    const DECLARATIONS_ROOT_DIRECTORY = './src/components/remotes';
+
+                    const componentCreationPromiseList = results.filter((result) => result.isDirectory()).map(async (result) => {
+                        const {
+                            name: componentName
+                        } = result;
+
+                        const componentDeclaration = `import React from 'react';\nimport {\n    I${componentName}\n} from 'reflecta-components/declarations/src/components/${componentName}/types';\n\nexport default React.lazy(() => import('${COMPONENT_REMOTE_NAME}/${componentName}')) as React.FC<I${componentName}>;\n`;
+
+                        const componentDirectory = `${DECLARATIONS_ROOT_DIRECTORY}/${componentName}`;
+
+                        try {
+                            await fs.mkdir(componentDirectory, {
+                                recursive: true
+                            });
+                        } catch (error) { }
+
+                        await fs.writeFile(`${componentDirectory}/index.tsx`, componentDeclaration);
+                    });
+
+                    await Promise.all(componentCreationPromiseList);
+                });
+            }
+        }
     ];
 
     const entry = './src/index.tsx';
