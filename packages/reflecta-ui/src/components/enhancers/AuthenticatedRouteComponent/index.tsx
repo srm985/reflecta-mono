@@ -3,7 +3,7 @@ import {
     Outlet
 } from 'react-router-dom';
 
-import Authentication from '@utils/Authentication';
+import Authentication from '../../../utils/Authentication';
 
 const authentication = new Authentication();
 

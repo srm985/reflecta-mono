@@ -9,7 +9,7 @@
             "@components/*": [
                 "./src/components/*"
             ],
-            "@constants/*": [
+            "@constants": [
                 "./src/constants.ts"
             ],
             "@modules/*": [
@@ -34,6 +34,7 @@
         "src/**/*",
         "src/*",
         "./*.js",
-        "./*.ts"
+        "./*.ts",
+        "!src/components/remotes/**/*"
     ]
 }

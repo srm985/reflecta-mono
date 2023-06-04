@@ -1,5 +1,8 @@
 
 import {
+    Suspense
+} from 'react';
+import {
     BrowserRouter,
     Route,
     Routes
@@ -11,25 +14,27 @@ import AuthenticatedRouteComponent from '@components/enhancers/AuthenticatedRout
 import ContainerComponent from '@components/enhancers/ContainerComponent';
 
 const App = () => (
-    <BrowserRouter>
-        <Routes>
-            <Route
-                element={<ContainerComponent />}
-                path={'/'}
-            >
+    <Suspense fallback={'loading...'}>
+        <BrowserRouter>
+            <Routes>
                 <Route
-                    element={<LoginView />}
-                    path={'login'}
-                />
-                <Route element={<AuthenticatedRouteComponent />}>
+                    element={<ContainerComponent />}
+                    path={'/'}
+                >
                     <Route
                         element={<LoginView />}
-                        path={'dashboard'}
+                        path={'login'}
                     />
+                    <Route element={<AuthenticatedRouteComponent />}>
+                        <Route
+                            element={<LoginView />}
+                            path={'dashboard'}
+                        />
+                    </Route>
                 </Route>
-            </Route>
-        </Routes>
-    </BrowserRouter>
+            </Routes>
+        </BrowserRouter>
+    </Suspense>
 );
 
 export default App;

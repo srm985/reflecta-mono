@@ -36,12 +36,12 @@ module.exports = () => {
         }),
         new webpack.container.ModuleFederationPlugin({
             remotes: {
-                COMPONENT_REMOTE_NAME: FEDERATED_COMPONENTS_URL
+                [COMPONENT_REMOTE_NAME]: FEDERATED_COMPONENTS_URL
             }
         }),
         {
             apply: (compiler) => {
-                compiler.hooks.afterEmit.tap('GenerateRemoteComponentDefinitions', async () => {
+                compiler.hooks.beforeCompile.tap('GenerateRemoteComponentDefinitions', async () => {
                     const DECLARED_COMPONENTS_ROOT_DIRECTORY = '../reflecta-components/declarations/src/components';
 
                     const results = await fs.readdir(DECLARED_COMPONENTS_ROOT_DIRECTORY, {
@@ -121,6 +121,11 @@ module.exports = () => {
                 '.tsx',
                 '.ts',
                 '.js'
+            ]
+        },
+        watchOptions: {
+            ignored: [
+                path.resolve(__dirname, 'src/components/remotes/')
             ]
         }
     });
