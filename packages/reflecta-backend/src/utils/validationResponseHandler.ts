@@ -3,7 +3,7 @@ import {
     ValidationError
 } from 'express-validator';
 
-import logger from './logger';
+import logger from '@utils/logger';
 
 export interface ErrorMessageDetails {
     errorMessage: string;

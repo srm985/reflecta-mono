@@ -1,8 +1,8 @@
-import colorVariables from '../../styles/_colors.scss';
-
 import {
     ColorGroupDetails
 } from './types';
+
+import colorVariables from '@styles/_colors.scss';
 
 import './styles.scss';
 

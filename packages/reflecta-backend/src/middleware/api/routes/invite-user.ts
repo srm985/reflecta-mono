@@ -10,12 +10,12 @@ import {
     ValidationChain
 } from 'express-validator/src/chain';
 
-import EnrollmentController from '../../../controllers/EnrollmentController';
+import EnrollmentController from '@controllers/EnrollmentController';
 
-import errorResponseHandler from '../../../utils/errorResponseHandler';
-import validationResponseHandle from '../../../utils/validationResponseHandler';
+import errorResponseHandler from '@utils/errorResponseHandler';
+import validationResponseHandle from '@utils/validationResponseHandler';
 
-import RateLimiter from '../../RateLimiter';
+import RateLimiter from '@middleware/RateLimiter';
 
 const enrollmentController = new EnrollmentController();
 

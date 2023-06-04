@@ -60,7 +60,7 @@ module.exports = async () => {
 
                     try {
                         await fs.mkdir(declarationsDirectory);
-                    } catch (error) {}
+                    } catch (error) { }
 
                     await fs.writeFile(`${declarationsDirectory}/index.d.ts`, declarationsList.join('\n'));
                 });
@@ -109,6 +109,13 @@ module.exports = async () => {
         },
         plugins,
         resolve: {
+            alias: {
+                '@components': path.resolve(__dirname, 'src/components'),
+                '@constants': path.resolve(__dirname, 'src/constants.ts'),
+                '@modules': path.resolve(__dirname, 'src/modules'),
+                '@styles': path.resolve(__dirname, 'src/styles'),
+                '@utils': path.resolve(__dirname, 'src/utils')
+            },
             extensions: [
                 '.tsx',
                 '.ts',

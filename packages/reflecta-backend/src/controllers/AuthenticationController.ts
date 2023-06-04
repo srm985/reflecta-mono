@@ -1,9 +1,9 @@
-import AuthenticationTokensModel from '../models/AuthenticationTokensModel';
-import UsersModel from '../models/UsersModel';
+import AuthenticationTokensModel from '@models/AuthenticationTokensModel';
+import UsersModel from '@models/UsersModel';
 
-import CustomError from '../utils/CustomError';
-import JWT from '../utils/JWT';
-import Secret from '../utils/Secret';
+import CustomError from '@utils/CustomError';
+import JWT from '@utils/JWT';
+import Secret from '@utils/Secret';
 
 export interface AuthenticationTokenPayload {
     emailAddress: string;

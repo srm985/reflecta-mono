@@ -10,12 +10,12 @@ import {
     ValidationChain
 } from 'express-validator/src/chain';
 
-import AuthenticationController from '../../../controllers/AuthenticationController';
+import AuthenticationController from '@controllers/AuthenticationController';
 
-import errorResponseHandler from '../../../utils/errorResponseHandler';
-import validationResponseHandle from '../../../utils/validationResponseHandler';
+import errorResponseHandler from '@utils/errorResponseHandler';
+import validationResponseHandle from '@utils/validationResponseHandler';
 
-import RateLimiter from '../../RateLimiter';
+import RateLimiter from '@middleware/RateLimiter';
 
 const authenticationController = new AuthenticationController();
 

@@ -15,10 +15,10 @@
                 "./*.js"
             ],
             "rules": {
-                "import/no-extraneous-dependencies": [
+                "global-require": [
                     0
                 ],
-                "global-require": [
+                "import/no-extraneous-dependencies": [
                     0
                 ]
             }
@@ -29,12 +29,16 @@
     },
     "root": true,
     "rules": {
+        "class-methods-use-this": [
+            0
+        ],
         "import/order": [
             "error",
             {
                 "alphabetize": {
-                    "caseInsensitive": false,
-                    "order": "asc"
+                    "caseInsensitive": true,
+                    "order": "asc",
+                    "orderImportKind": "asc"
                 },
                 "groups": [
                     "external",
@@ -45,182 +49,42 @@
                 "pathGroups": [
                     {
                         "group": "parent",
-                        "pattern": "./views/*",
+                        "pattern": "@views/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../views/*",
+                        "pattern": "@modules/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../../views/*",
+                        "pattern": "@components/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "./modules/*",
+                        "pattern": "@components/remotes/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../modules/*",
+                        "pattern": "@components/enhancers/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../../modules/*",
+                        "pattern": "@services/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "external",
+                        "pattern": "@utils/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../../../modules/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../**/config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../components/**/config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../components/**/config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./services",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./constants",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../constants",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../constants",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../constants",
+                        "pattern": "@constants",
                         "position": "after"
                     },
                     {
@@ -235,45 +99,14 @@
                     },
                     {
                         "group": "parent",
-                        "pattern": "./assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./assets/icons/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../assets/icons/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../assets/icons/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../assets/icons/*",
+                        "pattern": "@assets/*",
                         "position": "after"
                     }
-                ]
+                ],
+                "pathGroupsExcludedImportTypes": [
+                    "builtin"
+                ],
+                "warnOnUnassignedImports": true
             }
         ],
         "react/function-component-definition": [

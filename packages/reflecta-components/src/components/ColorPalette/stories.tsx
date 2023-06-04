@@ -1,4 +1,5 @@
 import ColorPaletteComponent from './index';
+
 import {
     IColorPalette
 } from './types';

@@ -1,12 +1,12 @@
-import EnrollmentTokensModel from '../models/EnrollmentTokensModel';
-import InvitationTokensModel from '../models/InvitationTokensModel';
-import UsersModel from '../models/UsersModel';
+import EnrollmentTokensModel from '@models/EnrollmentTokensModel';
+import InvitationTokensModel from '@models/InvitationTokensModel';
+import UsersModel from '@models/UsersModel';
 
-import MailService from '../services/MailService';
+import MailService from '@services/MailService';
 
-import CustomError from '../utils/CustomError';
-import JWT from '../utils/JWT';
-import Secret from '../utils/Secret';
+import CustomError from '@utils/CustomError';
+import JWT from '@utils/JWT';
+import Secret from '@utils/Secret';
 
 export interface EnrollingUserDetails {
     emailAddress: string;

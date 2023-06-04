@@ -2,9 +2,9 @@ import {
     FormEvent
 } from 'react';
 
-import ButtonComponent from '../../Components/RemoteComponents/ButtonComponent';
-import FormComponent from '../../Components/RemoteComponents/FormComponent';
-import InputComponent from '../../Components/RemoteComponents/InputComponent';
+import ButtonComponent from '../../components/remotes/ButtonComponent';
+import FormComponent from '../../components/remotes/FormComponent';
+import InputComponent from '../../components/remotes/InputComponent';
 
 import withReducer from './withReducer';
 

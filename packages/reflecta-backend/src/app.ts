@@ -9,9 +9,9 @@ import {
     AddressInfo
 } from 'net';
 
-import logger from './utils/logger';
+import logger from '@utils/logger';
 
-import middleware from './middleware';
+import middleware from '@middleware/index';
 
 import pool from './db';
 

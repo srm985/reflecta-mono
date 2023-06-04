@@ -2,7 +2,7 @@ import jwt, {
     JwtPayload
 } from 'jsonwebtoken';
 
-import logger from './logger';
+import logger from '@utils/logger';
 
 export interface TokenDataDefault {
     [key: string]: string | number | boolean

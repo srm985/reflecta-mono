@@ -7,12 +7,12 @@ import {
     validationResult
 } from 'express-validator';
 
-import EnrollmentController from '../../../controllers/EnrollmentController';
+import EnrollmentController from '@controllers/EnrollmentController';
 
-import errorResponseHandler from '../../../utils/errorResponseHandler';
-import validationResponseHandle from '../../../utils/validationResponseHandler';
+import errorResponseHandler from '@utils/errorResponseHandler';
+import validationResponseHandle from '@utils/validationResponseHandler';
 
-import RateLimiter from '../../RateLimiter';
+import RateLimiter from '@middleware/RateLimiter';
 
 const enrollmentController = new EnrollmentController();
 const rateLimiter = new RateLimiter(5, 60000);

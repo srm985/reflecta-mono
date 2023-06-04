@@ -1,4 +1,5 @@
 import ButtonComponent from './index';
+
 import {
     IButtonComponent
 } from './types';

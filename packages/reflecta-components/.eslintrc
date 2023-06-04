@@ -26,10 +26,10 @@
                 "./*.js"
             ],
             "rules": {
-                "no-console": [
+                "global-require": [
                     0
                 ],
-                "global-require": [
+                "no-console": [
                     0
                 ]
             }
@@ -43,8 +43,9 @@
             "error",
             {
                 "alphabetize": {
-                    "caseInsensitive": false,
-                    "order": "asc"
+                    "caseInsensitive": true,
+                    "order": "asc",
+                    "orderImportKind": "asc"
                 },
                 "groups": [
                     "external",
@@ -55,225 +56,44 @@
                 "pathGroups": [
                     {
                         "group": "parent",
-                        "pattern": "./views/*",
+                        "pattern": "@modules/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../views/*",
+                        "pattern": "@components/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "external",
+                        "pattern": "@utils/*",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../../views/*",
+                        "pattern": "@constants",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "./modules/*",
+                        "pattern": "./index",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../modules/*",
+                        "pattern": "./types",
                         "position": "after"
                     },
                     {
                         "group": "parent",
-                        "pattern": "../../modules/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../modules/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../components/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../HOCs/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../**/config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../components/**/config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../components/**/config",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../state/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./services",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../utils/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../routes",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./constants",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../constants",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../constants",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../constants",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../assets/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "./assets/icons/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../assets/icons/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../assets/icons/*",
-                        "position": "after"
-                    },
-                    {
-                        "group": "parent",
-                        "pattern": "../../../assets/icons/*",
+                        "pattern": "@styles/*",
                         "position": "after"
                     }
-                ]
+                ],
+                "pathGroupsExcludedImportTypes": [
+                    "builtin"
+                ],
+                "warnOnUnassignedImports": true
             }
         ],
         "react/function-component-definition": [

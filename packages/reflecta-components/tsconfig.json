@@ -2,7 +2,24 @@
     "compilerOptions": {
         "declaration": true,
         "jsx": "react-jsx",
-        "outDir": "./declarations"
+        "outDir": "./declarations",
+        "paths": {
+            "@components/*": [
+                "./src/components/*"
+            ],
+            "@constants/*": [
+                "./src/constants.ts"
+            ],
+            "@modules/*": [
+                "./src/modules/*"
+            ],
+            "@utils/*": [
+                "./src/utils/*"
+            ],
+            "@styles/*": [
+                "./src/styles/*"
+            ]
+        }
     },
     "exclude": [
         "./dist/**/*"

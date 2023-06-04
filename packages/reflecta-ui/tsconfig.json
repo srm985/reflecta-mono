@@ -1,7 +1,30 @@
 {
     "compilerOptions": {
         "jsx": "react-jsx",
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "paths": {
+            "@assets/*": [
+                "./src/assets/*"
+            ],
+            "@components/*": [
+                "./src/components/*"
+            ],
+            "@constants/*": [
+                "./src/constants.ts"
+            ],
+            "@modules/*": [
+                "./src/modules/*"
+            ],
+            "@services/*": [
+                "./src/services/*"
+            ],
+            "@utils/*": [
+                "./src/utils/*"
+            ],
+            "@views/*": [
+                "./src/views/*"
+            ]
+        }
     },
     "exclude": [
         "./dist/**/*"
