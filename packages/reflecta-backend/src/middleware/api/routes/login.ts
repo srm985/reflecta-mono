@@ -51,7 +51,7 @@ router.post('/login', [
 
         const {
             env: {
-                BASE_URL_APPLICATION = '',
+                COOKIE_DOMAIN = '',
                 COOKIE_EXPIRATION_SECONDS = '',
                 COOKIE_SAME_SITE_CONFIG,
                 COOKIE_STORAGE_NAME = '',
@@ -65,11 +65,12 @@ router.post('/login', [
         } = await authenticationController.login(emailAddress, password);
 
         return response.cookie(COOKIE_STORAGE_NAME, tokenHeaderPayload, {
-            domain: BASE_URL_APPLICATION,
+            domain: COOKIE_DOMAIN,
             httpOnly: true,
             maxAge: parseInt(COOKIE_EXPIRATION_SECONDS, 10) * 1000,
+            // Keeping TypeScript happy here with this ternary check
             sameSite: COOKIE_SAME_SITE_CONFIG === 'lax' ? 'lax' : 'none',
-            secure: NODE_ENV !== 'develop'
+            secure: NODE_ENV !== 'development'
         }).status(200).send({
             tokenSignature
         });

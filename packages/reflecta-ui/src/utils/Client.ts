@@ -16,7 +16,8 @@ class Client {
             const response = await axios({
                 data: payload,
                 method,
-                url: `${BASE_URL_API}/${serviceURL}`
+                url: `${BASE_URL_API}/${serviceURL}`,
+                withCredentials: true
             });
 
             return response.data;

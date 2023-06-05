@@ -20,7 +20,7 @@ const app: Application = express();
 
 const {
     env: {
-        BASE_URL_APPLICATION,
+        BASE_URL_CORS,
         SERVER_PORT
     }
 } = process;
@@ -35,7 +35,7 @@ app.use(cors({
         'POST',
         'PUT'
     ],
-    origin: BASE_URL_APPLICATION
+    origin: BASE_URL_CORS
 }));
 app.use(helmet());
 app.use(morgan('dev'));
