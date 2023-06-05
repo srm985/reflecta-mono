@@ -84,6 +84,11 @@
                     },
                     {
                         "group": "parent",
+                        "pattern": "@routes",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
                         "pattern": "@constants",
                         "position": "after"
                     },

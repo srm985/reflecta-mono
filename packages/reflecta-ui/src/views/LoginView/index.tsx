@@ -2,9 +2,15 @@ import {
     FormEvent
 } from 'react';
 
+import Client from '@utils/Client';
+
 import ButtonComponent from '@components/remotes/ButtonComponent';
 import FormComponent from '@components/remotes/FormComponent';
 import InputComponent from '@components/remotes/InputComponent';
+
+import {
+    ROUTE_API_LOGIN
+} from '@routes';
 
 import withReducer from './withReducer';
 
@@ -12,6 +18,8 @@ import {
     Action,
     ILoginView
 } from './types';
+
+const client = new Client();
 
 const LoginView: React.FC<ILoginView> = (props) => {
     const {
@@ -31,10 +39,22 @@ const LoginView: React.FC<ILoginView> = (props) => {
         });
     };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        console.log(state);
+        const {
+            emailAddress,
+            password
+        } = state;
+
+        const payload = await client.post(ROUTE_API_LOGIN, {
+            emailAddress,
+            password
+        });
+
+        console.log({
+            payload
+        });
     };
 
     return (

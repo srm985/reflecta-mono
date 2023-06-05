@@ -1,6 +1,8 @@
 {
+    "exec": "ts-node --transpile-only -r dotenv/config -r tsconfig-paths/register src/app.ts",
     "execMap": {
         "ts": "ts-node --transpile-only"
     },
+    "ext": "ts",
     "verbose": true
 }

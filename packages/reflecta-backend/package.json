@@ -24,6 +24,8 @@
     "@types/node": "^20.2.5",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.6",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.4"
   },
   "lint-staged": {
@@ -37,9 +39,9 @@
   "main": "index.js",
   "name": "reflecta-backend",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "config:local": "cross-env NODE_ENV=development",
-    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"nodemon -r dotenv/config ./src/app.ts\"",
+    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"nodemon\"",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "pre-commit": "cross-env FORCE_COLOR=true lint-staged",
@@ -50,6 +52,5 @@
     "watch:prettier": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent",
     "watch:scss": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent"
   },
-  "type": "module",
   "version": "1.0.0"
 }

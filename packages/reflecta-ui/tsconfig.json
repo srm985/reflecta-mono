@@ -15,6 +15,9 @@
             "@modules/*": [
                 "./src/modules/*"
             ],
+            "@routes": [
+                "./src/routes.ts"
+            ],
             "@services/*": [
                 "./src/services/*"
             ],

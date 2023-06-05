@@ -113,6 +113,7 @@ module.exports = () => {
                 '@components': path.resolve(__dirname, 'src/components'),
                 '@constants': path.resolve(__dirname, 'src/constants.ts'),
                 '@modules': path.resolve(__dirname, 'src/modules'),
+                '@routes': path.resolve(__dirname, 'src/routes.ts'),
                 '@services': path.resolve(__dirname, 'src/services'),
                 '@utils': path.resolve(__dirname, 'src/utils'),
                 '@views': path.resolve(__dirname, 'src/views')
