@@ -8,6 +8,10 @@ const config: StorybookConfig = {
         '@storybook/addon-essentials',
         '@storybook/addon-interactions'
     ],
+    core: {
+        disableTelemetry: true,
+        enableCrashReports: false
+    },
     docs: {
         autodocs: 'tag'
     },
