@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, {
     Application
@@ -27,6 +28,7 @@ const {
 
 // App Configurations
 app.disable('x-powered-by');
+app.use(cookieParser());
 app.use(cors({
     credentials: true,
     methods: [

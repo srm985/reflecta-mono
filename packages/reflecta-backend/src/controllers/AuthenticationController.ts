@@ -4,6 +4,7 @@ import UsersModel from '@models/UsersModel';
 import CustomError from '@utils/CustomError';
 import JWT from '@utils/JWT';
 import Secret from '@utils/Secret';
+import TokenHandler from '@utils/TokenHandler';
 
 export interface AuthenticationTokenPayload {
     emailAddress: string;
@@ -11,6 +12,9 @@ export interface AuthenticationTokenPayload {
     isAdmin: boolean;
     lastName: string;
     userID: number
+}
+export interface AuthenticationTokenPayloadLocals {
+    authenticationTokenPayload: AuthenticationTokenPayload
 }
 
 export interface AuthenticationToken {
@@ -27,18 +31,21 @@ class AuthenticationController {
 
     private readonly secret: Secret;
 
+    private readonly tokenHandler: TokenHandler;
+
     constructor() {
         this.authenticationTokensModel = new AuthenticationTokensModel();
         this.usersModel = new UsersModel();
 
         this.jwt = new JWT();
         this.secret = new Secret();
+        this.tokenHandler = new TokenHandler();
     }
 
     private generateToken = async (authenticationTokenPayload: AuthenticationTokenPayload): Promise<string> => {
         const {
             env: {
-                JWT_SECRET_KEY_LOGIN_TOKEN = ''
+                JWT_SECRET_KEY_AUTHENTICATION_TOKEN = ''
             }
         } = process;
 
@@ -56,7 +63,7 @@ class AuthenticationController {
             isAdmin,
             lastName,
             userID
-        }, JWT_SECRET_KEY_LOGIN_TOKEN);
+        }, JWT_SECRET_KEY_AUTHENTICATION_TOKEN);
 
         if (!authenticationToken) {
             throw new CustomError({
@@ -111,16 +118,7 @@ class AuthenticationController {
             userID
         });
 
-        const [
-            header,
-            payload,
-            tokenSignature
-        ] = authenticationToken.split('.');
-
-        return ({
-            tokenHeaderPayload: `${header}.${payload}`,
-            tokenSignature
-        });
+        return this.tokenHandler.split(authenticationToken);
     };
 }
 

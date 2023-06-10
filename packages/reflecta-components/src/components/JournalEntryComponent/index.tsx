@@ -5,24 +5,23 @@ import {
 import classNames from '@utils/classNames';
 
 import {
-    IInputComponent
+    IJournalEntryComponent
 } from './types';
 
-const InputComponent: React.FC<IInputComponent> = (props) => {
+const JournalEntryComponent: React.FC<IJournalEntryComponent> = (props) => {
     const {
-        autoCompleteType = 'off',
         className,
         label,
         name,
         onChange,
-        type
+        value
     } = props;
 
     const {
         displayName
-    } = InputComponent;
+    } = JournalEntryComponent;
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         onChange(event.target.value);
     };
 
@@ -41,16 +40,15 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
             >
                 {label}
             </label>
-            <input
-                autoComplete={autoCompleteType}
-                id={componentID}
+            <textarea
+                className={componentClassNames}
                 onChange={handleChange}
-                type={type}
+                value={value}
             />
         </div>
     );
 };
 
-InputComponent.displayName = 'InputComponent';
+JournalEntryComponent.displayName = 'JournalEntryComponent';
 
-export default InputComponent;
+export default JournalEntryComponent;
