@@ -23,6 +23,11 @@ export interface AuthenticationToken {
     tokenSignature: string;
 }
 
+export interface GenerateTokenResponse {
+    authenticationToken: string;
+    tokenID: string;
+}
+
 class AuthenticationController {
     private readonly authenticationTokensModel: AuthenticationTokensModel;
 
@@ -43,7 +48,7 @@ class AuthenticationController {
         this.tokenHandler = new TokenHandler();
     }
 
-    private generateToken = async (authenticationTokenPayload: AuthenticationTokenPayload): Promise<string> => {
+    private generateToken = (authenticationTokenPayload: AuthenticationTokenPayload): GenerateTokenResponse => {
         const {
             env: {
                 JWT_EXPIRATION_MINUTES_AUTHENTICATION_TOKEN = '',
@@ -81,9 +86,10 @@ class AuthenticationController {
             });
         }
 
-        await this.authenticationTokensModel.insertAuthenticationToken(userID, tokenID);
-
-        return tokenID;
+        return ({
+            authenticationToken,
+            tokenID
+        });
     };
 
     login = async (emailAddress: string, inputtedPassword: string): Promise<AuthenticationToken> => {
@@ -119,13 +125,18 @@ class AuthenticationController {
 
         await this.usersModel.updatePassword(userID, rehashedPassword);
 
-        const authenticationToken = await this.generateToken({
+        const {
+            authenticationToken, tokenID
+        } = this.generateToken({
             emailAddress,
             firstName,
             isAdmin,
             lastName,
             userID
         });
+
+        // Save our token ID to the authentication table
+        await this.authenticationTokensModel.insertAuthenticationToken(userID, tokenID);
 
         return this.tokenHandler.split(authenticationToken);
     };

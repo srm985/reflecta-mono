@@ -22,6 +22,10 @@ class Authentication {
     isAuthenticated = (): boolean => {
         const token = this.storage.readKeyLocal<string>(LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY);
 
+        console.log({
+            token
+        });
+
         return !!token;
     };
 }
