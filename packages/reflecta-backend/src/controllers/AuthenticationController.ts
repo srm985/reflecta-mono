@@ -2,6 +2,7 @@ import AuthenticationTokensModel from '@models/AuthenticationTokensModel';
 import UsersModel from '@models/UsersModel';
 
 import CustomError from '@utils/CustomError';
+import generateRandom from '@utils/generateRandom';
 import JWT from '@utils/JWT';
 import Secret from '@utils/Secret';
 import TokenHandler from '@utils/TokenHandler';
@@ -45,6 +46,7 @@ class AuthenticationController {
     private generateToken = async (authenticationTokenPayload: AuthenticationTokenPayload): Promise<string> => {
         const {
             env: {
+                JWT_EXPIRATION_MINUTES_AUTHENTICATION_TOKEN = '',
                 JWT_SECRET_KEY_AUTHENTICATION_TOKEN = ''
             }
         } = process;
@@ -57,13 +59,20 @@ class AuthenticationController {
             userID
         } = authenticationTokenPayload;
 
+        const tokenID = generateRandom();
+
         const authenticationToken = this.jwt.generateToken({
-            emailAddress,
-            firstName,
-            isAdmin,
-            lastName,
-            userID
-        }, JWT_SECRET_KEY_AUTHENTICATION_TOKEN);
+            expirationTimeMinutes: JWT_EXPIRATION_MINUTES_AUTHENTICATION_TOKEN,
+            payload: {
+                emailAddress,
+                firstName,
+                isAdmin,
+                lastName,
+                userID
+            },
+            secretKey: JWT_SECRET_KEY_AUTHENTICATION_TOKEN,
+            tokenID
+        });
 
         if (!authenticationToken) {
             throw new CustomError({
@@ -72,9 +81,9 @@ class AuthenticationController {
             });
         }
 
-        await this.authenticationTokensModel.insertAuthenticationToken(userID, authenticationToken);
+        await this.authenticationTokensModel.insertAuthenticationToken(userID, tokenID);
 
-        return authenticationToken;
+        return tokenID;
     };
 
     login = async (emailAddress: string, inputtedPassword: string): Promise<AuthenticationToken> => {

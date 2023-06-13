@@ -52,7 +52,7 @@ router.post('/login', [
         const {
             env: {
                 COOKIE_DOMAIN = '',
-                COOKIE_EXPIRATION_SECONDS = '',
+                COOKIE_EXPIRATION_MINUTES = '',
                 COOKIE_SAME_SITE_CONFIG,
                 COOKIE_STORAGE_NAME = '',
                 NODE_ENV = ''
@@ -67,7 +67,7 @@ router.post('/login', [
         return response.cookie(COOKIE_STORAGE_NAME, tokenHeaderPayload, {
             domain: COOKIE_DOMAIN,
             httpOnly: true,
-            maxAge: parseInt(COOKIE_EXPIRATION_SECONDS, 10) * 1000,
+            maxAge: parseInt(COOKIE_EXPIRATION_MINUTES, 10) * 60_000,
             // Keeping TypeScript happy here with this ternary check
             sameSite: COOKIE_SAME_SITE_CONFIG === 'lax' ? 'lax' : 'none',
             secure: NODE_ENV !== 'development'

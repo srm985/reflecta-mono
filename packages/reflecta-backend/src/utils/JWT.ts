@@ -8,32 +8,48 @@ export interface TokenDataDefault {
     [key: string]: string | number | boolean
 }
 export interface TokenPayload<TokenData> extends JwtPayload {
-    data: TokenData
+    data: TokenData,
+    exp: number;
+    jti: string;
+}
+
+export interface GenerateToken {
+    expirationTimeMinutes?: number | string;
+    payload?: TokenDataDefault;
+    secretKey: string;
+    tokenID: string;
 }
 
 const ONE_WEEK_SECONDS = 604_800;
 
 class JWT {
-    private readonly DEFAULT_TOKEN_EXPIRATION_SECONDS: number;
+    private readonly JWT_EXPIRATION_MINUTES_DEFAULT: number;
 
     constructor() {
         const {
             env: {
-                DEFAULT_TOKEN_EXPIRATION_SECONDS = ''
+                JWT_EXPIRATION_MINUTES_DEFAULT = ''
             }
         } = process;
 
-        this.DEFAULT_TOKEN_EXPIRATION_SECONDS = parseInt(DEFAULT_TOKEN_EXPIRATION_SECONDS, 10) || ONE_WEEK_SECONDS;
+        this.JWT_EXPIRATION_MINUTES_DEFAULT = parseInt(JWT_EXPIRATION_MINUTES_DEFAULT, 10) || ONE_WEEK_SECONDS;
     }
 
-    generateToken = (payload: TokenDataDefault, secretKey: string, expirationTimeSeconds?: number): string | undefined => {
-        const tokenExpirationTime = Math.floor(Date.now() / 1000) + (expirationTimeSeconds || this.DEFAULT_TOKEN_EXPIRATION_SECONDS);
-
+    generateToken = ({
+        expirationTimeMinutes = '',
+        payload = {},
+        secretKey,
+        tokenID
+    }: GenerateToken): string | undefined => {
         try {
+            const expiresIn: number = (typeof expirationTimeMinutes === 'number' ? expirationTimeMinutes : parseInt(expirationTimeMinutes, 10) || this.JWT_EXPIRATION_MINUTES_DEFAULT) * 60;
+
             return jwt.sign({
-                data: payload,
-                exp: tokenExpirationTime
-            }, secretKey);
+                data: payload
+            }, secretKey, {
+                expiresIn,
+                jwtid: tokenID
+            });
         } catch (error) {
             logger.error(error);
         }
@@ -41,7 +57,7 @@ class JWT {
         return undefined;
     };
 
-    decodeToken = <TokenData>(token: string, secretKey: string): TokenPayload<TokenData> | string | undefined => {
+    decodeToken = <TokenData>(token: string, secretKey: string): TokenPayload<TokenData> | undefined => {
         try {
             return jwt.verify(token, secretKey) as TokenPayload<TokenData>;
         } catch (error) {

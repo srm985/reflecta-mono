@@ -63,6 +63,12 @@ class Authentication {
     };
 
     required = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
+        const {
+            env: {
+                JWT_SECRET_KEY_AUTHENTICATION_TOKEN = ''
+            }
+        } = process;
+
         try {
             const authenticationToken = this.constructToken(request);
 
@@ -73,7 +79,17 @@ class Authentication {
                 });
             }
 
-            const isTokenValid = await this.authenticationTokensModel.isAuthenticationTokenValid(authenticationToken);
+            const providedTokenDetails = this.jwt.decodeToken<AuthenticationTokenPayload>(authenticationToken, JWT_SECRET_KEY_AUTHENTICATION_TOKEN);
+
+            // User didn't provided a token or the cryptographic signature is incorrect
+            if (!providedTokenDetails) {
+                throw new CustomError({
+                    privateMessage: `Authentication token: ${authenticationToken} not valid...`,
+                    statusCode: 401
+                });
+            }
+
+            const isTokenValid = await this.authenticationTokensModel.isAuthenticationTokenValid(providedTokenDetails.jti);
 
             if (!isTokenValid) {
                 throw new CustomError({
@@ -82,18 +98,8 @@ class Authentication {
                 });
             }
 
-            const {
-                env: {
-                    JWT_SECRET_KEY_AUTHENTICATION_TOKEN = ''
-                }
-            } = process;
-
-            const tokenData = this.jwt.decodeToken<AuthenticationTokenPayload>(authenticationToken, JWT_SECRET_KEY_AUTHENTICATION_TOKEN);
-
-            if (typeof tokenData === 'object') {
             // Stash the token payload for use in subsequent middlewares.
-                response.locals.authenticationTokenPayload = tokenData.data;
-            }
+            response.locals.authenticationTokenPayload = providedTokenDetails.data;
 
             return next();
         } catch (error) {
