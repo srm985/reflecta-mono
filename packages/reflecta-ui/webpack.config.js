@@ -52,11 +52,15 @@ module.exports = () => {
                     const DECLARATIONS_ROOT_DIRECTORY = './src/components/remotes';
 
                     try {
+                        console.log(`Attempting to drop ${DECLARATIONS_ROOT_DIRECTORY}...`);
+
                         await fs.rm(DECLARATIONS_ROOT_DIRECTORY, {
                             force: true,
                             recursive: true
                         });
                     } catch (error) { }
+
+                    console.log(`Generating ${DECLARATIONS_ROOT_DIRECTORY}...`);
 
                     await fs.mkdir(DECLARATIONS_ROOT_DIRECTORY, {
                         recursive: true
