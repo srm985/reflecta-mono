@@ -8,8 +8,6 @@ import {
     IJournalEntryInputComponent
 } from './types';
 
-import './styles.scss';
-
 const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props) => {
     const {
         className,

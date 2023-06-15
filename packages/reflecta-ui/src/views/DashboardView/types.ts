@@ -3,13 +3,11 @@ import {
 } from 'react';
 
 export interface JournalEntry {
-    body: string | null;
-    createdAt?: string;
-    deletedAt?: string | null;
-    entryID?: number;
-    title: string | null;
-    updatedAt?: string | null;
-    userID?: number;
+    body: string;
+    entryID: number;
+    occurredAt: string;
+    title: string;
+    updatedAt: string | null;
 }
 
 export interface State {

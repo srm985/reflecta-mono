@@ -8,6 +8,8 @@ import {
     Routes
 } from 'react-router-dom';
 
+import RootStylingComponent from '@components/remotes/RootStylingComponent';
+
 import AuthenticatedRouteComponent from '@components/enhancers/AuthenticatedRouteComponent';
 import ContainerComponent from '@components/enhancers/ContainerComponent';
 
@@ -16,6 +18,7 @@ const LoginView = React.lazy(() => import('@views/LoginView') as unknown as Prom
 
 const App = () => (
     <Suspense fallback={'loading...'}>
+        <RootStylingComponent />
         <BrowserRouter>
             <Routes>
                 <Route

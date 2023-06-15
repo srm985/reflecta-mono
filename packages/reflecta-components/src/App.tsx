@@ -1,4 +1,5 @@
+import './styles/styles.scss';
 
-const App = () => (<h1>{'Reflecta - Component Library'}</h1>);
+const App = () => (<span />);
 
 export default App;

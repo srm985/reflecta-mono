@@ -6,23 +6,23 @@ import {
 import pool from '../db';
 
 export interface JournalEntriesSchema {
-    body: string | null;
+    body: string;
     created_at: string;
     deleted_at: string | null;
     entry_id?: number;
     occurred_at: string;
-    title: string | null;
+    title: string;
     updated_at: string | null;
     user_id: number;
 }
 
 export interface JournalEntry {
-    body: string | null;
+    body: string;
     createdAt?: string;
     deletedAt?: string | null;
     entryID?: number;
     occurredAt: string;
-    title: string | null;
+    title: string;
     updatedAt?: string | null;
     userID?: number;
 }

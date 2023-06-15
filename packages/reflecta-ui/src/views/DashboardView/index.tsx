@@ -6,6 +6,8 @@ import {
 
 import Client from '@utils/Client';
 
+import JournalEntryDisplayComponent from '@components/remotes/JournalEntryDisplayComponent';
+
 import {
     ROUTE_API_JOURNAL_ENTRY
 } from '@routes';
@@ -51,7 +53,16 @@ const DashboardView: FC<IDashboardView> = (props) => {
     }, []);
 
     return (
-        <main className={displayName} />
+        <main className={displayName}>
+            {
+                state.journalEntriesList.map((journalEntryDetails) => (
+                    <JournalEntryDisplayComponent
+                        {...journalEntryDetails}
+                        key={journalEntryDetails.entryID}
+                    />
+                ))
+            }
+        </main>
     );
 };
 

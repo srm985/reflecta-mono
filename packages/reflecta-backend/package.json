@@ -27,6 +27,7 @@
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.2.5",
     "nodemon": "^2.0.22",
+    "onchange": "^7.1.0",
     "sequelize": "^6.32.0",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.6",
@@ -46,16 +47,13 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "config:local": "cross-env NODE_ENV=development",
-    "develop": "npm run config:local concurrently --raw \"npm:lint --silent\" \"nodemon\"",
+    "develop": "npm run config:local concurrently --raw \"nodemon\" \"npm:watch --silent\"",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "pre-commit": "cross-env FORCE_COLOR=true lint-staged",
     "start": "npm run develop",
     "update": "npm update --save/--save-dev",
-    "watch": "concurrently --raw \"npm:watch:js --silent\" \"npm:watch:scss --silent\"",
-    "watch:js": "onchange --delay 500 \"src/**/*.(ts|tsx)\" -- npm run lint:js --silent",
-    "watch:prettier": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent",
-    "watch:scss": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent"
+    "watch": "onchange --delay 500 \"src/**/*.(ts|tsx)\" -- npm run lint --silent"
   },
   "version": "1.0.0"
 }

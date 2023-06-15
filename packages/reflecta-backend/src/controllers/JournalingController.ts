@@ -4,6 +4,8 @@ import JournalEntriesModel, {
 
 import CustomError from '@utils/CustomError';
 
+export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'occurredAt' | 'title' | 'updatedAt'>;
+
 class JournalingController {
     private readonly journalEntriesModel: JournalEntriesModel;
 
@@ -39,9 +41,8 @@ class JournalingController {
         await this.journalEntriesModel.modifyJournalEntry(entryID, entryDetails);
     };
 
-    getAllEntriesByUserID = async (userID: number): Promise<JournalEntry[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map((entryDetails): JournalEntry => ({
+    getAllEntriesByUserID = async (userID: number): Promise<JournalEntry[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map((entryDetails): JournalEntryResponse => ({
         body: entryDetails.body,
-        createdAt: entryDetails.created_at,
         entryID: entryDetails.entry_id,
         occurredAt: entryDetails.occurred_at,
         title: entryDetails.title,
