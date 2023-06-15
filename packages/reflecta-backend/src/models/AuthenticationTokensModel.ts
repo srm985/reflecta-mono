@@ -43,7 +43,7 @@ class AuthenticationTokensModel {
     };
 
     isAuthenticationTokenValid = async (tokenID: string): Promise<boolean> => {
-        const query = 'SELECT authentication_token FROM ?? WHERE token_id = ? AND is_active = TRUE';
+        const query = 'SELECT * FROM ?? WHERE token_id = ? AND is_active = TRUE';
         const values = [
             this.TABLE_NAME,
             tokenID

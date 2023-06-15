@@ -1,3 +1,4 @@
+export const ROUTE_API_JOURNAL_ENTRY = 'journal-entry';
 export const ROUTE_API_LOGIN = 'login';
 
 export const ROUTE_UI_DEFAULT = '/';

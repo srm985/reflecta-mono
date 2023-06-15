@@ -19,13 +19,14 @@ class Authentication {
         this.storage.clearKeyLocal(LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY);
     };
 
-    isAuthenticated = (): boolean => {
+    retrieve = (): string | undefined => {
         const token = this.storage.readKeyLocal<string>(LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY);
 
-        console.log({
-            LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY,
-            token
-        });
+        return token;
+    };
+
+    isAuthenticated = (): boolean => {
+        const token = this.retrieve();
 
         return !!token;
     };

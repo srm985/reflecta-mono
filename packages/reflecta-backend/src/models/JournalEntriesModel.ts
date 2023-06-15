@@ -10,6 +10,7 @@ export interface JournalEntriesSchema {
     created_at: string;
     deleted_at: string | null;
     entry_id?: number;
+    occurred_at: string;
     title: string | null;
     updated_at: string | null;
     user_id: number;
@@ -20,6 +21,7 @@ export interface JournalEntry {
     createdAt?: string;
     deletedAt?: string | null;
     entryID?: number;
+    occurredAt: string;
     title: string | null;
     updatedAt?: string | null;
     userID?: number;
@@ -31,15 +33,17 @@ class JournalEntriesModel {
     insertJournalEntry = async (userID: number, entryDetails: JournalEntry) => {
         const {
             body,
+            occurredAt,
             title
         } = entryDetails;
 
-        const query = 'INSERT INTO ?? (user_id, title, body) VALUES (?, ?, ?)';
+        const query = 'INSERT INTO ?? (user_id, title, body, occurred_at) VALUES (?, ?, ?)';
         const values = [
             this.TABLE_NAME,
             userID,
             title,
-            body
+            body,
+            occurredAt
         ];
 
         await pool.query(query, values);
@@ -48,14 +52,16 @@ class JournalEntriesModel {
     modifyJournalEntry = async (entryID: number, entryDetails: JournalEntry) => {
         const {
             body,
+            occurredAt,
             title
         } = entryDetails;
 
-        const query = 'UPDATE ?? SET title = ?, body = ? WHERE entry_id = ?';
+        const query = 'UPDATE ?? SET title = ?, body = ?, occurred_at = ? WHERE entry_id = ?';
         const values = [
             this.TABLE_NAME,
             title,
             body,
+            occurredAt,
             entryID
         ];
 

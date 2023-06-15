@@ -21,6 +21,7 @@ module.exports = async () => {
     } = process;
 
     const COMPONENT_ROOT = './src/components';
+    const DECLARATIONS_DIRECTORY = './declarations';
 
     const results = await fs.readdir(COMPONENT_ROOT, {
         withFileTypes: true
@@ -55,14 +56,28 @@ module.exports = async () => {
         }),
         {
             apply: (compiler) => {
-                compiler.hooks.afterEmit.tap('GenerateModuleDeclarationPlugin', async () => {
-                    const declarationsDirectory = './declarations';
-
+                // I found some lingering artifacts so we empty the directory before each build
+                compiler.hooks.beforeRun.tapAsync('GenerateModuleDeclarationPlugin', async (_, callback) => {
                     try {
-                        await fs.mkdir(declarationsDirectory);
+                        await fs.rm(DECLARATIONS_DIRECTORY, {
+                            force: true,
+                            recursive: true
+                        });
                     } catch (error) { }
 
-                    await fs.writeFile(`${declarationsDirectory}/index.d.ts`, declarationsList.join('\n'));
+                    await fs.mkdir(DECLARATIONS_DIRECTORY);
+
+                    callback();
+                });
+            }
+        },
+        {
+            apply: (compiler) => {
+                // This generates the declarations module used for importing components into UI
+                compiler.hooks.afterCompile.tapAsync('GenerateModuleDeclarationPlugin', async (_, callback) => {
+                    await fs.writeFile(`${DECLARATIONS_DIRECTORY}/index.d.ts`, declarationsList.join('\n'));
+
+                    callback();
                 });
             }
         }

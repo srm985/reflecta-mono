@@ -1,6 +1,6 @@
 export type Value = string | number;
 
-export interface IJournalEntryComponent {
+export interface IJournalEntryInputComponent {
     className?: string;
     label: string;
     name: string;

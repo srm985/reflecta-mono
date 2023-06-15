@@ -5,10 +5,12 @@ import {
 import classNames from '@utils/classNames';
 
 import {
-    IJournalEntryComponent
+    IJournalEntryInputComponent
 } from './types';
 
-const JournalEntryComponent: React.FC<IJournalEntryComponent> = (props) => {
+import './styles.scss';
+
+const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props) => {
     const {
         className,
         label,
@@ -19,7 +21,7 @@ const JournalEntryComponent: React.FC<IJournalEntryComponent> = (props) => {
 
     const {
         displayName
-    } = JournalEntryComponent;
+    } = JournalEntryInputComponent;
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         onChange(event.target.value);
@@ -49,6 +51,6 @@ const JournalEntryComponent: React.FC<IJournalEntryComponent> = (props) => {
     );
 };
 
-JournalEntryComponent.displayName = 'JournalEntryComponent';
+JournalEntryInputComponent.displayName = 'JournalEntryInputComponent';
 
-export default JournalEntryComponent;
+export default JournalEntryInputComponent;

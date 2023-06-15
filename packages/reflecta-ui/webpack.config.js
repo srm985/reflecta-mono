@@ -42,7 +42,7 @@ module.exports = () => {
         {
             apply: (compiler) => {
                 // This only gets called on build so you need to rebuild any time there are new components
-                compiler.hooks.beforeRun.tap('GenerateRemoteComponentDefinitions', async () => {
+                compiler.hooks.beforeRun.tapAsync('GenerateRemoteComponentDefinitions', async (_, callback) => {
                     const DECLARED_COMPONENTS_ROOT_DIRECTORY = '../reflecta-components/declarations/src/components';
 
                     const results = await fs.readdir(DECLARED_COMPONENTS_ROOT_DIRECTORY, {
@@ -50,6 +50,17 @@ module.exports = () => {
                     });
 
                     const DECLARATIONS_ROOT_DIRECTORY = './src/components/remotes';
+
+                    try {
+                        await fs.rm(DECLARATIONS_ROOT_DIRECTORY, {
+                            force: true,
+                            recursive: true
+                        });
+                    } catch (error) { }
+
+                    await fs.mkdir(DECLARATIONS_ROOT_DIRECTORY, {
+                        recursive: true
+                    });
 
                     const componentCreationPromiseList = results.filter((result) => result.isDirectory()).map(async (result) => {
                         const {
@@ -62,16 +73,16 @@ module.exports = () => {
 
                         const componentDirectory = `${DECLARATIONS_ROOT_DIRECTORY}/${componentName}`;
 
-                        try {
-                            await fs.mkdir(componentDirectory, {
-                                recursive: true
-                            });
-                        } catch (error) { }
+                        await fs.mkdir(componentDirectory, {
+                            recursive: true
+                        });
 
                         await fs.writeFile(`${componentDirectory}/index.tsx`, componentDeclaration);
                     });
 
                     await Promise.all(componentCreationPromiseList);
+
+                    callback();
                 });
             }
         }

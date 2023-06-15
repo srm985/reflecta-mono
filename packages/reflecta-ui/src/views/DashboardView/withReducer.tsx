@@ -5,33 +5,27 @@ import {
 
 import {
     Action,
-    ILoginView,
+    IDashboardView,
     State
 } from './types';
 
 const initialState: State = {
-    emailAddress: '',
-    password: ''
+    journalEntriesList: []
 };
 
 const reducer = (state: State, action: Action): State => {
     switch (action.type) {
-        case 'UPDATE_EMAIL_ADDRESS':
+        case 'SET_JOURNAL_ENTRIES_LIST':
             return ({
                 ...state,
-                emailAddress: action.payload
-            });
-        case 'UPDATE_PASSWORD':
-            return ({
-                ...state,
-                password: action.payload
+                journalEntriesList: action.payload
             });
         default:
             return state;
     }
 };
 
-const withReducer = (Component: FC<ILoginView>) => () => {
+const withReducer = (Component: FC<IDashboardView>) => () => {
     const [
         state,
         dispatch

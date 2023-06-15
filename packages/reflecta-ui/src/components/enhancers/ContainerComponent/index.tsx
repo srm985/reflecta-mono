@@ -5,9 +5,7 @@ import {
 const ContainerComponent = () => (
     <>
         <nav />
-        <main>
-            <Outlet />
-        </main>
+        <Outlet />
         <footer />
     </>
 );

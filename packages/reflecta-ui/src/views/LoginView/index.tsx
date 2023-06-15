@@ -1,8 +1,9 @@
 import {
-    FormEvent, memo
+    FormEvent,
+    memo
 } from 'react';
 import {
-    redirect, useNavigate
+    useNavigate
 } from 'react-router-dom';
 
 import Authentication from '@utils/Authentication';
@@ -32,6 +33,10 @@ const LoginView: React.FC<ILoginView> = (props) => {
         dispatch,
         state
     } = props;
+
+    const {
+        displayName
+    } = LoginView;
 
     const navigate = useNavigate();
 
@@ -67,41 +72,44 @@ const LoginView: React.FC<ILoginView> = (props) => {
             console.log(props);
             authentication.authenticate(payload.tokenSignature);
 
-            redirect('/');
             navigate('/dashboard');
         }
     };
 
     return (
-        <FormComponent onSubmit={handleSubmit}>
-            <InputComponent
-                autoCompleteType={'username'}
-                label={'Email Address'}
-                name={'emailAddress'}
-                onChange={(payload) => handleChange({
-                    payload,
-                    type: 'UPDATE_EMAIL_ADDRESS'
-                })}
-                type={'email'}
-                value={state.emailAddress}
-            />
-            <InputComponent
-                autoCompleteType={'current-password'}
-                label={'Password'}
-                name={'password'}
-                onChange={(payload) => handleChange({
-                    payload,
-                    type: 'UPDATE_PASSWORD'
-                })}
-                type={'password'}
-                value={state.password}
-            />
-            <ButtonComponent
-                label={'Login'}
-                type={'submit'}
-            />
-        </FormComponent>
+        <main className={displayName}>
+            <FormComponent onSubmit={handleSubmit}>
+                <InputComponent
+                    autoCompleteType={'username'}
+                    label={'Email Address'}
+                    name={'emailAddress'}
+                    onChange={(payload) => handleChange({
+                        payload,
+                        type: 'UPDATE_EMAIL_ADDRESS'
+                    })}
+                    type={'email'}
+                    value={state.emailAddress}
+                />
+                <InputComponent
+                    autoCompleteType={'current-password'}
+                    label={'Password'}
+                    name={'password'}
+                    onChange={(payload) => handleChange({
+                        payload,
+                        type: 'UPDATE_PASSWORD'
+                    })}
+                    type={'password'}
+                    value={state.password}
+                />
+                <ButtonComponent
+                    label={'Login'}
+                    type={'submit'}
+                />
+            </FormComponent>
+        </main>
     );
 };
+
+LoginView.displayName = 'LoginView';
 
 export default withReducer(memo(LoginView));

@@ -1,4 +1,5 @@
 import axios, {
+    AxiosInstance,
     Method
 } from 'axios';
 
@@ -6,17 +7,40 @@ import {
     BASE_URL_API
 } from '@constants';
 
+import Authentication from './Authentication';
+
 export interface ErrorResponse {
     errorMessage: string;
 }
 
 class Client {
+    private readonly authentication: Authentication;
+
+    constructor() {
+        this.authentication = new Authentication();
+    }
+
     private makeCall = async <ResponsePayload>(serviceURL: string, method: Method, payload?: object): Promise<ResponsePayload | ErrorResponse> => {
         try {
-            const response = await axios({
+            const tokenSignature = this.authentication.retrieve();
+
+            const instance: AxiosInstance = axios.create({
+                baseURL: BASE_URL_API
+            });
+
+            instance.interceptors.request.use((config) => {
+                if (tokenSignature) {
+                    // eslint-disable-next-line no-param-reassign
+                    config.headers.Authorization = `Bearer ${tokenSignature}`;
+                }
+
+                return config;
+            });
+
+            const response = await instance({
                 data: payload,
                 method,
-                url: `${BASE_URL_API}/${serviceURL}`,
+                url: serviceURL,
                 withCredentials: true
             });
 

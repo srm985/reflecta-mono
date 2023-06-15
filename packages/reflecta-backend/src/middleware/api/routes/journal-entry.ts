@@ -28,8 +28,9 @@ import Authentication from '@middleware/Authentication';
 import RateLimiter from '@middleware/RateLimiter';
 
 export interface RequestBodyCreate {
-    entryBody: string | null;
-    entryTitle: string | null;
+    entryBody: string;
+    entryOccurredAt: string;
+    entryTitle: string;
 }
 
 export interface RequestBodyUpdate extends RequestBodyCreate {
@@ -49,7 +50,8 @@ const journalingController = new JournalingController();
 
 const inputValidationsCreate: ValidationChain[] = [
     body('entryTitle').trim(),
-    body('entryBody').trim()
+    body('entryBody').trim(),
+    body('entryOccurredAt').trim()
 ];
 
 const inputValidationsUpdate: ValidationChain[] = [
@@ -78,6 +80,7 @@ router.post('/journal-entry', [
         const {
             body: {
                 entryBody,
+                entryOccurredAt,
                 entryTitle
             }
         } = request;
@@ -92,6 +95,7 @@ router.post('/journal-entry', [
 
         await journalingController.insertJournalEntry(userID, {
             body: entryBody,
+            occurredAt: entryOccurredAt,
             title: entryTitle
         });
 
@@ -119,6 +123,7 @@ router.patch('/journal-entry', [
             body: {
                 entryBody,
                 entryID,
+                entryOccurredAt,
                 entryTitle
             }
         } = request;
@@ -133,6 +138,7 @@ router.patch('/journal-entry', [
 
         await journalingController.modifyJournalEntry(userID, entryID, {
             body: entryBody,
+            occurredAt: entryOccurredAt,
             title: entryTitle
         });
 

@@ -11,6 +11,7 @@ import {
 import AuthenticatedRouteComponent from '@components/enhancers/AuthenticatedRouteComponent';
 import ContainerComponent from '@components/enhancers/ContainerComponent';
 
+const DashboardView = React.lazy(() => import('@views/DashboardView') as unknown as Promise<{ default: FC }>);
 const LoginView = React.lazy(() => import('@views/LoginView') as unknown as Promise<{ default: FC }>);
 
 const App = () => (
@@ -27,7 +28,7 @@ const App = () => (
                     />
                     <Route element={<AuthenticatedRouteComponent />}>
                         <Route
-                            element={<LoginView />}
+                            element={<DashboardView />}
                             path={'dashboard'}
                         />
                     </Route>

@@ -43,6 +43,7 @@ class JournalingController {
         body: entryDetails.body,
         createdAt: entryDetails.created_at,
         entryID: entryDetails.entry_id,
+        occurredAt: entryDetails.occurred_at,
         title: entryDetails.title,
         updatedAt: entryDetails.updated_at
     }));

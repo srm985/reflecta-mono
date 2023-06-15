@@ -73,7 +73,7 @@
   "scripts": {
     "build": "webpack",
     "build:storybook": "storybook build",
-    "develop": "concurrently --raw \"npm:lint --silent\" \"webpack-dev-server --config ./webpack.config.js --mode=development --port 3003\" \"npm:watch --silent\"",
+    "develop": "concurrently --raw \"npm:lint --silent\" \"webpack serve --config ./webpack.config.js --mode=development --port 3003\" \"npm:watch --silent\"",
     "lint": "concurrently --raw \"npm:lint:js --silent\" \"npm:lint:scss --silent\"",
     "lint:fix": "concurrently --raw \"eslint . --ext .ts,.tsx,.js --fix\" \"stylelint src/**/*  --color --allow-empty-input --fix\"",
     "lint:js": "eslint . --ext .ts,.tsx,.js",
