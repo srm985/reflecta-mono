@@ -14,3 +14,6 @@ nvm install 18
 npm install -g npm@latest
 
 npm install
+
+chmod ug+x .husky/*
+chmod ug+x .git/hooks/*
