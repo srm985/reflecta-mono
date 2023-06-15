@@ -1,5 +1,5 @@
 import {
-    ComponentType,
+    FC,
     useReducer
 } from 'react';
 
@@ -31,7 +31,7 @@ const reducer = (state: State, action: Action) => {
     }
 };
 
-const withReducer = (Component: ComponentType<ILoginView>) => () => {
+const withReducer = (Component: FC<ILoginView>) => () => {
     const [
         state,
         dispatch

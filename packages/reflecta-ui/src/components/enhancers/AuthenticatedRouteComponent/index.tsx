@@ -1,4 +1,7 @@
 import {
+    memo
+} from 'react';
+import {
     Navigate,
     Outlet
 } from 'react-router-dom';
@@ -17,4 +20,4 @@ const AuthenticatedRouteComponent = () => {
     );
 };
 
-export default AuthenticatedRouteComponent;
+export default memo(AuthenticatedRouteComponent);

@@ -1,5 +1,5 @@
-
-import {
+import React, {
+    FC,
     Suspense
 } from 'react';
 import {
@@ -8,10 +8,10 @@ import {
     Routes
 } from 'react-router-dom';
 
-import LoginView from '@views/LoginView';
-
 import AuthenticatedRouteComponent from '@components/enhancers/AuthenticatedRouteComponent';
 import ContainerComponent from '@components/enhancers/ContainerComponent';
+
+const LoginView = React.lazy(() => import('@views/LoginView') as unknown as Promise<{ default: FC }>);
 
 const App = () => (
     <Suspense fallback={'loading...'}>

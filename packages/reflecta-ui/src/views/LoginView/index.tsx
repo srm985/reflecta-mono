@@ -1,7 +1,11 @@
 import {
-    FormEvent
+    FormEvent, memo
 } from 'react';
+import {
+    redirect, useNavigate
+} from 'react-router-dom';
 
+import Authentication from '@utils/Authentication';
 import Client from '@utils/Client';
 
 import ButtonComponent from '@components/remotes/ButtonComponent';
@@ -16,9 +20,11 @@ import withReducer from './withReducer';
 
 import {
     Action,
-    ILoginView
+    ILoginView,
+    LoginResponsePayload
 } from './types';
 
+const authentication = new Authentication();
 const client = new Client();
 
 const LoginView: React.FC<ILoginView> = (props) => {
@@ -26,6 +32,8 @@ const LoginView: React.FC<ILoginView> = (props) => {
         dispatch,
         state
     } = props;
+
+    const navigate = useNavigate();
 
     const handleChange = (action: Action) => {
         const {
@@ -47,19 +55,27 @@ const LoginView: React.FC<ILoginView> = (props) => {
             password
         } = state;
 
-        const payload = await client.post(ROUTE_API_LOGIN, {
+        const payload = await client.post<LoginResponsePayload>(ROUTE_API_LOGIN, {
             emailAddress,
             password
         });
 
-        console.log({
-            payload
-        });
+        if ('errorMessage' in payload) {
+            console.log(123);
+            console.log(payload.errorMessage);
+        } else {
+            console.log(props);
+            authentication.authenticate(payload.tokenSignature);
+
+            redirect('/');
+            navigate('/dashboard');
+        }
     };
 
     return (
         <FormComponent onSubmit={handleSubmit}>
             <InputComponent
+                autoCompleteType={'username'}
                 label={'Email Address'}
                 name={'emailAddress'}
                 onChange={(payload) => handleChange({
@@ -70,6 +86,7 @@ const LoginView: React.FC<ILoginView> = (props) => {
                 value={state.emailAddress}
             />
             <InputComponent
+                autoCompleteType={'current-password'}
                 label={'Password'}
                 name={'password'}
                 onChange={(payload) => handleChange({
@@ -87,4 +104,4 @@ const LoginView: React.FC<ILoginView> = (props) => {
     );
 };
 
-export default withReducer(LoginView);
+export default withReducer(memo(LoginView));

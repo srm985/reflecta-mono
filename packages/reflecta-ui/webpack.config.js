@@ -41,7 +41,8 @@ module.exports = () => {
         }),
         {
             apply: (compiler) => {
-                compiler.hooks.beforeCompile.tap('GenerateRemoteComponentDefinitions', async () => {
+                // This only gets called on build so you need to rebuild any time there are new components
+                compiler.hooks.beforeRun.tap('GenerateRemoteComponentDefinitions', async () => {
                     const DECLARED_COMPONENTS_ROOT_DIRECTORY = '../reflecta-components/declarations/src/components';
 
                     const results = await fs.readdir(DECLARED_COMPONENTS_ROOT_DIRECTORY, {
@@ -55,7 +56,9 @@ module.exports = () => {
                             name: componentName
                         } = result;
 
-                        const componentDeclaration = `import React from 'react';\nimport {\n    I${componentName}\n} from 'reflecta-components/declarations/src/components/${componentName}/types';\n\nexport default React.lazy(() => import('${COMPONENT_REMOTE_NAME}/${componentName}')) as React.FC<I${componentName}>;\n`;
+                        console.log(`Linking component: ${componentName}...`);
+
+                        const componentDeclaration = `import React from 'react';\nimport {\n    I${componentName}\n} from 'reflecta-components/declarations/src/components/${componentName}/types';\n\nexport default React.memo(React.lazy(() => import('${COMPONENT_REMOTE_NAME}/${componentName}'))) as React.FC<I${componentName}>;\n`;
 
                         const componentDirectory = `${DECLARATIONS_ROOT_DIRECTORY}/${componentName}`;
 

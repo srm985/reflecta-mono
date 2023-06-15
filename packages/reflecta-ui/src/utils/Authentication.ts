@@ -23,6 +23,7 @@ class Authentication {
         const token = this.storage.readKeyLocal<string>(LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY);
 
         console.log({
+            LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY,
             token
         });
 

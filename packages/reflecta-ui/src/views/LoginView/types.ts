@@ -15,6 +15,10 @@ export interface InjectedProps {
     dispatch: DispatchAction;
 }
 
+export interface LoginResponsePayload {
+    tokenSignature: string;
+}
+
 export interface State {
     emailAddress: string;
     password: string;
