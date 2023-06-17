@@ -1,5 +1,5 @@
 import {
-    ChangeEvent
+    ChangeEvent, useMemo
 } from 'react';
 
 import classNames from '@utils/classNames';
@@ -12,10 +12,12 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
     const {
         autoCompleteType = 'off',
         className,
+        defaultValue,
         label,
         name,
         onChange,
-        type
+        type,
+        value
     } = props;
 
     const {
@@ -31,7 +33,9 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
         className
     );
 
-    const componentID = `${name}-${Math.random().toString().slice(-5)}`;
+    const componentID = useMemo(() => `${name}-${Math.random().toString().slice(-5)}`, [
+        name
+    ]);
 
     return (
         <div className={componentClassNames}>
@@ -43,9 +47,11 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
             </label>
             <input
                 autoComplete={autoCompleteType}
+                defaultValue={defaultValue}
                 id={componentID}
                 onChange={handleChange}
                 type={type}
+                value={value}
             />
         </div>
     );

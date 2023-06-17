@@ -10,12 +10,20 @@ export interface JournalEntry {
     updatedAt: string | null;
 }
 
+export interface NewJournalEntry {
+    body: string;
+    date: string;
+    title: string;
+}
+
 export interface State {
+    isAddingEntry: boolean;
     journalEntriesList: JournalEntry[]
 }
 
 export type Action =
-  | { type: 'SET_JOURNAL_ENTRIES_LIST'; payload: JournalEntry[] };
+  | { type: 'SET_JOURNAL_ENTRIES_LIST'; payload: JournalEntry[] }
+  | { type: 'TOGGLE_ADDING_ENTRY'; };
 
 type DispatchAction = Dispatch<Action>;
 

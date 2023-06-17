@@ -6,7 +6,10 @@ import {
 
 import Client from '@utils/Client';
 
+import ButtonComponent from '@components/remotes/ButtonComponent';
 import JournalEntryDisplayComponent from '@components/remotes/JournalEntryDisplayComponent';
+import JournalEntryInputComponent from '@components/remotes/JournalEntryInputComponent';
+import ModalComponent from '@components/remotes/ModalComponent';
 
 import {
     ROUTE_API_JOURNAL_ENTRY
@@ -16,7 +19,8 @@ import withReducer from './withReducer';
 
 import {
     IDashboardView,
-    JournalEntry
+    JournalEntry,
+    NewJournalEntry
 } from './types';
 
 const client = new Client();
@@ -48,6 +52,20 @@ const DashboardView: FC<IDashboardView> = (props) => {
         }
     };
 
+    const handleEntrySubmission = (journalEntry: NewJournalEntry) => {
+        console.log(journalEntry);
+
+        dispatch({
+            type: 'TOGGLE_ADDING_ENTRY'
+        });
+    };
+
+    const handleEntryConclusion = () => {
+        dispatch({
+            type: 'TOGGLE_ADDING_ENTRY'
+        });
+    };
+
     useEffect(() => {
         fetchJournalEntries();
     }, []);
@@ -61,6 +79,19 @@ const DashboardView: FC<IDashboardView> = (props) => {
                         key={journalEntryDetails.entryID}
                     />
                 ))
+            }
+            <ButtonComponent
+                label={'Add Entry'}
+                onClick={() => dispatch({
+                    type: 'TOGGLE_ADDING_ENTRY'
+                })}
+            />
+            {
+                state.isAddingEntry && (
+                    <ModalComponent onClose={handleEntryConclusion}>
+                        <JournalEntryInputComponent onSubmit={handleEntrySubmission} />
+                    </ModalComponent>
+                )
             }
         </main>
     );

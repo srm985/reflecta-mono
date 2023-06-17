@@ -52,7 +52,15 @@ module.exports = async () => {
         new webpack.container.ModuleFederationPlugin({
             exposes: componentsList,
             filename: 'remoteEntry.js',
-            name: 'reflecta_components'
+            name: 'reflecta_components',
+            shared: {
+                react: {
+                    singleton: true
+                },
+                'react-dom': {
+                    singleton: true
+                }
+            }
         }),
         {
             apply: (compiler) => {

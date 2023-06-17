@@ -1,8 +1,13 @@
 import {
-    ChangeEvent
+    FormEvent,
+    useState
 } from 'react';
 
 import classNames from '@utils/classNames';
+
+import ButtonComponent from '@components/ButtonComponent';
+import FormComponent from '@components/FormComponent';
+import InputComponent from '@components/InputComponent';
 
 import {
     IJournalEntryInputComponent
@@ -11,18 +16,44 @@ import {
 const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props) => {
     const {
         className,
-        label,
-        name,
-        onChange,
-        value
+        onSubmit
     } = props;
 
     const {
         displayName
     } = JournalEntryInputComponent;
 
-    const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        onChange(event.target.value);
+    const now = new Date().toISOString().split('T')[0];
+
+    const [
+        title,
+        setTitle
+    ] = useState('');
+
+    const [
+        body,
+        setBody
+    ] = useState('');
+
+    const [
+        date,
+        setDate
+    ] = useState(now);
+
+    const handleEntrySubmission = (event: FormEvent) => {
+        event.preventDefault();
+
+        onSubmit({
+            body,
+            date,
+            title
+        });
+    };
+
+    const handleReset = () => {
+        setBody('');
+        setDate(now);
+        setTitle('');
     };
 
     const componentClassNames = classNames(
@@ -30,22 +61,41 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         className
     );
 
-    const componentID = `${name}-${Math.random().toString().slice(-5)}`;
-
     return (
-        <div className={componentClassNames}>
-            <label
-                className={displayName}
-                htmlFor={componentID}
-            >
-                {label}
-            </label>
-            <textarea
-                className={componentClassNames}
-                onChange={handleChange}
-                value={value}
+        <FormComponent
+            className={componentClassNames}
+            onSubmit={handleEntrySubmission}
+        >
+            <InputComponent
+                label={'Title'}
+                name={'title'}
+                onChange={setTitle}
+                type={'text'}
+                value={title}
             />
-        </div>
+            <InputComponent
+                label={'Body'}
+                name={'body'}
+                onChange={setBody}
+                type={'text'}
+                value={body}
+            />
+            <InputComponent
+                label={'Date'}
+                name={'date'}
+                onChange={setDate}
+                type={'date'}
+                value={date}
+            />
+            <ButtonComponent
+                label={'Discard'}
+                onClick={handleReset}
+            />
+            <ButtonComponent
+                label={'Save'}
+                type={'submit'}
+            />
+        </FormComponent>
     );
 };
 

@@ -1,7 +1,7 @@
 import JournalEntryInputComponent from './index';
 
 import {
-    IJournalEntryInputComponent
+    IJournalEntryInputComponent, JournalEntry
 } from './types';
 
 export default {
@@ -9,6 +9,17 @@ export default {
     title: 'JournalEntryInputComponent'
 };
 
-const Template = (args: IJournalEntryInputComponent) => <JournalEntryInputComponent {...args} />;
+const Template = (args: IJournalEntryInputComponent) => {
+    const handleSubmit = (journalEntry: JournalEntry) => {
+        console.log(journalEntry);
+    };
+
+    return (
+        <JournalEntryInputComponent
+            {...args}
+            onSubmit={handleSubmit}
+        />
+    );
+};
 
 export const Default = Template.bind({});

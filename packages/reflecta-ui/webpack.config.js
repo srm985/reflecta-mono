@@ -37,6 +37,14 @@ module.exports = () => {
         new webpack.container.ModuleFederationPlugin({
             remotes: {
                 [COMPONENT_REMOTE_NAME]: FEDERATED_COMPONENTS_URL
+            },
+            shared: {
+                react: {
+                    singleton: true
+                },
+                'react-dom': {
+                    singleton: true
+                }
             }
         }),
         {

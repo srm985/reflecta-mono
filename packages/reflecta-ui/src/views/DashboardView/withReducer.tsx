@@ -10,6 +10,7 @@ import {
 } from './types';
 
 const initialState: State = {
+    isAddingEntry: false,
     journalEntriesList: []
 };
 
@@ -19,6 +20,11 @@ const reducer = (state: State, action: Action): State => {
             return ({
                 ...state,
                 journalEntriesList: action.payload
+            });
+        case 'TOGGLE_ADDING_ENTRY':
+            return ({
+                ...state,
+                isAddingEntry: !state.isAddingEntry
             });
         default:
             return state;
