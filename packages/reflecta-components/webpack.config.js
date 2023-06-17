@@ -42,7 +42,11 @@ module.exports = async () => {
         new Dotenv({
             systemvars: true
         }),
-        new CleanWebpackPlugin(),
+        new CleanWebpackPlugin({
+            dangerouslyAllowCleanPatternsOutsideProject: true,
+            dry: false,
+            verbose: true
+        }),
         new HtmlWebpackPlugin({
             // favicon: './src/assets/icons/favicon.ico',
             filename: 'index.html',

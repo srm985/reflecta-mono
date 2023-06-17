@@ -33,9 +33,7 @@ const ModalComponent: FC<IModalComponent> = (props) => {
             target
         } = event;
 
-        console.log('called....');
-
-        if ((backgroundReference && code === 'Space' && target === backgroundReference.current) || code === 'Escape') {
+        if ((code === 'Space' && target === backgroundReference.current) || code === 'Escape') {
             onClose();
         }
     };
@@ -51,9 +49,9 @@ const ModalComponent: FC<IModalComponent> = (props) => {
     };
 
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyedClose);
+        document.addEventListener('keydown', handleKeyedClose);
 
-        return window.removeEventListener('keydown', handleKeyedClose);
+        return document.removeEventListener('keydown', handleKeyedClose);
     }, []);
 
     const componentClassNames = classNames(
