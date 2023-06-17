@@ -8,12 +8,14 @@ export interface LoginResponsePayload {
 
 export interface State {
     emailAddress: string;
+    isAuthenticated: boolean;
     password: string;
 }
 
 export type Action =
   | { type: 'UPDATE_EMAIL_ADDRESS'; payload: string }
-  | { type: 'UPDATE_PASSWORD'; payload: string };
+  | { type: 'UPDATE_PASSWORD'; payload: string }
+  | { type: 'SET_AUTHENTICATED'; };
 
 type DispatchAction = Dispatch<Action>;
 

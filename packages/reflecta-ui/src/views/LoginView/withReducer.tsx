@@ -11,6 +11,7 @@ import {
 
 const initialState: State = {
     emailAddress: '',
+    isAuthenticated: false,
     password: ''
 };
 
@@ -25,6 +26,11 @@ const reducer = (state: State, action: Action): State => {
             return ({
                 ...state,
                 password: action.payload
+            });
+        case 'SET_AUTHENTICATED':
+            return ({
+                ...state,
+                isAuthenticated: true
             });
         default:
             return state;

@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import {
     BrowserRouter,
+    Navigate,
     Route,
     Routes
 } from 'react-router-dom';
@@ -21,18 +22,20 @@ const App = () => (
         <RootStylingComponent />
         <BrowserRouter>
             <Routes>
-                <Route
-                    element={<ContainerComponent />}
-                    path={'/'}
-                >
+                <Route element={<ContainerComponent />}>
+                    <Route
+                        element={<Navigate to={'/dashboard'} />}
+                        path={'/'}
+                    />
                     <Route
                         element={<LoginView />}
-                        path={'login'}
+                        index
+                        path={'/login'}
                     />
                     <Route element={<AuthenticatedRouteComponent />}>
                         <Route
                             element={<DashboardView />}
-                            path={'dashboard'}
+                            path={'/dashboard'}
                         />
                     </Route>
                 </Route>

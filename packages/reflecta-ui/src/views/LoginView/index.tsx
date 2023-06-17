@@ -1,6 +1,7 @@
 import {
     FormEvent,
-    memo
+    memo,
+    useEffect
 } from 'react';
 import {
     useNavigate
@@ -20,7 +21,6 @@ import {
 import withReducer from './withReducer';
 
 import {
-    Action,
     ILoginView,
     LoginResponsePayload
 } from './types';
@@ -40,17 +40,23 @@ const LoginView: React.FC<ILoginView> = (props) => {
 
     const navigate = useNavigate();
 
-    const handleChange = (action: Action) => {
-        const {
-            payload,
-            type
-        } = action;
+    useEffect(() => {
+        const isAuthenticated = authentication.isAuthenticated();
 
-        dispatch({
-            payload,
-            type
-        });
-    };
+        if (isAuthenticated) {
+            dispatch({
+                type: 'SET_AUTHENTICATED'
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (state.isAuthenticated) {
+            navigate('/dashboard');
+        }
+    }, [
+        state.isAuthenticated
+    ]);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -66,13 +72,13 @@ const LoginView: React.FC<ILoginView> = (props) => {
         });
 
         if ('errorMessage' in payload) {
-            console.log(123);
             console.log(payload.errorMessage);
         } else {
-            console.log(props);
             authentication.authenticate(payload.tokenSignature);
 
-            navigate('/dashboard');
+            dispatch({
+                type: 'SET_AUTHENTICATED'
+            });
         }
     };
 
@@ -83,7 +89,7 @@ const LoginView: React.FC<ILoginView> = (props) => {
                     autoCompleteType={'username'}
                     label={'Email Address'}
                     name={'emailAddress'}
-                    onChange={(payload) => handleChange({
+                    onChange={(payload) => dispatch({
                         payload,
                         type: 'UPDATE_EMAIL_ADDRESS'
                     })}
@@ -94,7 +100,7 @@ const LoginView: React.FC<ILoginView> = (props) => {
                     autoCompleteType={'current-password'}
                     label={'Password'}
                     name={'password'}
-                    onChange={(payload) => handleChange({
+                    onChange={(payload) => dispatch({
                         payload,
                         type: 'UPDATE_PASSWORD'
                     })}
