@@ -49,9 +49,9 @@ const rateLimiter = new RateLimiter();
 const journalingController = new JournalingController();
 
 const inputValidationsCreate: ValidationChain[] = [
-    body('entryTitle').trim(),
-    body('entryBody').trim(),
-    body('entryOccurredAt').trim()
+    body('entryTitle').trim().isString(),
+    body('entryBody').trim().isString(),
+    body('entryOccurredAt').trim().isString()
 ];
 
 const inputValidationsUpdate: ValidationChain[] = [

@@ -52,12 +52,20 @@ const DashboardView: FC<IDashboardView> = (props) => {
         }
     };
 
-    const handleEntrySubmission = (journalEntry: NewJournalEntry) => {
+    const handleEntrySubmission = async (journalEntry: NewJournalEntry) => {
         console.log(journalEntry);
+
+        await client.post(ROUTE_API_JOURNAL_ENTRY, {
+            entryBody: journalEntry.body,
+            entryOccurredAt: journalEntry.date,
+            entryTitle: journalEntry.title
+        });
 
         dispatch({
             type: 'TOGGLE_ADDING_ENTRY'
         });
+
+        await fetchJournalEntries();
     };
 
     const handleEntryConclusion = () => {

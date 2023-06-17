@@ -37,7 +37,7 @@ class JournalEntriesModel {
             title
         } = entryDetails;
 
-        const query = 'INSERT INTO ?? (user_id, title, body, occurred_at) VALUES (?, ?, ?)';
+        const query = 'INSERT INTO ?? (user_id, title, body, occurred_at) VALUES (?, ?, ?, ?)';
         const values = [
             this.TABLE_NAME,
             userID,
