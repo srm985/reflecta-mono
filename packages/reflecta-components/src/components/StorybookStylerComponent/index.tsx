@@ -5,12 +5,12 @@ import {
 import classNames from '@utils/classNames';
 
 import {
-    IStorybookStyler
+    IStorybookStylerComponent
 } from './types';
 
 import './styles.scss';
 
-const StorybookStyler: FC<IStorybookStyler> = (props) => {
+const StorybookStylerComponent: FC<IStorybookStylerComponent> = (props) => {
     const {
         children,
         className
@@ -18,7 +18,7 @@ const StorybookStyler: FC<IStorybookStyler> = (props) => {
 
     const {
         displayName
-    } = StorybookStyler;
+    } = StorybookStylerComponent;
 
     const componentClassNames = classNames(
         displayName,
@@ -28,6 +28,6 @@ const StorybookStyler: FC<IStorybookStyler> = (props) => {
     return (<div className={componentClassNames}>{children}</div>);
 };
 
-StorybookStyler.displayName = 'StorybookStyler';
+StorybookStylerComponent.displayName = 'StorybookStylerComponent';
 
-export default StorybookStyler;
+export default StorybookStylerComponent;
