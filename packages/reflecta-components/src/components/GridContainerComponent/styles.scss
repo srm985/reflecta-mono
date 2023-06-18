@@ -1,0 +1,24 @@
+@import '../../styles/styles';
+
+.GridContainerComponent {
+    &__grid {
+        display: grid;
+        grid-gap: calc($planck-length * 3) $planck-length;
+        grid-template-rows: auto;
+        grid-template-columns: repeat(12, 1fr);
+        width: 100%;
+
+        @media only screen and (min-width: $breakpoint-begin-small) {
+            max-width: $max-width-small;
+        }
+        @media only screen and (min-width: $breakpoint-begin-medium) {
+            max-width: $max-width-medium;
+        }
+        @media only screen and (min-width: $breakpoint-begin-large) {
+            max-width: $max-width-large;
+        }
+        @media only screen and (min-width: $breakpoint-begin-xlarge) {
+            max-width: $max-width-xlarge;
+        }
+    }
+}

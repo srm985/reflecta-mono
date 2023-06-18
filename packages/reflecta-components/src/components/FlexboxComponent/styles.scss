@@ -1,0 +1,47 @@
+$align-items-options: (
+  flex-start,
+  flex-end,
+  center,
+  baseline,
+  stretch
+);
+$flex-direction-options: (
+  row,
+  row-reverse,
+  column,
+  column-reverse
+);
+$justify-content-options: (
+  flex-start,
+  flex-end,
+  center,
+  space-between,
+  space-around,
+  space-evenly,
+  start,
+  end,
+  left,
+  right
+);
+
+.FlexboxComponent {
+    display: flex !important;
+    width: 100%;
+    height: 100%;
+
+    @each $option in $align-items-options {
+        &__align-items--#{$option} {
+            align-items: $option;
+        }
+    }
+    @each $option in $flex-direction-options {
+        &__flex-direction--#{$option} {
+            flex-direction: $option;
+        }
+    }
+    @each $option in $justify-content-options {
+        &__justify-content--#{$option} {
+            justify-content: $option;
+        }
+    }
+}

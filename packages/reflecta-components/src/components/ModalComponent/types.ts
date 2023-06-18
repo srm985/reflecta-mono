@@ -4,6 +4,6 @@ import {
 
 export interface IModalComponent {
     className?: string;
-    children: ReactNode;
+    children: ReactNode | ReactNode[];
     onClose: () => void;
 }

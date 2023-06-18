@@ -26,6 +26,6 @@ const classNames = (...classNameInputParametersList: ClassNameInputParameter[]):
     }, '').trim();
 
     return `${classList} ${dynamicClassNames}`;
-}, '');
+}, '').trim();
 
 export default classNames;

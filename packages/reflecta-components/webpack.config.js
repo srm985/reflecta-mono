@@ -1,6 +1,3 @@
-const {
-    CleanWebpackPlugin
-} = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
@@ -41,11 +38,6 @@ module.exports = async () => {
     const plugins = [
         new Dotenv({
             systemvars: true
-        }),
-        new CleanWebpackPlugin({
-            dangerouslyAllowCleanPatternsOutsideProject: true,
-            dry: false,
-            verbose: true
         }),
         new HtmlWebpackPlugin({
             // favicon: './src/assets/icons/favicon.ico',
@@ -131,6 +123,7 @@ module.exports = async () => {
             ]
         },
         output: {
+            clean: true,
             filename: 'bundle.[fullhash].js',
             path: path.resolve(__dirname, 'dist')
         },

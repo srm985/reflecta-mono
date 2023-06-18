@@ -1,0 +1,43 @@
+@import '../../styles/styles';
+
+$breakpoints: (
+    'breakpointSmall': $breakpoint-begin-small,
+    'breakpointMedium': $breakpoint-begin-medium,
+    'breakpointLarge': $breakpoint-begin-large,
+    'breakpointXlarge': $breakpoint-begin-xlarge
+);
+
+.GridItemComponent {
+    grid-column: span 12;
+
+    & > * {
+        display: inline-block;
+    }
+
+    @each $breakpoint,
+        $breakpoint-value in $breakpoints {
+        &__#{$breakpoint} {
+            @for $column from 0 through 13 {
+                @media only screen and (min-width: $breakpoint-value) {
+                    &--span-#{$column} {
+                        @if $column > 0 {
+                            grid-column: auto / span $column;
+                        }
+                    }
+
+                    &--start-#{$column} {
+                        @if $column > 0 {
+                            grid-column-start: $column;
+                        }
+                    }
+
+                    &--stop-#{$column} {
+                        @if $column > 0 {
+                            grid-column-end: $column;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

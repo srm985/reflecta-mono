@@ -65,6 +65,11 @@
                         "position": "after"
                     },
                     {
+                        "group": "parent",
+                        "pattern": "@components/**/*",
+                        "position": "after"
+                    },
+                    {
                         "group": "external",
                         "pattern": "@utils/*",
                         "position": "after"

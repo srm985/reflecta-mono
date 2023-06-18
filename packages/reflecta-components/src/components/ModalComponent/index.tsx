@@ -1,3 +1,6 @@
+// We're disabling these because clicking on the modal background is a nicety and isn't required for screen readers
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import {
     FC,
     MouseEvent,
@@ -7,6 +10,10 @@ import {
 } from 'react';
 
 import classNames from '@utils/classNames';
+
+import FlexboxComponent from '@components/FlexboxComponent';
+import GridContainerComponent from '@components/GridContainerComponent';
+import GridItemComponent from '@components/GridItemComponent';
 
 import {
     IModalComponent
@@ -67,15 +74,36 @@ const ModalComponent: FC<IModalComponent> = (props) => {
                 onKeyDown={handleKeyedClose}
                 ref={backgroundReference}
                 role={'button'}
-                tabIndex={0}
-            >
-                <dialog
-                    className={`${displayName}__dialog`}
-                    open
+            />
+
+            <GridContainerComponent>
+                <GridItemComponent
+                    breakpointLarge={{
+                        start: 3,
+                        stop: 11
+                    }}
+                    breakpointMedium={{
+                        start: 2,
+                        stop: 12
+                    }}
+                    breakpointXlarge={{
+                        start: 4,
+                        stop: 10
+                    }}
                 >
-                    {children}
-                </dialog>
-            </div>
+                    <FlexboxComponent
+                        alignItems={'center'}
+                        className={`${displayName}__dialog-wrapper`}
+                    >
+                        <dialog
+                            className={`${displayName}__dialog`}
+                            open
+                        >
+                            {children}
+                        </dialog>
+                    </FlexboxComponent>
+                </GridItemComponent>
+            </GridContainerComponent>
         </div>
     );
 };

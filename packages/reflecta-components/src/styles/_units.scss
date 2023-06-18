@@ -1,1 +1,14 @@
+// Application Minimum Spacing Unit
 $planck-length: 8px;
+
+// Breakpoints
+$breakpoint-begin-small: 576px;
+$breakpoint-begin-medium: 768px;
+$breakpoint-begin-large: 992px;
+$breakpoint-begin-xlarge: 1200px;
+
+// Grid Container Maximum Widths
+$max-width-small: 540px;
+$max-width-medium: 720px;
+$max-width-large: 960px;
+$max-width-xlarge: 1140px;

@@ -1,6 +1,3 @@
-const {
-    CleanWebpackPlugin
-} = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
@@ -27,7 +24,6 @@ module.exports = () => {
         new Dotenv({
             systemvars: true
         }),
-        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             // favicon: './src/assets/icons/favicon.ico',
             filename: 'index.html',
@@ -129,6 +125,7 @@ module.exports = () => {
             ]
         },
         output: {
+            clean: true,
             filename: 'bundle.[fullhash].js',
             path: path.resolve(__dirname, 'dist')
         },
