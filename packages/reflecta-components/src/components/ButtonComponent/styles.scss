@@ -1,3 +1,65 @@
+@import '../../styles/styles';
+
+$letter-spacing: 0.05em;
+
 .ButtonComponent {
-    font-size: 22px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:focus {
+        outline: solid $color-primary-100 2px;
+        outline-offset: 1px;
+    }
+
+    &--primary {
+        height: calc($planck-length * 6);
+        padding: 0 $padding-medium;
+
+        color: $color-neutral-100;
+        font-weight: bold;
+        font-size: $font-size-regular;
+        font-family: $font-family-default;
+        letter-spacing: $letter-spacing;
+        text-transform: uppercase;
+
+        background-color: $color-accent-300;
+        border-radius: $border-radius-medium;
+
+        &-disabled{
+            background-color: $color-accent-200;
+        }
+    }
+
+    &--secondary {
+        height: calc($planck-length * 6);
+        padding: 0 $padding-medium;
+
+        color: $color-accent-300;
+        font-weight: bold;
+        font-size: $font-size-regular;
+        font-family: $font-family-default;
+        letter-spacing: $letter-spacing;
+        text-transform: uppercase;
+
+        border: solid 3px $color-accent-300;
+        border-radius: $border-radius-medium;
+
+        &-disabled{
+            color: $color-accent-200;
+
+            border-color: $color-accent-200;
+        }
+    }
+
+    &--inline {
+        margin: 0;
+        padding: 0;
+
+        font-size: inherit;
+
+        font-family: inherit;
+
+        text-decoration: underline;
+    }
 }

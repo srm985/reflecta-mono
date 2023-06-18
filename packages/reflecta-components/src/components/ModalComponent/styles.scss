@@ -7,6 +7,7 @@
 
     width: 100vw;
     height: 100vh;
+    padding: $padding-medium;
 
     &__background {
         position: fixed;
@@ -21,16 +22,17 @@
         opacity: 0.8;
     }
 
-    &__dialog-wrapper {
-        padding: $padding-medium;
-    }
-
     &__dialog {
         position: relative;
 
+        width: 100%;
         padding: $padding-medium;
 
         background-color: $color-neutral-100;
         border-radius: $border-radius-medium;
+
+        @media only screen and (min-width: $breakpoint-begin-medium) {
+            margin-top: 25vh;
+        }
     }
 }

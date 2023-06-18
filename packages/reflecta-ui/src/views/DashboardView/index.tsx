@@ -1,15 +1,18 @@
 import {
     FC,
     memo,
-    useEffect
+    useEffect,
+    useMemo
 } from 'react';
 
-import Client from '@utils/Client';
-
 import ButtonComponent from '@components/remotes/ButtonComponent';
+import GridContainerComponent from '@components/remotes/GridContainerComponent';
+import GridItemComponent from '@components/remotes/GridItemComponent';
 import JournalEntryDisplayComponent from '@components/remotes/JournalEntryDisplayComponent';
 import JournalEntryInputComponent from '@components/remotes/JournalEntryInputComponent';
 import ModalComponent from '@components/remotes/ModalComponent';
+
+import Client from '@utils/Client';
 
 import {
     ROUTE_API_JOURNAL_ENTRY
@@ -53,8 +56,6 @@ const DashboardView: FC<IDashboardView> = (props) => {
     };
 
     const handleEntrySubmission = async (journalEntry: NewJournalEntry) => {
-        console.log(journalEntry);
-
         await client.post(ROUTE_API_JOURNAL_ENTRY, {
             entryBody: journalEntry.body,
             entryOccurredAt: journalEntry.date,
@@ -78,16 +79,29 @@ const DashboardView: FC<IDashboardView> = (props) => {
         fetchJournalEntries();
     }, []);
 
+    const generatedJournalEntriesList = useMemo(() => state.journalEntriesList.map((journalEntryDetails) => (
+        <GridItemComponent
+            breakpointLarge={{
+                span: 4
+            }}
+            breakpointSmall={{
+                span: 6
+            }}
+        >
+            <JournalEntryDisplayComponent
+                {...journalEntryDetails}
+                key={journalEntryDetails.entryID}
+            />
+        </GridItemComponent>
+    )), [
+        state.journalEntriesList
+    ]);
+
     return (
         <main className={displayName}>
-            {
-                state.journalEntriesList.map((journalEntryDetails) => (
-                    <JournalEntryDisplayComponent
-                        {...journalEntryDetails}
-                        key={journalEntryDetails.entryID}
-                    />
-                ))
-            }
+            <GridContainerComponent>
+                {generatedJournalEntriesList}
+            </GridContainerComponent>
             <ButtonComponent
                 label={'Add Entry'}
                 onClick={() => dispatch({

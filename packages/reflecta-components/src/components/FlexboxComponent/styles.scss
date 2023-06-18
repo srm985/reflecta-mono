@@ -27,11 +27,15 @@ $justify-content-options: (
 .FlexboxComponent {
     display: flex !important;
     width: 100%;
-    height: 100%;
+
+    &__height--full {
+        height: 100%;
+    }
 
     @each $option in $align-items-options {
         &__align-items--#{$option} {
             align-items: $option;
+            height: 100%;
         }
     }
     @each $option in $flex-direction-options {

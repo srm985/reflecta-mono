@@ -7,12 +7,12 @@ import {
     useNavigate
 } from 'react-router-dom';
 
-import Authentication from '@utils/Authentication';
-import Client from '@utils/Client';
-
 import ButtonComponent from '@components/remotes/ButtonComponent';
 import FormComponent from '@components/remotes/FormComponent';
 import InputComponent from '@components/remotes/InputComponent';
+
+import Authentication from '@utils/Authentication';
+import Client from '@utils/Client';
 
 import {
     ROUTE_API_LOGIN

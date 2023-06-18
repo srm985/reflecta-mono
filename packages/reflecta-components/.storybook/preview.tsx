@@ -6,11 +6,14 @@ import {
 } from 'react';
 
 import RootStylingComponent from '@components/RootStylingComponent';
+import StorybookStylerComponent from '@components/StorybookStylerComponent';
 
 const withGlobalStyling = (Story: FC) => (
     <>
         <RootStylingComponent />
-        <Story />
+        <StorybookStylerComponent>
+            <Story />
+        </StorybookStylerComponent>
     </>
 );
 

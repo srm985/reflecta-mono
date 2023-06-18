@@ -4,6 +4,8 @@ import {
     IFormComponent
 } from './types';
 
+import './styles.scss';
+
 const FormComponent: React.FC<IFormComponent> = (props) => {
     const {
         children,

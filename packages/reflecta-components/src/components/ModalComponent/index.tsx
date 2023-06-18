@@ -9,11 +9,10 @@ import {
     useRef
 } from 'react';
 
-import classNames from '@utils/classNames';
-
-import FlexboxComponent from '@components/FlexboxComponent';
 import GridContainerComponent from '@components/GridContainerComponent';
 import GridItemComponent from '@components/GridItemComponent';
+
+import classNames from '@utils/classNames';
 
 import {
     IModalComponent
@@ -75,7 +74,6 @@ const ModalComponent: FC<IModalComponent> = (props) => {
                 ref={backgroundReference}
                 role={'button'}
             />
-
             <GridContainerComponent>
                 <GridItemComponent
                     breakpointLarge={{
@@ -91,17 +89,12 @@ const ModalComponent: FC<IModalComponent> = (props) => {
                         stop: 10
                     }}
                 >
-                    <FlexboxComponent
-                        alignItems={'center'}
-                        className={`${displayName}__dialog-wrapper`}
+                    <dialog
+                        className={`${displayName}__dialog`}
+                        open
                     >
-                        <dialog
-                            className={`${displayName}__dialog`}
-                            open
-                        >
-                            {children}
-                        </dialog>
-                    </FlexboxComponent>
+                        {children}
+                    </dialog>
                 </GridItemComponent>
             </GridContainerComponent>
         </div>

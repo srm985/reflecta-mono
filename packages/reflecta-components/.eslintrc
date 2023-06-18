@@ -13,7 +13,8 @@
         {
             "files": [
                 "./*.js",
-                "./.storybook/*"
+                "./.storybook/*",
+                "stories.tsx"
             ],
             "rules": {
                 "import/no-extraneous-dependencies": [
@@ -70,7 +71,7 @@
                         "position": "after"
                     },
                     {
-                        "group": "external",
+                        "group": "parent",
                         "pattern": "@utils/*",
                         "position": "after"
                     },

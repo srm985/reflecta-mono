@@ -2,9 +2,9 @@ import {
     FC
 } from 'react';
 
-import classNames from '@utils/classNames';
-
 import FlexboxComponent from '@components/FlexboxComponent';
+
+import classNames from '@utils/classNames';
 
 import {
     IGridContainerComponent

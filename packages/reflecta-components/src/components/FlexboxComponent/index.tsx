@@ -16,6 +16,7 @@ const FlexboxComponent: FC<IFlexboxComponent> = (props) => {
         children,
         className,
         flexDirection,
+        isFullHeight,
         justifyContent
     } = props;
 
@@ -28,6 +29,7 @@ const FlexboxComponent: FC<IFlexboxComponent> = (props) => {
         className,
         {
             [`${displayName}__align-items--${alignItems}`]: !!alignItems,
+            [`${displayName}__height--full`]: !!isFullHeight,
             [`${displayName}__flex-direction--${flexDirection}`]: !!flexDirection,
             [`${displayName}__justify-content--${justifyContent}`]: !!justifyContent
         }

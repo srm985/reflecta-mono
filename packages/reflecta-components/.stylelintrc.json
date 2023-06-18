@@ -162,6 +162,7 @@
         "unit-allowed-list": [
             "%",
             "deg",
+            "em",
             "fr",
             "px",
             "s",

@@ -3,11 +3,12 @@ import {
     useState
 } from 'react';
 
-import classNames from '@utils/classNames';
-
 import ButtonComponent from '@components/ButtonComponent';
+import FlexboxComponent from '@components/FlexboxComponent';
 import FormComponent from '@components/FormComponent';
 import InputComponent from '@components/InputComponent';
+
+import classNames from '@utils/classNames';
 
 import {
     IJournalEntryInputComponent
@@ -67,6 +68,7 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
             onSubmit={handleEntrySubmission}
         >
             <InputComponent
+                className={'mb--1'}
                 label={'Title'}
                 name={'title'}
                 onChange={setTitle}
@@ -74,6 +76,7 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                 value={title}
             />
             <InputComponent
+                className={'mb--1'}
                 label={'Body'}
                 name={'body'}
                 onChange={setBody}
@@ -81,20 +84,24 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                 value={body}
             />
             <InputComponent
+                className={'mb--2'}
                 label={'Date'}
                 name={'date'}
                 onChange={setDate}
                 type={'date'}
                 value={date}
             />
-            <ButtonComponent
-                label={'Discard'}
-                onClick={handleReset}
-            />
-            <ButtonComponent
-                label={'Save'}
-                type={'submit'}
-            />
+            <FlexboxComponent justifyContent={'flex-end'}>
+                <ButtonComponent
+                    className={'mr--2'}
+                    label={'Discard'}
+                    onClick={handleReset}
+                />
+                <ButtonComponent
+                    label={'Save'}
+                    type={'submit'}
+                />
+            </FlexboxComponent>
         </FormComponent>
     );
 };

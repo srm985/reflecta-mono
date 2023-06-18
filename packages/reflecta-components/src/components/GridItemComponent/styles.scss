@@ -10,12 +10,10 @@ $breakpoints: (
 .GridItemComponent {
     grid-column: span 12;
 
-    & > * {
-        display: inline-block;
-    }
+
 
     @each $breakpoint,
-        $breakpoint-value in $breakpoints {
+    $breakpoint-value in $breakpoints {
         &__#{$breakpoint} {
             @for $column from 0 through 13 {
                 @media only screen and (min-width: $breakpoint-value) {

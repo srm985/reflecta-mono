@@ -1,0 +1,16 @@
+@import '../../styles/styles';
+
+.StorybookStyler {
+    min-height: 100vh;
+    padding: $padding-medium;
+
+    background-color: $color-neutral-200;
+
+    & > * {
+        margin-bottom: $margin-large;
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+}

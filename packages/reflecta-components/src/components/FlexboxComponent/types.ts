@@ -28,9 +28,10 @@ type JustifyContent =
   | 'right';
 
 export interface IFlexboxComponent {
+    alignItems?: AlignItems;
     children: ReactNode | ReactNode[];
     className?: string;
     flexDirection?: FlexDirection;
+    isFullHeight?: boolean;
     justifyContent?: JustifyContent;
-    alignItems?: AlignItems;
 }

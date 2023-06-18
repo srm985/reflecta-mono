@@ -9,8 +9,11 @@ import './styles.scss';
 const ButtonComponent: React.FC<IButtonComponent> = (props) => {
     const {
         className,
+        disabled,
+        href,
         label,
         onClick,
+        styleType = 'primary',
         type = 'button'
     } = props;
 
@@ -20,18 +23,35 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
 
     const componentClassNames = classNames(
         displayName,
-        className
+        className,
+        {
+            [`${displayName}--inline-disabled`]: styleType === 'inline' && !!disabled,
+            [`${displayName}--inline`]: styleType === 'inline',
+            [`${displayName}--primary-disabled`]: styleType === 'primary' && !!disabled,
+            [`${displayName}--primary`]: styleType === 'primary',
+            [`${displayName}--secondary-disabled`]: styleType === 'secondary' && !!disabled,
+            [`${displayName}--secondary`]: styleType === 'secondary'
+        }
     );
 
     return (
-        <button
-            className={componentClassNames}
-            onClick={onClick}
-            // eslint-disable-next-line react/button-has-type
-            type={type}
-        >
-            {label}
-        </button>
+        href ? (
+            <a
+                className={componentClassNames}
+                href={href}
+            >{label}
+            </a>
+        ) : (
+            <button
+                className={componentClassNames}
+                disabled={disabled}
+                onClick={onClick}
+                // eslint-disable-next-line react/button-has-type
+                type={type}
+            >
+                {label}
+            </button>
+        )
     );
 };
 
