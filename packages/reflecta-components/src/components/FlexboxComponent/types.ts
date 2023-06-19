@@ -2,20 +2,20 @@ import {
     ReactNode
 } from 'react';
 
-type AlignItems =
+export type AlignItems =
   | 'flex-start'
   | 'flex-end'
   | 'center'
   | 'baseline'
   | 'stretch';
 
-type FlexDirection =
+export type FlexDirection =
   | 'row'
   | 'row-reverse'
   | 'column'
   | 'column-reverse';
 
-type JustifyContent =
+export type JustifyContent =
   | 'flex-start'
   | 'flex-end'
   | 'center'

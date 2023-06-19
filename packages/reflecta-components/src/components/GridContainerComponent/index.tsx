@@ -14,8 +14,10 @@ import './styles.scss';
 
 const GridContainerComponent: FC<IGridContainerComponent> = (props) => {
     const {
+        alignItems,
         children,
-        className
+        className,
+        isFullHeight
     } = props;
 
     const {
@@ -29,7 +31,9 @@ const GridContainerComponent: FC<IGridContainerComponent> = (props) => {
 
     return (
         <FlexboxComponent
+            alignItems={alignItems}
             className={componentClassNames}
+            isFullHeight={isFullHeight}
             justifyContent={'center'}
         >
             <div className={`${displayName}__grid`}>

@@ -9,6 +9,6 @@ export default {
     title: 'ColorPalette'
 };
 
-const Template = (args: IColorPalette) => <ColorPaletteComponent {...args} />;
+const Template = (args: IColorPalette) => (<ColorPaletteComponent {...args} />);
 
 export const Default = Template.bind({});

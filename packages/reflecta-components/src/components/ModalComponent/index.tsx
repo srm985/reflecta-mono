@@ -74,20 +74,24 @@ const ModalComponent: FC<IModalComponent> = (props) => {
                 ref={backgroundReference}
                 role={'button'}
             />
-            <GridContainerComponent>
+            <GridContainerComponent
+                alignItems={'center'}
+                isFullHeight
+            >
                 <GridItemComponent
                     breakpointLarge={{
-                        start: 3,
-                        stop: 11
+                        start: 4,
+                        stop: 10
                     }}
                     breakpointMedium={{
-                        start: 2,
-                        stop: 12
+                        start: 3,
+                        stop: 11
                     }}
                     breakpointXlarge={{
                         start: 4,
                         stop: 10
                     }}
+                    className={`${displayName}__dialog-wrapper`}
                 >
                     <dialog
                         className={`${displayName}__dialog`}

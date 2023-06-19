@@ -47,11 +47,12 @@ $color-danger-400: #9d0c0c;
 $color-danger-500: #660000;
 
 // Neutrals
-$color-neutral-100: #f0f0fc;
-$color-neutral-200: #ceced9;
-$color-neutral-300: #797980;
-$color-neutral-400: #303033;
-$color-neutral-500: #020203;
+$color-neutral-100: #f8f8ff;
+$color-neutral-200: #f0f0fc;
+$color-neutral-300: #ceced9;
+$color-neutral-400: #797980;
+$color-neutral-500: #303033;
+$color-neutral-600: #020203;
 
 :export {
     _1_primary-midnight-orchid: {
@@ -102,5 +103,6 @@ $color-neutral-500: #020203;
         _3_color-neutral-300: $color-neutral-300;
         _4_color-neutral-400: $color-neutral-400;
         _5_color-neutral-500: $color-neutral-500;
+        _6_color-neutral-600: $color-neutral-600;
     }
 }
