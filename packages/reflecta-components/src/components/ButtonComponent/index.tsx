@@ -8,10 +8,11 @@ import './styles.scss';
 
 const ButtonComponent: React.FC<IButtonComponent> = (props) => {
     const {
+        children,
         className,
+        color = 'primary',
         disabled,
         href,
-        label,
         onClick,
         styleType = 'primary',
         type = 'button'
@@ -24,13 +25,11 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
     const componentClassNames = classNames(
         displayName,
         className,
+        `${displayName}--${styleType}-color-${color}`,
+        `${displayName}--${styleType}`,
         {
-            [`${displayName}--inline-disabled`]: styleType === 'inline' && !!disabled,
-            [`${displayName}--inline`]: styleType === 'inline',
-            [`${displayName}--primary-disabled`]: styleType === 'primary' && !!disabled,
-            [`${displayName}--primary`]: styleType === 'primary',
-            [`${displayName}--secondary-disabled`]: styleType === 'secondary' && !!disabled,
-            [`${displayName}--secondary`]: styleType === 'secondary'
+            [`${displayName}--${styleType}-disabled`]: !!disabled,
+            [`${displayName}--${styleType}-disabled-color-${color}`]: !!disabled
         }
     );
 
@@ -39,7 +38,7 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
             <a
                 className={componentClassNames}
                 href={href}
-            >{label}
+            >{children}
             </a>
         ) : (
             <button
@@ -49,7 +48,7 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
                 // eslint-disable-next-line react/button-has-type
                 type={type}
             >
-                {label}
+                {children}
             </button>
         )
     );

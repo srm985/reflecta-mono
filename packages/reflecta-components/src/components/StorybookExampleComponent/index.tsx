@@ -28,9 +28,7 @@ const StorybookExampleComponent: FC<IStorybookExampleComponent> = (props) => {
 
     return (
         <div className={componentClassNames}>
-            <div className={`${displayName}__tab`}>
-                <span>{label}</span>
-            </div>
+            <p className={'mb--2 bold'}>{label}</p>
             <div className={`${displayName}__card`}>{children}</div>
         </div>
     );

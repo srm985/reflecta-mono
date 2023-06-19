@@ -102,12 +102,11 @@ const DashboardView: FC<IDashboardView> = (props) => {
             <GridContainerComponent>
                 {generatedJournalEntriesList}
             </GridContainerComponent>
-            <ButtonComponent
-                label={'Add Entry'}
-                onClick={() => dispatch({
-                    type: 'TOGGLE_ADDING_ENTRY'
-                })}
-            />
+            <ButtonComponent onClick={() => dispatch({
+                type: 'TOGGLE_ADDING_ENTRY'
+            })}
+            >{'Add Entry'}
+            </ButtonComponent>
             {
                 state.isAddingEntry && (
                     <ModalComponent onClose={handleEntryConclusion}>

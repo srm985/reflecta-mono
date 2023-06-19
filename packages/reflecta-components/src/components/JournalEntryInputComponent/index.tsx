@@ -94,13 +94,15 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
             <FlexboxComponent justifyContent={'flex-end'}>
                 <ButtonComponent
                     className={'mr--2'}
-                    label={'Discard'}
                     onClick={handleReset}
-                />
+                >
+                    {'Discard'}
+                </ButtonComponent>
                 <ButtonComponent
-                    label={'Save'}
                     type={'submit'}
-                />
+                >
+                    {'Save'}
+                </ButtonComponent>
             </FlexboxComponent>
         </FormComponent>
     );

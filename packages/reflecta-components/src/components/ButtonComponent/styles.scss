@@ -8,13 +8,19 @@ $letter-spacing: 0.05em;
     cursor: pointer;
 
     &:focus {
-        outline: solid $color-primary-100 2px;
+        outline: solid
+            $color-primary-100
+            2px;
         outline-offset: 1px;
     }
 
     &--primary {
-        height: calc($planck-length * 6);
-        padding: 0 $padding-medium;
+        height: calc(
+            $planck-length *
+                6
+        );
+        padding: 0
+            $padding-medium;
 
         color: $color-neutral-100;
         font-weight: bold;
@@ -23,17 +29,42 @@ $letter-spacing: 0.05em;
         letter-spacing: $letter-spacing;
         text-transform: uppercase;
 
-        background-color: $color-accent-300;
         border-radius: $border-radius-medium;
 
-        &-disabled{
-            background-color: $color-accent-200;
+        &-color-primary {
+            background-color: $color-primary-300;
+        }
+
+        &-color-secondary {
+            background-color: $color-secondary-300;
+        }
+
+        &-color-accent {
+            background-color: $color-accent-300;
+        }
+
+        &-disabled {
+            &-color-primary {
+                background-color: $color-primary-100;
+            }
+
+            &-color-secondary {
+                background-color: $color-secondary-200;
+            }
+
+            &-color-accent {
+                background-color: $color-accent-200;
+            }
         }
     }
 
     &--secondary {
-        height: calc($planck-length * 6);
-        padding: 0 $padding-medium;
+        height: calc(
+            $planck-length *
+                6
+        );
+        padding: 0
+            $padding-medium;
 
         color: $color-accent-300;
         font-weight: bold;
@@ -42,24 +73,80 @@ $letter-spacing: 0.05em;
         letter-spacing: $letter-spacing;
         text-transform: uppercase;
 
-        border: solid 3px $color-accent-300;
+        border-style: solid;
+        border-width: 3px;
         border-radius: $border-radius-medium;
 
-        &-disabled{
-            color: $color-accent-200;
+        &-color-primary {
+            color: $color-primary-300;
 
-            border-color: $color-accent-200;
+            border-color: $color-primary-300;
+        }
+
+        &-color-secondary {
+            color: $color-secondary-300;
+
+            border-color: $color-secondary-300;
+        }
+
+        &-color-accent {
+            color: $color-accent-300;
+
+            border-color: $color-accent-300;
+        }
+
+        &-disabled {
+            &-color-primary {
+                color: $color-primary-200;
+
+                border-color: $color-primary-200;
+            }
+
+            &-color-secondary {
+                color: $color-secondary-200;
+
+                border-color: $color-secondary-200;
+            }
+
+            &-color-accent {
+                color: $color-accent-200;
+
+                border-color: $color-accent-200;
+            }
         }
     }
 
     &--inline {
-        margin: 0;
         padding: 0;
 
         font-size: inherit;
-
         font-family: inherit;
-
         text-decoration: underline;
+
+        &-color-primary {
+            color: $color-primary-300;
+        }
+
+        &-color-secondary {
+            color: $color-secondary-300;
+        }
+
+        &-color-accent {
+            color: $color-accent-300;
+        }
+
+        &-disabled {
+            &-color-primary {
+                color: $color-primary-200;
+            }
+
+            &-color-secondary {
+                color: $color-secondary-200;
+            }
+
+            &-color-accent {
+                color: $color-accent-200;
+            }
+        }
     }
 }

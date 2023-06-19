@@ -1,6 +1,6 @@
 /* stylelint-disable import-notation */
 
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;700:900&family=Cormorant:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700:900');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;700&family=Cormorant:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700');
 
 // Font sizes used for things other than headers
 $font-size-xsmall: 12px;
@@ -9,9 +9,7 @@ $font-size-regular: 18px;
 $font-size-large: 22px;
 
 // Font families for display and reading
-$font-family-default:
-    'Comfortaa',
+$font-family-default: 'Comfortaa',
     sans-serif;
-$font-family-text-block:
-    'Cormorant',
+$font-family-text-block: 'Cormorant',
     serif;

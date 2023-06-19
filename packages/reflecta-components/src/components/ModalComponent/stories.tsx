@@ -39,10 +39,7 @@ const Template = (args: IModalComponent) => {
                 )
             }
 
-            <ButtonComponent
-                label={'Toggle Modal'}
-                onClick={toggleOpen}
-            />
+            <ButtonComponent onClick={toggleOpen}>{'Toggle Modal'}</ButtonComponent>
         </>
     );
 };
