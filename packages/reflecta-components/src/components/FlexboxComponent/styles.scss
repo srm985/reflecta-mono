@@ -1,28 +1,6 @@
-$align-items-options: (
-  flex-start,
-  flex-end,
-  center,
-  baseline,
-  stretch
-);
-$flex-direction-options: (
-  row,
-  row-reverse,
-  column,
-  column-reverse
-);
-$justify-content-options: (
-  flex-start,
-  flex-end,
-  center,
-  space-between,
-  space-around,
-  space-evenly,
-  start,
-  end,
-  left,
-  right
-);
+$align-items-options: (flex-start, flex-end, center, baseline, stretch);
+$flex-direction-options: (row, row-reverse, column, column-reverse);
+$justify-content-options: (flex-start, flex-end, center, space-between, space-around, space-evenly, start, end, left, right);
 
 .FlexboxComponent {
     display: flex !important;

@@ -11,10 +11,12 @@
 }
 
 body {
-    color: $color-neutral-500;
+    color: $color-neutral-600;
     font-weight: 500;
     font-size: 18px;
     font-family: $font-family-default;
+
+    background-color: $color-neutral-200;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

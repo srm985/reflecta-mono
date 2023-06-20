@@ -31,10 +31,7 @@
         position: relative;
 
         width: 100%;
-        margin-bottom: calc(
-            $planck-length *
-                10
-        );
+        margin-bottom: calc($planck-length * 10);
         padding: $padding-medium;
 
         background-color: $color-neutral-100;

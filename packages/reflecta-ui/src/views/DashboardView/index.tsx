@@ -87,6 +87,7 @@ const DashboardView: FC<IDashboardView> = (props) => {
             breakpointSmall={{
                 span: 6
             }}
+            rowSpan={journalEntryDetails.isHighInterest ? 2 : 1}
         >
             <JournalEntryDisplayComponent
                 {...journalEntryDetails}

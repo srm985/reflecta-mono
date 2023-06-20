@@ -5,6 +5,7 @@ import {
 export interface JournalEntry {
     body: string;
     entryID: number;
+    isHighInterest: boolean;
     occurredAt: string;
     title: string;
     updatedAt: string | null;

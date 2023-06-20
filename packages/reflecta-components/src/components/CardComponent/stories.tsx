@@ -50,6 +50,7 @@ export const Default: Story = {
                 breakpointXlarge={{
                     span: 3
                 }}
+                rowSpan={Math.round(Math.random()) + 1}
             >
                 <CardComponent {...args}>
                     <CardContent />
@@ -65,8 +66,11 @@ export const Default: Story = {
                 breakpointXlarge={{
                     span: 3
                 }}
+                rowSpan={Math.round(Math.random()) + 1}
             >
-                <CardComponent {...args} />
+                <CardComponent {...args}>
+                    <CardContent />
+                </CardComponent>
             </GridItemComponent>
             <GridItemComponent
                 breakpointLarge={{
@@ -78,8 +82,11 @@ export const Default: Story = {
                 breakpointXlarge={{
                     span: 3
                 }}
+                rowSpan={Math.round(Math.random()) + 1}
             >
-                <CardComponent {...args} />
+                <CardComponent {...args}>
+                    <CardContent />
+                </CardComponent>
             </GridItemComponent>
             <GridItemComponent
                 breakpointLarge={{
@@ -91,8 +98,11 @@ export const Default: Story = {
                 breakpointXlarge={{
                     span: 3
                 }}
+                rowSpan={Math.round(Math.random()) + 1}
             >
-                <CardComponent {...args} />
+                <CardComponent {...args}>
+                    <CardContent />
+                </CardComponent>
             </GridItemComponent>
             <GridItemComponent
                 breakpointLarge={{
@@ -104,8 +114,27 @@ export const Default: Story = {
                 breakpointXlarge={{
                     span: 3
                 }}
+                rowSpan={Math.round(Math.random()) + 1}
             >
-                <CardComponent {...args} />
+                <CardComponent {...args}>
+                    <CardContent />
+                </CardComponent>
+            </GridItemComponent>
+            <GridItemComponent
+                breakpointLarge={{
+                    span: 4
+                }}
+                breakpointMedium={{
+                    span: 6
+                }}
+                breakpointXlarge={{
+                    span: 3
+                }}
+                rowSpan={Math.round(Math.random()) + 1}
+            >
+                <CardComponent {...args}>
+                    <CardContent />
+                </CardComponent>
             </GridItemComponent>
         </GridContainerComponent>
     )

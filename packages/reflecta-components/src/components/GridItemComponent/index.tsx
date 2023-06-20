@@ -15,6 +15,7 @@ const GridItemComponent: FC<IGridItemComponent> = (props) => {
     const {
         children,
         className,
+        rowSpan,
         ...breakpoints
     } = props;
 
@@ -51,7 +52,12 @@ const GridItemComponent: FC<IGridItemComponent> = (props) => {
     );
 
     return (
-        <div className={componentClassNames}>
+        <div
+            className={componentClassNames}
+            style={{
+                gridRowEnd: rowSpan ? `span ${rowSpan}` : 'auto'
+            }}
+        >
             {children}
         </div>
     );

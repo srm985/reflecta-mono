@@ -4,7 +4,7 @@ import JournalEntriesModel, {
 
 import CustomError from '@utils/CustomError';
 
-export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'occurredAt' | 'title' | 'updatedAt'>;
+export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'occurredAt' | 'title' | 'updatedAt'>;
 
 class JournalingController {
     private readonly journalEntriesModel: JournalEntriesModel;
@@ -44,6 +44,7 @@ class JournalingController {
     getAllEntriesByUserID = async (userID: number): Promise<JournalEntry[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map((entryDetails): JournalEntryResponse => ({
         body: entryDetails.body,
         entryID: entryDetails.entry_id,
+        isHighInterest: !!Math.round(Math.random()),
         occurredAt: entryDetails.occurred_at,
         title: entryDetails.title,
         updatedAt: entryDetails.updated_at

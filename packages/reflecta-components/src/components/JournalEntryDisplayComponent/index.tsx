@@ -2,11 +2,15 @@ import {
     FC
 } from 'react';
 
+import CardComponent from '@components/CardComponent';
+
 import classNames from '@utils/classNames';
 
 import {
     IJournalEntryDisplayComponent
 } from './types';
+
+import './styles.scss';
 
 const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) => {
     const {
@@ -27,7 +31,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
     );
 
     return (
-        <div className={componentClassNames}>
+        <CardComponent className={componentClassNames}>
             <h3>{title}</h3>
             <p>{occurredAt}</p>
             {
@@ -36,7 +40,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
                 )
             }
             <p>{body}</p>
-        </div>
+        </CardComponent>
     );
 };
 

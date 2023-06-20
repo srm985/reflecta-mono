@@ -21,6 +21,7 @@ export interface JournalEntry {
     createdAt?: string;
     deletedAt?: string | null;
     entryID?: number;
+    isHighInterest?: boolean;
     occurredAt: string;
     title: string;
     updatedAt?: string | null;
@@ -69,7 +70,7 @@ class JournalEntriesModel {
     };
 
     allJournalEntriesByUserID = async (userID: number): Promise<JournalEntriesSchema[]> => {
-        const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL';
+        const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL ORDER BY occurred_at DESC';
         const values = [
             this.TABLE_NAME,
             userID

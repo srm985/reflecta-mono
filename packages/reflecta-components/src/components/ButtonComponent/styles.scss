@@ -8,19 +8,13 @@ $letter-spacing: 0.05em;
     cursor: pointer;
 
     &:focus {
-        outline: solid
-            $color-primary-100
-            2px;
+        outline: solid $color-primary-100 2px;
         outline-offset: 1px;
     }
 
     &--primary {
-        height: calc(
-            $planck-length *
-                6
-        );
-        padding: 0
-            $padding-medium;
+        height: calc($planck-length * 6);
+        padding: 0 $padding-medium;
 
         color: $color-neutral-100;
         font-weight: bold;
@@ -59,12 +53,8 @@ $letter-spacing: 0.05em;
     }
 
     &--secondary {
-        height: calc(
-            $planck-length *
-                6
-        );
-        padding: 0
-            $padding-medium;
+        height: calc($planck-length * 6);
+        padding: 0 $padding-medium;
 
         color: $color-accent-300;
         font-weight: bold;

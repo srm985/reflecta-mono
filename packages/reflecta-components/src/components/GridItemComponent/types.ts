@@ -34,4 +34,5 @@ export type Breakpoints = {
 export interface IGridItemComponent extends Breakpoints {
     children: ReactNode | ReactNode[];
     className?: string;
+    rowSpan?: number;
 }
