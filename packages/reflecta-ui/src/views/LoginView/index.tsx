@@ -107,10 +107,7 @@ const LoginView: React.FC<ILoginView> = (props) => {
                     type={'password'}
                     value={state.password}
                 />
-                <ButtonComponent
-                    label={'Login'}
-                    type={'submit'}
-                />
+                <ButtonComponent type={'submit'}>{'Login'}</ButtonComponent>
             </FormComponent>
         </main>
     );
