@@ -12,7 +12,7 @@ import {
 
 export default {
     component: ModalComponent,
-    title: 'ModalComponent'
+    title: 'Modal'
 };
 
 const Template = (args: IModalComponent) => {

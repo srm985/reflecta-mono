@@ -6,7 +6,7 @@ import {
 
 export default {
     component: FormComponent,
-    title: 'FormComponent'
+    title: 'Form'
 };
 
 const Template = (args: IFormComponent) => <FormComponent {...args} />;

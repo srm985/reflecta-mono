@@ -26,6 +26,7 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.2.5",
+    "node-gyp": "^9.4.0",
     "nodemon": "^2.0.22",
     "onchange": "^7.1.0",
     "sequelize": "^6.32.0",

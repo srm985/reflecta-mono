@@ -15,7 +15,7 @@ type Story = StoryObj<IButtonComponent>;
 
 const meta: Meta<IButtonComponent> = {
     component: ButtonComponent,
-    title: 'ButtonComponent'
+    title: 'Button'
 };
 
 // const Default = (args: IButtonComponent) => (<ButtonComponent {...args} />);

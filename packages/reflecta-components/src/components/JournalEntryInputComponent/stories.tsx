@@ -6,7 +6,7 @@ import {
 
 export default {
     component: JournalEntryInputComponent,
-    title: 'JournalEntryInputComponent'
+    title: 'Journal Entry Input'
 };
 
 const Template = (args: IJournalEntryInputComponent) => {

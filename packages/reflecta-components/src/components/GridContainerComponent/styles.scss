@@ -3,8 +3,8 @@
 .GridContainerComponent {
     &__grid {
         display: grid;
-        grid-gap: calc($planck-length * 3) $planck-length;
-        grid-template-rows: auto;
+        grid-gap: calc($planck-length * 3) calc($planck-length * 2);
+        grid-template-rows: 1fr min-content;
         grid-template-columns: repeat(12, 1fr);
         width: 100%;
 

@@ -6,7 +6,7 @@ import {
 
 export default {
     component: InputComponent,
-    title: 'InputComponent'
+    title: 'Input'
 };
 
 const Template = (args: IInputComponent) => <InputComponent {...args} />;

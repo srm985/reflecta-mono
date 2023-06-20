@@ -6,7 +6,7 @@ import {
 
 export default {
     component: ColorPaletteComponent,
-    title: 'ColorPalette'
+    title: 'Color Palette'
 };
 
 const Template = (args: IColorPalette) => (<ColorPaletteComponent {...args} />);

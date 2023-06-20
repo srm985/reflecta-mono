@@ -1,0 +1,2 @@
+{"level":"info","message":"server started on port: 3100...","timestamp":"2023-06-20 11:19:15"}
+{"level":"error","message":"unable to connect to database  located at : with user ...","timestamp":"2023-06-20 11:19:15"}

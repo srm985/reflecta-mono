@@ -6,7 +6,7 @@ import {
 
 export default {
     component: NavigationBarComponent,
-    title: 'NavigationBarComponent'
+    title: 'Navigation Bar'
 };
 
 const Template = (args: INavigationBarComponent) => <NavigationBarComponent {...args} />;

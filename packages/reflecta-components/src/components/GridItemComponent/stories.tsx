@@ -8,7 +8,7 @@ import {
 
 export default {
     component: GridItemComponent,
-    title: 'GridItemComponent'
+    title: 'Grid Item'
 };
 
 const Template = (args: IGridItemComponent) => (

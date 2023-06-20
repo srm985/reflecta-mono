@@ -6,7 +6,7 @@ import {
 
 export default {
     component: JournalEntryDisplayComponent,
-    title: 'JournalEntryDisplayComponent'
+    title: 'Journal Entry Display'
 };
 
 const Template = (args: IJournalEntryDisplayComponent) => <JournalEntryDisplayComponent {...args} />;
