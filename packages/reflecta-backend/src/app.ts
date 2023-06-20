@@ -61,7 +61,7 @@ const server = app.listen(SERVER_PORT || 3100, async () => {
 
         const connection = await pool.getConnection();
 
-        logger.info('database connection established...');
+        logger.info('database connection established....');
 
         connection.release();
     } catch (error) {

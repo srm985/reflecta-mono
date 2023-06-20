@@ -66,7 +66,11 @@ jobs:
 
       # Install Production Packages
       - name: Install Production Packages
-        run: npm ci -w reflecta-backend
+        run: npm ci --only-production --ignore-scripts -w reflecta-backend
+
+      # Install Production Packages
+      - name: Fully Install bcrypt
+        run: npm explore bcrypt -- npm install
 
       # Copy Packages
       - name: Copy Packages Config
