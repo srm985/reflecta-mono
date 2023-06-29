@@ -13,9 +13,10 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
         color = 'primary',
         disabled,
         href,
+        isAccented = true,
         onClick,
         styleType = 'primary',
-        type = 'button'
+        type
     } = props;
 
     const {
@@ -28,8 +29,9 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
         `${displayName}--${styleType}-color-${color}`,
         `${displayName}--${styleType}`,
         {
-            [`${displayName}--${styleType}-disabled`]: !!disabled,
-            [`${displayName}--${styleType}-disabled-color-${color}`]: !!disabled
+            [`${displayName}--${styleType}-accented`]: styleType === 'inline' && !!isAccented,
+            [`${displayName}--${styleType}-disabled-color-${color}`]: !!disabled,
+            [`${displayName}--${styleType}-disabled`]: !!disabled
         }
     );
 
@@ -38,7 +40,8 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
             <a
                 className={componentClassNames}
                 href={href}
-            >{children}
+            >
+                {children}
             </a>
         ) : (
             <button

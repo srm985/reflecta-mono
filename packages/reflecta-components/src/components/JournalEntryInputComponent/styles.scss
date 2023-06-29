@@ -1,0 +1,53 @@
+@import '../../styles/styles';
+
+@mixin divider {
+    border-bottom: solid 1px $color-neutral-300;
+}
+@mixin input {
+    font-size: $font-size-regular;
+
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.JournalEntryInputComponent {
+    width: 100%;
+
+    &__input {
+        @include divider ();
+
+        width: 100%;
+        padding-top: $margin-small;
+        padding-bottom: $margin-small;
+
+        label {
+            margin-right: $margin-medium;
+        }
+
+        input {
+            @include input ();
+
+            flex-grow: 1;
+            height: calc($planck-length * 5);
+
+            font-weight: bold !important;
+        }
+    }
+
+    &__textarea {
+        @include divider ();
+        @include input ();
+
+        width: 100%;
+        height: 100vh;
+        max-height: calc($planck-length * 50);
+        margin-top: $margin-medium;
+        margin-bottom: $margin-large;
+
+        font-size: $font-size-large;
+        font-family: $font-family-text-block;
+
+        resize: none;
+    }
+}

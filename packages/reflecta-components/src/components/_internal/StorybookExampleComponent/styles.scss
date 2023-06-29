@@ -1,6 +1,9 @@
-@import '../../styles/styles';
+@import '../../../styles/styles';
 
 .StorybookExampleComponent {
+    width: 100%;
+    max-width: calc($planck-length * 100);
+
     &__card {
         padding: $padding-medium $padding-medium $padding-large;
 

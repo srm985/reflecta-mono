@@ -5,5 +5,5 @@ import {
 export interface IStorybookExampleComponent {
     children: ReactNode | ReactNode[];
     className?: string;
-    label: string;
+    label?: string;
 }

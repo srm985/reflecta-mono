@@ -70,7 +70,7 @@ module.exports = () => {
                         recursive: true
                     });
 
-                    const componentCreationPromiseList = results.filter((result) => result.isDirectory()).map(async (result) => {
+                    const componentCreationPromiseList = results.filter((result) => result.isDirectory() && result.name !== '_internal').map(async (result) => {
                         const {
                             name: componentName
                         } = result;

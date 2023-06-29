@@ -9,6 +9,6 @@ export default {
     title: 'Form'
 };
 
-const Template = (args: IFormComponent) => <FormComponent {...args} />;
+const Template = (args: IFormComponent) => (<FormComponent {...args} />);
 
 export const Default = Template.bind({});

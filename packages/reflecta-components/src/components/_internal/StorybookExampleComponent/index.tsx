@@ -28,7 +28,7 @@ const StorybookExampleComponent: FC<IStorybookExampleComponent> = (props) => {
 
     return (
         <div className={componentClassNames}>
-            <p className={'mb--2 bold'}>{label}</p>
+            {label && <p className={'mb--2 bold'}>{label}</p>}
             <div className={`${displayName}__card`}>{children}</div>
         </div>
     );

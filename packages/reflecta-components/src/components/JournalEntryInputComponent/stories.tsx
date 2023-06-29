@@ -1,3 +1,5 @@
+import StorybookExampleComponent from '@components/_internal/StorybookExampleComponent';
+
 import JournalEntryInputComponent from './index';
 
 import {
@@ -15,10 +17,12 @@ const Template = (args: IJournalEntryInputComponent) => {
     };
 
     return (
-        <JournalEntryInputComponent
-            {...args}
-            onSubmit={handleSubmit}
-        />
+        <StorybookExampleComponent>
+            <JournalEntryInputComponent
+                {...args}
+                onSubmit={handleSubmit}
+            />
+        </StorybookExampleComponent>
     );
 };
 

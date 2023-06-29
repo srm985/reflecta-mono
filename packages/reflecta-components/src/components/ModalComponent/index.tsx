@@ -80,12 +80,12 @@ const ModalComponent: FC<IModalComponent> = (props) => {
             >
                 <GridItemComponent
                     breakpointLarge={{
-                        start: 4,
-                        stop: 10
-                    }}
-                    breakpointMedium={{
                         start: 3,
                         stop: 11
+                    }}
+                    breakpointMedium={{
+                        start: 2,
+                        stop: 12
                     }}
                     breakpointXlarge={{
                         start: 4,

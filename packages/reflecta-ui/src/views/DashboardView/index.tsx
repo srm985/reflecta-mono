@@ -103,9 +103,11 @@ const DashboardView: FC<IDashboardView> = (props) => {
             <GridContainerComponent>
                 {generatedJournalEntriesList}
             </GridContainerComponent>
-            <ButtonComponent onClick={() => dispatch({
-                type: 'TOGGLE_ADDING_ENTRY'
-            })}
+            <ButtonComponent
+                color={'accent'}
+                onClick={() => dispatch({
+                    type: 'TOGGLE_ADDING_ENTRY'
+                })}
             >{'Add Entry'}
             </ButtonComponent>
             {

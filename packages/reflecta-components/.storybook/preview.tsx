@@ -6,7 +6,8 @@ import {
 } from 'react';
 
 import RootStylingComponent from '@components/RootStylingComponent';
-import StorybookStylerComponent from '@components/StorybookStylerComponent';
+
+import StorybookStylerComponent from '@components/_internal/StorybookStylerComponent';
 
 const withGlobalStyling = (Story: FC) => (
     <>

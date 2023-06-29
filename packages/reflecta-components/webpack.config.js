@@ -17,6 +17,10 @@ module.exports = async () => {
         }
     } = process;
 
+    console.log({
+        WEBPACK_SERVER_PORT_COMPONENTS
+    });
+
     const COMPONENT_ROOT = './src/components';
     const DECLARATIONS_DIRECTORY = './declarations';
 
@@ -24,7 +28,7 @@ module.exports = async () => {
         withFileTypes: true
     });
 
-    const directoriesList = results.filter((result) => result.isDirectory()).map((result) => result.name);
+    const directoriesList = results.filter((result) => result.isDirectory() && result.name !== '_internal').map((result) => result.name);
 
     console.log('Found the following components to export:');
     console.log(directoriesList.join('\n'));

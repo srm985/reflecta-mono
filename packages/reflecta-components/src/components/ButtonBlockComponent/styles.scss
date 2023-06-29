@@ -1,0 +1,30 @@
+@import '../../styles/styles';
+
+.ButtonBlockComponent {
+    flex-direction: column-reverse;
+
+    .ButtonComponent--inline {
+        align-self: center;
+    }
+
+    @media only screen and (min-width: $breakpoint-begin-medium) {
+        flex-direction: row;
+    }
+
+    & > * {
+        margin-bottom: $margin-large !important;
+
+        &:first-of-type {
+            margin-bottom: 0 !important;
+        }
+
+        @media only screen and (min-width: $breakpoint-begin-medium) {
+            margin-right: $margin-large !important;
+            margin-bottom: 0 !important;
+
+            &:last-of-type {
+                margin-right: 0 !important;
+            }
+        }
+    }
+}

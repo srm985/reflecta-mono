@@ -19,7 +19,7 @@ const Template = (args: IModalComponent) => {
     const [
         isOpen,
         setOpen
-    ] = useState(false);
+    ] = useState<boolean>(false);
 
     const toggleOpen = () => {
         setOpen(!isOpen);

@@ -1,13 +1,31 @@
 import {
-    Outlet
+    Outlet,
+    useNavigate
 } from 'react-router-dom';
 
-const ContainerComponent = () => (
-    <>
-        <nav />
-        <Outlet />
-        <footer />
-    </>
-);
+import NavigationBarComponent from '@components/remotes/NavigationBarComponent';
+
+import Authentication from '@utils/Authentication';
+
+const authentication = new Authentication();
+
+const ContainerComponent = () => {
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        authentication.deAuthenticate();
+
+        navigate('/');
+    };
+
+    return (
+        <>
+            <NavigationBarComponent onLogout={handleLogout} />
+            <div className={'mx--2 mt--9'}>
+                <Outlet />
+            </div>
+            <footer />
+        </>
+    );
+};
 
 export default ContainerComponent;

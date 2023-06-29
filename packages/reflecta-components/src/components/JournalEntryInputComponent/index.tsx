@@ -3,16 +3,18 @@ import {
     useState
 } from 'react';
 
+import ButtonBlockComponent from '@components/ButtonBlockComponent';
 import ButtonComponent from '@components/ButtonComponent';
 import FlexboxComponent from '@components/FlexboxComponent';
 import FormComponent from '@components/FormComponent';
-import InputComponent from '@components/InputComponent';
 
 import classNames from '@utils/classNames';
 
 import {
     IJournalEntryInputComponent
 } from './types';
+
+import './styles.scss';
 
 const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props) => {
     const {
@@ -29,17 +31,17 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     const [
         title,
         setTitle
-    ] = useState('');
+    ] = useState<string>('');
 
     const [
         body,
         setBody
-    ] = useState('');
+    ] = useState<string>('');
 
     const [
         date,
         setDate
-    ] = useState(now);
+    ] = useState<string>(now);
 
     const handleEntrySubmission = (event: FormEvent) => {
         event.preventDefault();
@@ -67,43 +69,57 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
             className={componentClassNames}
             onSubmit={handleEntrySubmission}
         >
-            <InputComponent
-                className={'mb--1'}
-                label={'Title'}
-                name={'title'}
-                onChange={setTitle}
-                type={'text'}
-                value={title}
-            />
-            <InputComponent
-                className={'mb--1'}
-                label={'Body'}
+            <FlexboxComponent
+                alignItems={'center'}
+                className={`${displayName}__input`}
+            >
+                <label htmlFor={'title'}>
+                    <span>{'Title (optional):'}</span>
+                </label>
+                <input
+                    id={'title'}
+                    name={'title'}
+                    onChange={(event) => setTitle(event.target.value)}
+                    type={'search'}
+                    value={title}
+                />
+            </FlexboxComponent>
+            <FlexboxComponent
+                alignItems={'center'}
+                className={`${displayName}__input`}
+            >
+                <label htmlFor={'date'}>
+                    <span>{'Entry date:'}</span>
+                </label>
+                <input
+                    id={'date'}
+                    name={'date'}
+                    onChange={(event) => setDate(event.target.value)}
+                    type={'date'}
+                    value={date}
+                />
+            </FlexboxComponent>
+            <textarea
+                className={`${displayName}__textarea`}
                 name={'body'}
-                onChange={setBody}
-                type={'text'}
+                onChange={(event) => setBody(event.target.value)}
                 value={body}
             />
-            <InputComponent
-                className={'mb--2'}
-                label={'Date'}
-                name={'date'}
-                onChange={setDate}
-                type={'date'}
-                value={date}
-            />
-            <FlexboxComponent justifyContent={'flex-end'}>
+            <ButtonBlockComponent>
                 <ButtonComponent
-                    className={'mr--2'}
+                    color={'danger'}
                     onClick={handleReset}
+                    styleType={'inline'}
                 >
                     {'Discard'}
                 </ButtonComponent>
                 <ButtonComponent
+                    color={'accent'}
                     type={'submit'}
                 >
                     {'Save'}
                 </ButtonComponent>
-            </FlexboxComponent>
+            </ButtonBlockComponent>
         </FormComponent>
     );
 };
