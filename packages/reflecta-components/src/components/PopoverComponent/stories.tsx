@@ -56,15 +56,29 @@ export const Default: Story = {
         actions
     },
     render: (args: IPopoverComponent) => (
-        <FlexboxComponent justifyContent={'space-between'}>
-            <PopoverComponent
-                {...args}
-                label={'Test drop - left'}
-            />
-            <PopoverComponent
-                {...args}
-                label={'Test drop - right'}
-            />
-        </FlexboxComponent>
+        <div style={{
+            height: 1000
+        }}
+        >
+            <FlexboxComponent justifyContent={'space-between'}>
+                <FlexboxComponent alignItems={'center'}>
+                    <PopoverComponent
+                        {...args}
+                        label={'Test drop - left'}
+                    />
+                    <p className={'ml--2'}>{'Left-aligned'}</p>
+                </FlexboxComponent>
+                <FlexboxComponent
+                    alignItems={'center'}
+                    justifyContent={'flex-end'}
+                >
+                    <p className={'mr--2'}>{'Right-aligned'}</p>
+                    <PopoverComponent
+                        {...args}
+                        label={'Test drop - right'}
+                    />
+                </FlexboxComponent>
+            </FlexboxComponent>
+        </div>
     )
 };

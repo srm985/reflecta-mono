@@ -28,73 +28,55 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
     } = PopoverComponent;
 
     const [
-        windowDimensions,
-        setWindowDimensions
-    ] = useState<{ innerHeight: number; innerWidth: number; }>({
-        innerHeight: window.innerHeight,
-        innerWidth: window.innerWidth
-    });
-
-    const [
         isPopoverOpen,
         togglePopoverOpen
     ] = useState<boolean>(false);
 
-    const [
-        popoverLocation,
-        setPopoverLocation
-    ] = useState<{ x: number; y: number; }>({
-        x: 0,
-        y: 0
-    });
-
-    useEffect(() => {
-        const handleWindowResize = () => {
-            setWindowDimensions({
-                innerHeight: window.innerHeight,
-                innerWidth: window.innerWidth
-            });
-        };
-
-        window.addEventListener('resize', handleWindowResize);
-
-        return () => window.removeEventListener('resize', handleWindowResize);
-    }, []);
-
     const controlReference = useRef<HTMLButtonElement>(null);
+    const dialogReference = useRef<HTMLDialogElement>(null);
 
-    console.log({
-        windowDimensions
-    });
+    const clickListener = (event: MouseEvent) => {
+        if (!dialogReference.current?.contains(event.target as Node)) {
+            togglePopoverOpen(false);
 
-    const handleToggle = () => {
-        if (controlReference.current) {
-            const {
-                height,
-                width,
-                x,
-                y
-            } = controlReference.current.getBoundingClientRect();
-
-            let popoverX = x;
-
-            if (x + popoverWidth > windowDimensions.innerWidth) {
-                popoverX = x - popoverWidth + width;
-
-                console.log('here...');
-            }
-
-            setPopoverLocation({
-                x: popoverX,
-                y: y + height + 20
-            });
+            window.removeEventListener('click', clickListener);
         }
-
-        togglePopoverOpen(!isPopoverOpen);
     };
 
-    const controlClassNames = classNames(
-        `${displayName}__control`,
+    useEffect(() => {
+        // Prevent batching to ensure our event listener occurs after toggle open click finishes
+        setTimeout(() => {
+            if (isPopoverOpen) {
+                window.addEventListener('click', clickListener);
+            } else {
+                window.removeEventListener('click', clickListener);
+            }
+        }, 0);
+
+        return () => window.removeEventListener('click', clickListener);
+    }, [
+        isPopoverOpen
+    ]);
+
+    const handleActionClick = (onClick: () => void) => {
+        onClick();
+
+        togglePopoverOpen(false);
+    };
+
+    const {
+        bottom: controlLocationBottom = 0,
+        left: controlLocationLeft = 0,
+        width: controlWidth = 0
+    } = controlReference.current?.getBoundingClientRect() || {};
+
+    const popoverPosition = {
+        x: controlLocationLeft + popoverWidth > window.innerWidth ? controlWidth - popoverWidth : 0,
+        y: controlLocationBottom
+    };
+
+    const componentClassNames = classNames(
+        displayName,
         className
     );
 
@@ -107,7 +89,7 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
                 <button
                     className={`${displayName}__action-item`}
                     key={`${groupDetails.groupLabel}-${actionDetails.label}`}
-                    onClick={actionDetails.onClick}
+                    onClick={() => handleActionClick(actionDetails.onClick)}
                     type={'button'}
                 >{actionDetails.label}
                 </button>
@@ -116,11 +98,11 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
     ));
 
     return (
-        <>
+        <div className={componentClassNames}>
             <button
                 aria-label={'open popover'}
-                className={controlClassNames}
-                onClick={handleToggle}
+                className={`${displayName}__control`}
+                onClick={() => togglePopoverOpen(!isPopoverOpen)}
                 ref={controlReference}
                 type={'button'}
             >
@@ -131,9 +113,10 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
             <dialog
                 className={`${displayName}__popover`}
                 open={isPopoverOpen}
+                ref={dialogReference}
                 style={{
-                    left: popoverLocation.x,
-                    top: popoverLocation.y,
+                    left: popoverPosition.x,
+                    top: popoverPosition.y,
                     width: popoverWidth
                 }}
             >
@@ -145,7 +128,7 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
                     <button
                         aria-label={'close'}
                         className={`${displayName}__close`}
-                        onClick={() => togglePopoverOpen(!isPopoverOpen)}
+                        onClick={() => togglePopoverOpen(false)}
                         type={'button'}
                     >
                         <span />
@@ -153,7 +136,7 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
                 </FlexboxComponent>
                 <div className={`${displayName}__actions`}>{actionItemsList}</div>
             </dialog>
-        </>
+        </div>
     );
 };
 

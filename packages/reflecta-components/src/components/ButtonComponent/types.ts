@@ -11,7 +11,7 @@ export type SharedButtonProps = {
     className?: string;
     color?: Color;
     disabled?: boolean;
-    onClick?:() => void;
+    onClick?: () => void;
 };
 
 export type ButtonFunctionality = {

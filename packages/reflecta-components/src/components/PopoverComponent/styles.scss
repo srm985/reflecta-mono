@@ -10,6 +10,8 @@
 }
 
 .PopoverComponent {
+    position: relative;
+
     &__control {
         @include unstyled-button();
 
@@ -29,7 +31,7 @@
     }
 
     &__popover {
-        position: fixed;
+        position: absolute;
 
         margin: 0;
         padding: $padding-small;

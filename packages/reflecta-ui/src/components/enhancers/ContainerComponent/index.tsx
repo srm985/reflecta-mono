@@ -11,15 +11,18 @@ const authentication = new Authentication();
 
 const ContainerComponent = () => {
     const navigate = useNavigate();
+
     const handleLogout = () => {
         authentication.deAuthenticate();
 
         navigate('/');
     };
 
+    const isAuthenticated = authentication.isAuthenticated();
+
     return (
         <>
-            <NavigationBarComponent onLogout={handleLogout} />
+            {isAuthenticated && <NavigationBarComponent onLogout={handleLogout} />}
             <div className={'mx--2 mt--9'}>
                 <Outlet />
             </div>

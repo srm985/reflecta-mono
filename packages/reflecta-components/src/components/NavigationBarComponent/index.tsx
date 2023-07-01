@@ -2,8 +2,8 @@ import {
     FC
 } from 'react';
 
-import ButtonComponent from '@components/ButtonComponent';
 import FlexboxComponent from '@components/FlexboxComponent';
+import PopoverComponent from '@components/PopoverComponent';
 
 import {
     INavigationBarComponent
@@ -23,12 +23,20 @@ const NavigationBarComponent: FC<INavigationBarComponent> = (props) => {
     return (
         <nav className={displayName}>
             <FlexboxComponent justifyContent={'flex-end'}>
-                <ButtonComponent
-                    onClick={onLogout}
-                    styleType={'inline'}
-                >
-                    {'logout'}
-                </ButtonComponent>
+                <PopoverComponent
+                    actions={[
+                        {
+                            groupActions: [
+                                {
+                                    label: 'Logout',
+                                    onClick: onLogout
+                                }
+                            ],
+                            groupLabel: 'logout'
+                        }
+                    ]}
+                    label={'Options'}
+                />
             </FlexboxComponent>
         </nav>
     );
