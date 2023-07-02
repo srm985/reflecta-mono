@@ -10,6 +10,7 @@ import FlexboxComponent from '@components/FlexboxComponent';
 import classNames from '@utils/classNames';
 
 import {
+    ClickAction,
     IPopoverComponent
 } from './types';
 
@@ -58,21 +59,21 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
         isPopoverOpen
     ]);
 
-    const handleActionClick = (onClick: () => void) => {
+    const handleActionClick = (onClick: ClickAction) => {
         onClick();
 
         togglePopoverOpen(false);
     };
 
     const {
-        bottom: controlLocationBottom = 0,
+        height: controlHeight = 0,
         left: controlLocationLeft = 0,
         width: controlWidth = 0
     } = controlReference.current?.getBoundingClientRect() || {};
 
     const popoverPosition = {
         x: controlLocationLeft + popoverWidth > window.innerWidth ? controlWidth - popoverWidth : 0,
-        y: controlLocationBottom
+        y: controlHeight
     };
 
     const componentClassNames = classNames(
@@ -88,7 +89,7 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
             {groupDetails.groupActions.map((actionDetails) => (
                 <button
                     className={`${displayName}__action-item`}
-                    key={`${groupDetails.groupLabel}-${actionDetails.label}`}
+                    key={`${groupDetails.groupLabel}-${actionDetails.actionLabel || actionDetails.label}`}
                     onClick={() => handleActionClick(actionDetails.onClick)}
                     type={'button'}
                 >{actionDetails.label}
@@ -110,32 +111,36 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
                 <span />
                 <span />
             </button>
-            <dialog
-                className={`${displayName}__popover`}
-                open={isPopoverOpen}
-                ref={dialogReference}
-                style={{
-                    left: popoverPosition.x,
-                    top: popoverPosition.y,
-                    width: popoverWidth
-                }}
-            >
-                <FlexboxComponent
-                    alignItems={'flex-start'}
-                    justifyContent={'space-between'}
-                >
-                    <h3>{label}</h3>
-                    <button
-                        aria-label={'close'}
-                        className={`${displayName}__close`}
-                        onClick={() => togglePopoverOpen(false)}
-                        type={'button'}
+            {
+                isPopoverOpen && (
+                    <dialog
+                        className={`${displayName}__popover`}
+                        open
+                        ref={dialogReference}
+                        style={{
+                            left: popoverPosition.x,
+                            top: popoverPosition.y,
+                            width: popoverWidth
+                        }}
                     >
-                        <span />
-                    </button>
-                </FlexboxComponent>
-                <div className={`${displayName}__actions`}>{actionItemsList}</div>
-            </dialog>
+                        <FlexboxComponent
+                            alignItems={'flex-start'}
+                            justifyContent={'space-between'}
+                        >
+                            <h3>{label}</h3>
+                            <button
+                                aria-label={'close'}
+                                className={`${displayName}__close`}
+                                onClick={() => togglePopoverOpen(false)}
+                                type={'button'}
+                            >
+                                <span />
+                            </button>
+                        </FlexboxComponent>
+                        <div className={`${displayName}__actions`}>{actionItemsList}</div>
+                    </dialog>
+                )
+            }
         </div>
     );
 };

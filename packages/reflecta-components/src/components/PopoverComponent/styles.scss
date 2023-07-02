@@ -32,6 +32,7 @@
 
     &__popover {
         position: absolute;
+        z-index: $z-index-popover;
 
         margin: 0;
         padding: $padding-small;
@@ -41,7 +42,7 @@
         background-color: $color-neutral-100;
         border: none;
         border-radius: $border-radius-medium;
-        box-shadow: $box-shadow-default;
+        box-shadow: $box-shadow-dark;
 
         h3 {
             display: inline-block;

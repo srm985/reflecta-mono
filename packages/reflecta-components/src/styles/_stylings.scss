@@ -5,3 +5,4 @@ $border-radius-large: calc($planck-length * 2);
 
 // Box Shadows
 $box-shadow-default: calc($planck-length / 2) calc($planck-length / 2) $planck-length $color-neutral-300;
+$box-shadow-dark: calc($planck-length / 2) calc($planck-length / 2) $planck-length calc($planck-length / 2) $color-neutral-400;

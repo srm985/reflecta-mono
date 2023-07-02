@@ -9,9 +9,10 @@ import {
     IGridItemComponent
 } from '@components/GridItemComponent/types';
 
-export interface IGridContainerComponent {
+export type IGridContainerComponent = {
     alignItems?: AlignItems;
     children: ReactElement<IGridItemComponent> | ReactElement<IGridItemComponent>[];
     className?: string;
     isFullHeight?: boolean;
-}
+    rowHeight?: number;
+};

@@ -2,6 +2,8 @@ import JournalEntriesModel, {
     JournalEntry
 } from '@models/JournalEntriesModel';
 
+import OpenAIService from '@services/OpenAIService';
+
 import CustomError from '@utils/CustomError';
 
 export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'occurredAt' | 'title' | 'updatedAt'>;
@@ -9,12 +11,53 @@ export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHi
 class JournalingController {
     private readonly journalEntriesModel: JournalEntriesModel;
 
+    private readonly openAIService: OpenAIService;
+
     constructor() {
         this.journalEntriesModel = new JournalEntriesModel();
+
+        this.openAIService = new OpenAIService();
     }
 
+    private prepareAnalyzeEntry = async (title: string, body: string): Promise<{ isHighInterest: boolean; title: string; }> => {
+        const {
+            env: {
+                JOURNAL_ENTRY_MINIMUM_BODY_WORDS_FOR_TITLE = ''
+            }
+        } = process;
+
+        const minimumWordCount = parseInt(JOURNAL_ENTRY_MINIMUM_BODY_WORDS_FOR_TITLE, 10);
+        const isBodyMinimumWordCount = body.split(' ').length >= minimumWordCount;
+
+        if (isBodyMinimumWordCount) {
+            const analyzedEntryDetails = await this.openAIService.analyze(body);
+
+            if (analyzedEntryDetails) {
+                return ({
+                    isHighInterest: analyzedEntryDetails.isHighInterest,
+                    title: title || analyzedEntryDetails.title.trim()
+                });
+            }
+        }
+
+        return ({
+            isHighInterest: false,
+            title
+        });
+    };
+
     insertJournalEntry = async (userID: number, entryDetails: JournalEntry) => {
-        await this.journalEntriesModel.insertJournalEntry(userID, entryDetails);
+        const {
+            isHighInterest,
+            title
+        } = await this.prepareAnalyzeEntry(entryDetails.title, entryDetails.body);
+
+        await this.journalEntriesModel.insertJournalEntry(userID, {
+            ...entryDetails,
+            isHighInterest,
+            occurredAt: entryDetails.occurredAt.slice(0, 10),
+            title
+        });
     };
 
     modifyJournalEntry = async (userID: number, entryID: number, entryDetails: JournalEntry) => {
@@ -37,14 +80,24 @@ class JournalingController {
             });
         }
 
+        const {
+            isHighInterest,
+            title
+        } = await this.prepareAnalyzeEntry(entryDetails.title, entryDetails.body);
+
         // Everything looks good so we can go ahead and update the journal entry
-        await this.journalEntriesModel.modifyJournalEntry(entryID, entryDetails);
+        await this.journalEntriesModel.modifyJournalEntry(entryID, {
+            ...entryDetails,
+            isHighInterest,
+            occurredAt: entryDetails.occurredAt.slice(0, 10),
+            title
+        });
     };
 
     getAllEntriesByUserID = async (userID: number): Promise<JournalEntry[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map((entryDetails): JournalEntryResponse => ({
         body: entryDetails.body,
         entryID: entryDetails.entry_id,
-        isHighInterest: !!Math.round(Math.random()),
+        isHighInterest: entryDetails.is_high_interest,
         occurredAt: entryDetails.occurred_at,
         title: entryDetails.title,
         updatedAt: entryDetails.updated_at

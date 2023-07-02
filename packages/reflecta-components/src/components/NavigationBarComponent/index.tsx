@@ -1,4 +1,10 @@
 import {
+    faArrowRightFromBracket
+} from '@fortawesome/free-solid-svg-icons';
+import {
+    FontAwesomeIcon
+} from '@fortawesome/react-fontawesome';
+import {
     FC
 } from 'react';
 
@@ -28,7 +34,8 @@ const NavigationBarComponent: FC<INavigationBarComponent> = (props) => {
                         {
                             groupActions: [
                                 {
-                                    label: 'Logout',
+                                    actionLabel: 'logout',
+                                    label: <><FontAwesomeIcon icon={faArrowRightFromBracket} /> {'Logout'}</>,
                                     onClick: onLogout
                                 }
                             ],

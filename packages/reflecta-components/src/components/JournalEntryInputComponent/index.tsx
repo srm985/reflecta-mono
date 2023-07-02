@@ -19,6 +19,11 @@ import './styles.scss';
 const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props) => {
     const {
         className,
+        entryID,
+        initialBody,
+        initialOccurredAt,
+        initialTitle,
+        onDiscard,
         onSubmit
     } = props;
 
@@ -31,32 +36,27 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     const [
         title,
         setTitle
-    ] = useState<string>('');
+    ] = useState<string>(initialTitle || '');
 
     const [
         body,
         setBody
-    ] = useState<string>('');
+    ] = useState<string>(initialBody || '');
 
     const [
-        date,
-        setDate
-    ] = useState<string>(now);
+        occurredAt,
+        setOccurredAt
+    ] = useState<string>((initialOccurredAt || '').split('T')[0] || now);
 
     const handleEntrySubmission = (event: FormEvent) => {
         event.preventDefault();
 
         onSubmit({
             body,
-            date,
+            entryID,
+            occurredAt,
             title
         });
-    };
-
-    const handleReset = () => {
-        setBody('');
-        setDate(now);
-        setTitle('');
     };
 
     const componentClassNames = classNames(
@@ -94,9 +94,9 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                 <input
                     id={'date'}
                     name={'date'}
-                    onChange={(event) => setDate(event.target.value)}
+                    onChange={(event) => setOccurredAt(event.target.value)}
                     type={'date'}
-                    value={date}
+                    value={occurredAt}
                 />
             </FlexboxComponent>
             <textarea
@@ -108,8 +108,9 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
             <ButtonBlockComponent>
                 <ButtonComponent
                     color={'danger'}
-                    onClick={handleReset}
+                    onClick={onDiscard}
                     styleType={'inline'}
+                    type={'button'}
                 >
                     {'Discard'}
                 </ButtonComponent>

@@ -12,3 +12,9 @@ $max-width-small: 540px;
 $max-width-medium: 720px;
 $max-width-large: 960px;
 $max-width-xlarge: 1140px;
+
+// Global Z-Index Ranking
+$z-index-modal: 9999;
+$z-index-popover: 9998;
+$z-index-navigation: 9997;
+$z-index-footer: 9996;

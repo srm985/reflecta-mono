@@ -17,7 +17,8 @@ const GridContainerComponent: FC<IGridContainerComponent> = (props) => {
         alignItems,
         children,
         className,
-        isFullHeight
+        isFullHeight,
+        rowHeight
     } = props;
 
     const {
@@ -36,7 +37,12 @@ const GridContainerComponent: FC<IGridContainerComponent> = (props) => {
             isFullHeight={isFullHeight}
             justifyContent={'center'}
         >
-            <div className={`${displayName}__grid`}>
+            <div
+                className={`${displayName}__grid`}
+                style={{
+                    gridTemplateRows: rowHeight
+                }}
+            >
                 {children}
             </div>
         </FlexboxComponent>

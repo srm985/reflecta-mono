@@ -56,7 +56,7 @@ class Client {
         }
     };
 
-    delete = async <ResponsePayload>(serviceURL: string): Promise<ResponsePayload | ErrorResponse> => this.makeCall<ResponsePayload>(serviceURL, 'DELETE');
+    delete = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload | ErrorResponse> => this.makeCall<ResponsePayload>(serviceURL, 'DELETE', payload);
 
     get = async <ResponsePayload>(serviceURL: string): Promise<ResponsePayload | ErrorResponse> => this.makeCall<ResponsePayload>(serviceURL, 'GET');
 

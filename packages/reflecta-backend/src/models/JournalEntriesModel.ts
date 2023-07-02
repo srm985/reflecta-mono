@@ -10,6 +10,7 @@ export interface JournalEntriesSchema {
     created_at: string;
     deleted_at: string | null;
     entry_id?: number;
+    is_high_interest: boolean;
     occurred_at: string;
     title: string;
     updated_at: string | null;
@@ -34,16 +35,18 @@ class JournalEntriesModel {
     insertJournalEntry = async (userID: number, entryDetails: JournalEntry) => {
         const {
             body,
+            isHighInterest,
             occurredAt,
             title
         } = entryDetails;
 
-        const query = 'INSERT INTO ?? (user_id, title, body, occurred_at) VALUES (?, ?, ?, ?)';
+        const query = 'INSERT INTO ?? (user_id, title, body, is_high_interest, occurred_at) VALUES (?, ?, ?, ?, ?)';
         const values = [
             this.TABLE_NAME,
             userID,
             title,
             body,
+            isHighInterest,
             occurredAt
         ];
 
@@ -53,15 +56,17 @@ class JournalEntriesModel {
     modifyJournalEntry = async (entryID: number, entryDetails: JournalEntry) => {
         const {
             body,
+            isHighInterest,
             occurredAt,
             title
         } = entryDetails;
 
-        const query = 'UPDATE ?? SET title = ?, body = ?, occurred_at = ? WHERE entry_id = ?';
+        const query = 'UPDATE ?? SET title = ?, body = ?, is_high_interest = ?, occurred_at = ? WHERE entry_id = ?';
         const values = [
             this.TABLE_NAME,
             title,
             body,
+            isHighInterest,
             occurredAt,
             entryID
         ];

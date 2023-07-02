@@ -1,3 +1,4 @@
+@import './colors';
 @import './units';
 
 @mixin render-helpers($i, $size: '') {
@@ -83,4 +84,14 @@
 
 .bold {
     font-weight: bold;
+}
+
+
+@each $key, $value in $color-names-list {
+    .background--#{$key} {
+        background-color: $value;
+    }
+    .color--#{$key} {
+        color: $value;
+    }
 }

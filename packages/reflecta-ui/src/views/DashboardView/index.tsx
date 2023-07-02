@@ -21,9 +21,10 @@ import {
 import withReducer from './withReducer';
 
 import {
+    EntryID,
     IDashboardView,
     JournalEntry,
-    NewJournalEntry
+    PendingJournalEntry
 } from './types';
 
 const client = new Client();
@@ -55,15 +56,31 @@ const DashboardView: FC<IDashboardView> = (props) => {
         }
     };
 
-    const handleEntrySubmission = async (journalEntry: NewJournalEntry) => {
-        await client.post(ROUTE_API_JOURNAL_ENTRY, {
-            entryBody: journalEntry.body,
-            entryOccurredAt: journalEntry.date,
-            entryTitle: journalEntry.title
-        });
+    const handleEntrySubmission = async (journalEntry: PendingJournalEntry) => {
+        const {
+            body,
+            entryID,
+            occurredAt,
+            title
+        } = journalEntry;
+
+        if (entryID) {
+            await client.put(ROUTE_API_JOURNAL_ENTRY, {
+                entryBody: body,
+                entryID,
+                entryOccurredAt: occurredAt,
+                entryTitle: title
+            });
+        } else {
+            await client.post(ROUTE_API_JOURNAL_ENTRY, {
+                entryBody: body,
+                entryOccurredAt: occurredAt,
+                entryTitle: title
+            });
+        }
 
         dispatch({
-            type: 'TOGGLE_ADDING_ENTRY'
+            type: 'CLEAR_JOURNAL_ENTRY'
         });
 
         await fetchJournalEntries();
@@ -71,8 +88,23 @@ const DashboardView: FC<IDashboardView> = (props) => {
 
     const handleEntryConclusion = () => {
         dispatch({
-            type: 'TOGGLE_ADDING_ENTRY'
+            type: 'CLEAR_JOURNAL_ENTRY'
         });
+    };
+
+    const handleEntryEdit = (entryDetails: Required<PendingJournalEntry>) => {
+        dispatch({
+            payload: entryDetails,
+            type: 'SET_EDITING_JOURNAL_ENTRY'
+        });
+    };
+
+    const handleEntryDelete = async (entryID: EntryID) => {
+        await client.delete(ROUTE_API_JOURNAL_ENTRY, {
+            entryID
+        });
+
+        await fetchJournalEntries();
     };
 
     useEffect(() => {
@@ -87,11 +119,14 @@ const DashboardView: FC<IDashboardView> = (props) => {
             breakpointSmall={{
                 span: 6
             }}
+            key={journalEntryDetails.entryID}
             rowSpan={journalEntryDetails.isHighInterest ? 2 : 1}
         >
             <JournalEntryDisplayComponent
                 {...journalEntryDetails}
                 key={journalEntryDetails.entryID}
+                onDelete={() => handleEntryDelete(journalEntryDetails.entryID)}
+                onEdit={() => handleEntryEdit(journalEntryDetails)}
             />
         </GridItemComponent>
     )), [
@@ -106,14 +141,21 @@ const DashboardView: FC<IDashboardView> = (props) => {
             <ButtonComponent
                 color={'accent'}
                 onClick={() => dispatch({
-                    type: 'TOGGLE_ADDING_ENTRY'
+                    type: 'SET_CREATING_JOURNAL_ENTRY'
                 })}
             >{'Add Entry'}
             </ButtonComponent>
             {
-                state.isAddingEntry && (
+                state.isEntryEditorVisible && (
                     <ModalComponent onClose={handleEntryConclusion}>
-                        <JournalEntryInputComponent onSubmit={handleEntrySubmission} />
+                        <JournalEntryInputComponent
+                            entryID={state.editingEntryID}
+                            initialBody={state.editingEntryBody}
+                            initialOccurredAt={state.editingEntryOccurredAt}
+                            initialTitle={state.editingEntryTitle}
+                            onDiscard={handleEntryConclusion}
+                            onSubmit={handleEntrySubmission}
+                        />
                     </ModalComponent>
                 )
             }

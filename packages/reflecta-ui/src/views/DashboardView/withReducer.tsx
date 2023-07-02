@@ -10,7 +10,11 @@ import {
 } from './types';
 
 const initialState: State = {
-    isAddingEntry: false,
+    editingEntryBody: '',
+    editingEntryID: undefined,
+    editingEntryOccurredAt: '',
+    editingEntryTitle: '',
+    isEntryEditorVisible: false,
     journalEntriesList: []
 };
 
@@ -21,10 +25,28 @@ const reducer = (state: State, action: Action): State => {
                 ...state,
                 journalEntriesList: action.payload
             });
-        case 'TOGGLE_ADDING_ENTRY':
+        case 'CLEAR_JOURNAL_ENTRY':
             return ({
                 ...state,
-                isAddingEntry: !state.isAddingEntry
+                editingEntryBody: '',
+                editingEntryID: undefined,
+                editingEntryOccurredAt: '',
+                editingEntryTitle: '',
+                isEntryEditorVisible: false
+            });
+        case 'SET_CREATING_JOURNAL_ENTRY':
+            return ({
+                ...state,
+                isEntryEditorVisible: true
+            });
+        case 'SET_EDITING_JOURNAL_ENTRY':
+            return ({
+                ...state,
+                editingEntryBody: action.payload.body,
+                editingEntryID: action.payload.entryID,
+                editingEntryOccurredAt: action.payload.occurredAt,
+                editingEntryTitle: action.payload.title,
+                isEntryEditorVisible: true
             });
         default:
             return state;
