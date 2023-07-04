@@ -11,6 +11,7 @@ export interface JournalEntriesSchema {
     deleted_at: string | null;
     entry_id?: number;
     is_high_interest: boolean;
+    keywords: string | null;
     occurred_at: string;
     title: string;
     updated_at: string | null;
@@ -23,6 +24,7 @@ export interface JournalEntry {
     deletedAt?: string | null;
     entryID?: number;
     isHighInterest?: boolean;
+    keywords: string | null;
     occurredAt: string;
     title: string;
     updatedAt?: string | null;
@@ -36,16 +38,18 @@ class JournalEntriesModel {
         const {
             body,
             isHighInterest,
+            keywords,
             occurredAt,
             title
         } = entryDetails;
 
-        const query = 'INSERT INTO ?? (user_id, title, body, is_high_interest, occurred_at) VALUES (?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO ?? (user_id, title, body, keywords, is_high_interest, occurred_at) VALUES (?, ?, ?, ?, ?, ?)';
         const values = [
             this.TABLE_NAME,
             userID,
             title,
             body,
+            keywords,
             isHighInterest,
             occurredAt
         ];
@@ -57,15 +61,17 @@ class JournalEntriesModel {
         const {
             body,
             isHighInterest,
+            keywords,
             occurredAt,
             title
         } = entryDetails;
 
-        const query = 'UPDATE ?? SET title = ?, body = ?, is_high_interest = ?, occurred_at = ? WHERE entry_id = ?';
+        const query = 'UPDATE ?? SET title = ?, body = ?, keywords = ?, is_high_interest = ?, occurred_at = ? WHERE entry_id = ?';
         const values = [
             this.TABLE_NAME,
             title,
             body,
+            keywords,
             isHighInterest,
             occurredAt,
             entryID
