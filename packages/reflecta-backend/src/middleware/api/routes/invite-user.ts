@@ -15,7 +15,10 @@ import EnrollmentController from '@controllers/EnrollmentController';
 import errorResponseHandler from '@utils/errorResponseHandler';
 import validationResponseHandle from '@utils/validationResponseHandler';
 
+import Authentication from '@middleware/Authentication';
 import RateLimiter from '@middleware/RateLimiter';
+
+const authentication = new Authentication();
 
 const enrollmentController = new EnrollmentController();
 
@@ -29,6 +32,7 @@ const inputValidations: ValidationChain[] = [
 
 router.post('/invite-user', [
     rateLimiter.limited,
+    authentication.required,
     ...inputValidations
 ], async (request: Request, response: Response) => {
     const errors = validationResult(request);
