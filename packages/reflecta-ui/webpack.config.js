@@ -5,9 +5,7 @@ const webpack = require('webpack');
 const fs = require('fs/promises');
 const path = require('path');
 
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
+require('dotenv').config();
 
 module.exports = () => {
     const {
