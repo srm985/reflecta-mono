@@ -116,7 +116,7 @@ jobs:
           passphrase: ${{ secrets.KEY_PASSPHRASE }}
           port: ${{ secrets.PORT }}
           rm: true
-          source: "./bundle/*"
+          source: "./packages/reflecta-backend/dist/*"
           strip_components: 1
           target: ${{ vars.DEPLOYMENT_LOCATION_BACKEND }}
           timeout: "120s"

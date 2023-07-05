@@ -92,7 +92,6 @@ jobs:
         run: npm run build -w reflecta-components
         env:
           NODE_ENV: ${{ vars.NODE_ENV}}
-          WEBPACK_SERVER_PORT_ui: ${{ env.WEBPACK_SERVER_PORT_COMPONENTS}}
 
       # Upload Artifacts
       - name: Upload Artifacts
@@ -137,9 +136,10 @@ jobs:
       - name: Build
         run: npm run build -w reflecta-ui
         env:
+          BASE_URL_API: ${{ vars.BASE_URL_API }}
           FEDERATED_COMPONENTS_URL: ${{ vars.FEDERATED_COMPONENTS_URL }}
+          LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY: ${{ vars.LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY }}
           NODE_ENV: ${{ vars.NODE_ENV }}
-          WEBPACK_SERVER_PORT_ui: ${{ env.WEBPACK_SERVER_PORT_UI }}
 
       # Upload Artifacts
       - name: Upload Artifacts
