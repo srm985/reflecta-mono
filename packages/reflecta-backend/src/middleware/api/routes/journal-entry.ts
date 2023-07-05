@@ -13,11 +13,9 @@ import {
 import {
     AuthenticationTokenPayloadLocals
 } from '@controllers/AuthenticationController';
-import JournalingController from '@controllers/JournalingController';
-
-import {
-    JournalEntry
-} from '@models/JournalEntriesModel';
+import JournalingController, {
+    JournalEntryResponse
+} from '@controllers/JournalingController';
 
 import errorResponseHandler from '@utils/errorResponseHandler';
 import validationResponseHandle, {
@@ -151,7 +149,7 @@ router.put('/journal-entry', [
 router.get('/journal-entry', [
     rateLimiter.limited,
     authentication.required
-], async (request: Request, response: Response<JournalEntry[], AuthenticationTokenPayloadLocals>) => {
+], async (request: Request, response: Response<JournalEntryResponse[], AuthenticationTokenPayloadLocals>) => {
     try {
         const {
             locals: {

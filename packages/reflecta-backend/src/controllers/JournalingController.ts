@@ -6,6 +6,7 @@ import OpenAIService from '@services/OpenAIService';
 
 import CustomError from '@utils/CustomError';
 
+export type JournalEntryAPIInput = Pick<JournalEntry, 'body' | 'occurredAt' | 'title'>;
 export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'occurredAt' | 'title' | 'updatedAt'>;
 
 export type AnalyzedEntry = Pick<JournalEntry, 'isHighInterest' | 'keywords' | 'title'>;
@@ -50,7 +51,7 @@ class JournalingController {
         });
     };
 
-    insertJournalEntry = async (userID: number, entryDetails: JournalEntry) => {
+    insertJournalEntry = async (userID: number, entryDetails: JournalEntryAPIInput) => {
         const {
             isHighInterest,
             keywords,
@@ -66,7 +67,7 @@ class JournalingController {
         });
     };
 
-    modifyJournalEntry = async (userID: number, entryID: number, entryDetails: JournalEntry) => {
+    modifyJournalEntry = async (userID: number, entryID: number, entryDetails: JournalEntryAPIInput) => {
         const existingEntryDetails = await this.journalEntriesModel.journalEntry(entryID);
 
         // Quick sanity check to ensure we actually found a valid journal entry
