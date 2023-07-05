@@ -190,7 +190,7 @@ class EnrollmentController {
             this.invitationTokensModel.invalidateInvitationToken(invitationToken),
             this.enrollmentTokensModel.insertEnrollmentToken(userID, tokenID),
             this.mailService.sendEmailConfirmation({
-                emailConfirmationURL: `${this.BASE_URL_API}/api/verify?enrollmentToken=${enrollmentToken}`,
+                emailConfirmationURL: `${this.BASE_URL_API}/verify?enrollmentToken=${enrollmentToken}`,
                 to: emailAddress
             })
         ]);
