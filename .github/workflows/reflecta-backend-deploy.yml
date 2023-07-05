@@ -78,12 +78,16 @@ jobs:
           cp -r ./node_modules/ ./packages/reflecta-backend/dist/
           cp ./packages/reflecta-backend/package.json ./packages/reflecta-backend/dist/
 
+      # Zip Artifact
+      - name: Zip Artifact
+        run: zip bundle.zip ./packages/reflecta-backend/dist/* -r
+
       # Upload Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: bundle
-          path: ./packages/reflecta-backend/dist/
+          path: ./bundle.zip
 
   deploy:
     name: Deploy
@@ -96,6 +100,12 @@ jobs:
 
       - name: Download Artifacts
         uses: actions/download-artifact@v3
+        with:
+          name: bundle
+
+      # Unzip Artifact
+      - name: Unzip Artifact
+        run: unzip ./bundle.zip
 
       # Deploy Backend
       - name: Deploy
