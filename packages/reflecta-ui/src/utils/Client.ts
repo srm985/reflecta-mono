@@ -24,6 +24,10 @@ class Client {
         try {
             const tokenSignature = this.authentication.retrieve();
 
+            console.log({
+                BASE_URL_API
+            });
+
             const instance: AxiosInstance = axios.create({
                 baseURL: BASE_URL_API
             });
