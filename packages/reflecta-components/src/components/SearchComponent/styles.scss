@@ -1,15 +1,10 @@
 @import '../../styles/styles';
 
-.SearchbarComponent {
+.SearchComponent {
     &__basic-search {
         button {
             width: calc($planck-length * 5);
         }
-    }
-
-    &__searchbar {
-        // width: 70%;
-        margin-right: $margin-large;
     }
 
     &__advanced-search {
@@ -19,6 +14,16 @@
 
         &--visible {
             display: inline-block;
+        }
+    }
+
+    &__date-search-block {
+        & > * {
+            margin-right: $margin-medium;
+
+            &:last-of-type {
+                margin-right: 0;
+            }
         }
     }
 }

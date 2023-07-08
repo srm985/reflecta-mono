@@ -1,21 +1,21 @@
 import GridContainerComponent from '@components/GridContainerComponent';
 import GridItemComponent from '@components/GridItemComponent';
 
-import SearchbarComponent from './index';
+import SearchComponent from './index';
 
 import {
-    ISearchbarComponent
+    ISearchComponent
 } from './types';
 
 export default {
-    component: SearchbarComponent,
-    title: 'Searchbar'
+    component: SearchComponent,
+    title: 'Search'
 };
 
-const Template = (args: ISearchbarComponent) => (
+const Template = (args: ISearchComponent) => (
     <GridContainerComponent>
         <GridItemComponent>
-            <SearchbarComponent {...args} />
+            <SearchComponent {...args} />
         </GridItemComponent>
     </GridContainerComponent>
 );
