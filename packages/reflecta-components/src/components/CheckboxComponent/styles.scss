@@ -1,0 +1,28 @@
+@import '../../styles/styles';
+
+.CheckboxComponent {
+    display: inline-block;
+
+    font-size: $font-size-small;
+
+    cursor: pointer;
+
+    & > * {
+        cursor: pointer;
+    }
+
+    input {
+        accent-color: $color-primary-300;
+
+        margin: 0 $margin-small 0 0;
+    }
+
+    &--disabled {
+        cursor: default;
+        opacity: $opacity-disabled;
+
+        & > * {
+            cursor: default;
+        }
+    }
+}

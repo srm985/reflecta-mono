@@ -14,7 +14,11 @@ $letter-spacing: 0.05em;
 
     &--primary,
     &--secondary {
-        padding: calc($padding-small * 1.5) $padding-large;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc($planck-length * 5);
+        padding: $padding-small $padding-large;
 
         font-weight: bold;
         font-size: $font-size-small;
@@ -22,6 +26,10 @@ $letter-spacing: 0.05em;
         letter-spacing: $letter-spacing;
 
         border-radius: $border-radius-small;
+
+        &-icon-only {
+            padding: $padding-small $padding-medium;
+        }
     }
 
     &--primary {
@@ -57,8 +65,7 @@ $letter-spacing: 0.05em;
 
         &-disabled {
             cursor: default;
-
-            opacity: 0.35;
+            opacity: $opacity-disabled;
         }
     }
 
@@ -66,8 +73,7 @@ $letter-spacing: 0.05em;
         color: $font-color-default;
 
         border-style: solid;
-        border-width: 2px;
-        border-radius: $border-radius-medium;
+        border-width: 1px;
 
         &-color-primary {
             border-color: $color-primary-300;
@@ -99,8 +105,7 @@ $letter-spacing: 0.05em;
 
         &-disabled {
             cursor: default;
-
-            opacity: 0.35;
+            opacity: $opacity-disabled;
         }
     }
 

@@ -1,0 +1,28 @@
+@import '../../styles/styles';
+
+.SelectComponent {
+    color: $color-neutral-500;
+    font-size: $font-size-small;
+
+    label {
+        margin-bottom: $margin-small;
+    }
+
+    select {
+        height: calc($planck-length * 5);
+        padding: 0 $planck-length;
+
+        background-color: $color-neutral-200;
+        border: solid 1px $color-neutral-500;
+        border-radius: $border-radius-small;
+        cursor: pointer;
+    }
+
+    &--disabled {
+        opacity: $opacity-disabled;
+
+        select {
+            cursor: default;
+        }
+    }
+}

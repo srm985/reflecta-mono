@@ -1,0 +1,23 @@
+@import '../../styles/styles';
+
+.InputComponent {
+    color: $color-neutral-500;
+    font-size: $font-size-small;
+
+    label {
+        margin-bottom: $margin-small;
+    }
+
+    input {
+        height: calc($planck-length * 5);
+        padding: 0 $planck-length;
+
+        background-color: $color-neutral-200;
+        border: solid 1px $color-neutral-500;
+        border-radius: $border-radius-small;
+    }
+
+    &--disabled {
+        opacity: $opacity-disabled;
+    }
+}

@@ -6,13 +6,15 @@ export type AutoComplete = 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-n
 
 export type Value = string | number;
 
-export interface IInputComponent {
+export type IInputComponent = {
     autoCompleteType?: AutoComplete;
     className?: string;
     defaultValue?: Value;
+    disabled?: boolean;
     label: string;
     name: string;
     onChange: (argument: string) => void;
+    required?: boolean;
     type?: HTMLInputTypeAttribute;
     value: Value;
-}
+};

@@ -1,5 +1,6 @@
 import {
-    ChangeEvent, useMemo
+    ChangeEvent,
+    FC, useMemo
 } from 'react';
 
 import FlexboxComponent from '@components/FlexboxComponent';
@@ -7,32 +8,50 @@ import FlexboxComponent from '@components/FlexboxComponent';
 import classNames from '@utils/classNames';
 
 import {
-    IInputComponent
+    ISelectComponent
 } from './types';
 
 import './styles.scss';
 
-const InputComponent: React.FC<IInputComponent> = (props) => {
+const SelectComponent: FC<ISelectComponent> = (props) => {
     const {
-        autoCompleteType = 'off',
         className,
-        defaultValue,
         disabled,
         label,
         name,
         onChange,
+        options,
+        placeholder,
         required,
-        type,
         value
     } = props;
 
     const {
         displayName
-    } = InputComponent;
+    } = SelectComponent;
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
         onChange(event.target.value);
     };
+
+    const selectOptions = options.map((optionDetails) => (
+        <option
+            selected={optionDetails.value === value}
+            value={optionDetails.value}
+        >{optionDetails.label}
+        </option>
+    ));
+
+    selectOptions.unshift(
+        <option
+            aria-label={'default'}
+            disabled
+            hidden
+            selected
+            value={''}
+        >{placeholder || ''}
+        </option>
+    );
 
     const componentClassNames = classNames(
         displayName,
@@ -42,7 +61,7 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
         }
     );
 
-    const componentID = useMemo(() => `${name}-${Math.random().toString().slice(-5)}`, [
+    const inputID = useMemo(() => `${name}-${Math.random().toString().slice(-5)}`, [
         name
     ]);
 
@@ -54,25 +73,24 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
         >
             <label
                 className={displayName}
-                htmlFor={componentID}
+                htmlFor={inputID}
             >
                 {label}{required && (<span className={'color--danger bold'}>*</span>)}
             </label>
-            <input
+            <select
                 aria-label={label}
-                autoComplete={autoCompleteType}
-                defaultValue={defaultValue}
                 disabled={disabled}
-                id={componentID}
+                id={inputID}
                 onChange={handleChange}
                 required={required}
-                type={type}
                 value={value}
-            />
+            >
+                {selectOptions}
+            </select>
         </FlexboxComponent>
     );
 };
 
-InputComponent.displayName = 'InputComponent';
+SelectComponent.displayName = 'SelectComponent';
 
-export default InputComponent;
+export default SelectComponent;

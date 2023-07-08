@@ -29,11 +29,12 @@ const buttonColorList: Color[] = [
     'neutral'
 ];
 
-const generateButtons = (args: IButtonComponent, label: string, isDisabled?: boolean) => buttonColorList.map((buttonColor) => (
+const generateButtons = (args: IButtonComponent, label: string, key: string, isDisabled?: boolean) => buttonColorList.map((buttonColor) => (
     <ButtonComponent
         {...args}
         color={buttonColor}
         disabled={isDisabled}
+        key={`${key}-${label}-${buttonColor}`}
     >
         {label}
     </ButtonComponent>
@@ -46,10 +47,10 @@ export const Primary: Story = {
     render: (args: IButtonComponent) => (
         <>
             <StorybookExampleComponent label={'Primary'}>
-                {generateButtons(args, 'Primary button')}
+                {generateButtons(args, 'Primary button', 'enabled')}
             </StorybookExampleComponent>
             <StorybookExampleComponent label={'Primary - Disabled'}>
-                {generateButtons(args, 'Primary button', true)}
+                {generateButtons(args, 'Primary button', 'disabled', true)}
             </StorybookExampleComponent>
         </>
     )
@@ -62,10 +63,10 @@ export const Secondary: Story = {
     render: (args: IButtonComponent) => (
         <>
             <StorybookExampleComponent label={'Secondary'}>
-                {generateButtons(args, 'Secondary button')}
+                {generateButtons(args, 'Secondary button', 'enabled')}
             </StorybookExampleComponent>
             <StorybookExampleComponent label={'Secondary - Disabled'}>
-                {generateButtons(args, 'Secondary button', true)}
+                {generateButtons(args, 'Secondary button', 'disabled', true)}
             </StorybookExampleComponent>
         </>
     )
@@ -78,7 +79,7 @@ export const Inline: Story = {
     render: (args: IButtonComponent) => (
         <>
             <StorybookExampleComponent label={'Default Inline'}>
-                {generateButtons(args, 'Inline button')}
+                {generateButtons(args, 'Inline button', 'enabled')}
             </StorybookExampleComponent>
             <StorybookExampleComponent label={'Inline Text'}>
                 <p>
@@ -115,7 +116,7 @@ export const Inline: Story = {
                 </p>
             </StorybookExampleComponent>
             <StorybookExampleComponent label={'Default Inline - Disabled'}>
-                {generateButtons(args, 'Inline button', true)}
+                {generateButtons(args, 'Inline button', 'disabled', true)}
             </StorybookExampleComponent>
         </>
     )

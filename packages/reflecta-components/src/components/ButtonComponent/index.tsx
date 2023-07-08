@@ -14,6 +14,7 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
         disabled,
         href,
         isAccented = true,
+        isIconOnly,
         onClick,
         styleType = 'primary',
         type
@@ -31,7 +32,8 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
         {
             [`${displayName}--${styleType}-accented`]: styleType === 'inline' && !!isAccented,
             [`${displayName}--${styleType}-disabled-color-${color}`]: !!disabled,
-            [`${displayName}--${styleType}-disabled`]: !!disabled
+            [`${displayName}--${styleType}-disabled`]: !!disabled,
+            [`${displayName}--${styleType}-icon-only`]: !!isIconOnly
         }
     );
 

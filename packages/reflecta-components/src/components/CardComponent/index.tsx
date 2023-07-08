@@ -25,7 +25,7 @@ const CardComponent: FC<ICardComponent> = (props) => {
         className
     );
 
-    return (<article className={componentClassNames}>{children}</article>);
+    return (<div className={componentClassNames}>{children}</div>);
 };
 
 CardComponent.displayName = 'CardComponent';

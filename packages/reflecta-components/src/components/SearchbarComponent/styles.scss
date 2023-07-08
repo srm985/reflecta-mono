@@ -1,0 +1,24 @@
+@import '../../styles/styles';
+
+.SearchbarComponent {
+    &__basic-search {
+        button {
+            width: calc($planck-length * 5);
+        }
+    }
+
+    &__searchbar {
+        // width: 70%;
+        margin-right: $margin-large;
+    }
+
+    &__advanced-search {
+        display: none;
+        width: 100%;
+        margin-top: $margin-medium;
+
+        &--visible {
+            display: inline-block;
+        }
+    }
+}
