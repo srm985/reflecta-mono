@@ -44,7 +44,7 @@ class OpenAIService {
                     ]
                 }
             } = await this.openAI.createCompletion({
-                max_tokens: 75,
+                max_tokens: 250,
                 model: this.OPENAI_MODEL,
                 prompt: `[INSTRUCTIONS] As a thoughtful and insightful digital diary, evaluate the following {text}. Begin by generating a poetic title which summarizes the {text}. This title must be at least 8 words long and a maximum of 15 words. Then compare the {text} to everyday life and determine if the events that occurred on this given day are more interesting than normal. If so, you'll return the flag isHighInterest=true. Finally generate a list of broader keywords which will allow fuzzy searching of the text. Ensure you return specific keywords and also expanded out concepts such as geographical locations. For example, if I wrote about a city you might also include the state or country. Generate at least 10 keywords with a maximum of 50 keywords for longer {text}. Return your results as a strictly-formatted JSON string with the following schema: {"title": string, "isHighInterest": boolean; "keywords": string}\n\ntext = '${entryBody.trim()}'`,
                 temperature: 0.7
