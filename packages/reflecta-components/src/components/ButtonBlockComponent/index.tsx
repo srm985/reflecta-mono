@@ -30,7 +30,9 @@ const ButtonBlockComponent: FC<IButtonBlockComponent> = (props) => {
     return (
         <FlexboxComponent
             className={componentClassNames}
-            justifyContent={'flex-end'}
+            layoutDefault={{
+                justifyContent: 'flex-end'
+            }}
         >
             {children}
         </FlexboxComponent>

@@ -65,7 +65,7 @@ const DashboardView: FC<IDashboardView> = (props) => {
         } = journalEntry;
 
         if (entryID) {
-            await client.put(ROUTE_API_JOURNAL_ENTRY, {
+            await client.patch(ROUTE_API_JOURNAL_ENTRY, {
                 entryBody: body,
                 entryID,
                 entryOccurredAt: occurredAt,

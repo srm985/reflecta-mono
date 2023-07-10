@@ -6,7 +6,9 @@ import {
     FontAwesomeIcon
 } from '@fortawesome/react-fontawesome';
 import {
-    FC, useState
+    FC,
+    useMemo,
+    useState
 } from 'react';
 
 import ButtonBlockComponent from '@components/ButtonBlockComponent';
@@ -20,39 +22,70 @@ import SelectComponent from '@components/SelectComponent';
 import classNames from '@utils/classNames';
 
 import {
-    ISearchComponent
+    DateSearchOption,
+    ISearchComponent,
+    KeywordSearchOption,
+    SearchKeyword
 } from './types';
 
 import './styles.scss';
 
 const SearchComponent: FC<ISearchComponent> = (props) => {
     const {
-        className
+        className,
+        onSearch
     } = props;
 
     const {
         displayName
     } = SearchComponent;
 
+    const now = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+    const [
+        searchString,
+        setSearchString
+    ] = useState<string>('');
+
+    const [
+        searchKeywordsList,
+        updateSearchKeywordsList
+    ] = useState<SearchKeyword[]>([]);
+
     const [
         isAdvancedSearchVisible,
         setAdvancedSearchVisible
-    ] = useState(true);
+    ] = useState<boolean>(true);
 
     const [
         useAISearch,
         setUseAISearch
-    ] = useState(true);
+    ] = useState<boolean>(true);
 
     const [
         keywordSearchOption,
         setKeywordSearchOption
-    ] = useState('disabled');
+    ] = useState<KeywordSearchOption>('disabled');
 
     const [
         dateSearchOption,
         setDateSearchOption
-    ] = useState('disabled');
+    ] = useState<DateSearchOption>('disabled');
+
+    const [
+        entryDate,
+        setEntryDate
+    ] = useState<string>(now);
+
+    const [
+        searchStartDate,
+        setSearchStartDate
+    ] = useState<string>(now);
+
+    const [
+        searchEndDate,
+        setSearchEndDate
+    ] = useState<string>(now);
 
     const componentClassNames = classNames(
         displayName,
@@ -65,6 +98,22 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
             [`${displayName}__advanced-search--visible`]: isAdvancedSearchVisible
         }
     );
+
+    const handleSearch = () => {
+        // Just a placeholder
+        updateSearchKeywordsList([]);
+
+        onSearch({
+            dateSearchOption,
+            entryDate,
+            keywordSearchOption,
+            searchEndDate,
+            searchKeywordsList,
+            searchStartDate,
+            searchString,
+            useAISearch
+        });
+    };
 
     const handleReset = () => {
         setUseAISearch(true);
@@ -105,21 +154,24 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
     return (
         <div className={componentClassNames}>
             <FlexboxComponent
-                alignItems={'flex-end'}
                 className={`${displayName}__basic-search`}
+                layoutDefault={{
+                    alignItems: 'flex-end'
+                }}
             >
                 <InputComponent
                     className={'mr--2'}
                     label={'Search your entries'}
                     name={'entrySearch'}
-                    onChange={() => {}}
+                    onChange={setSearchString}
                     type={'search'}
-                    value={''}
+                    value={searchString}
                 />
                 <ButtonComponent
                     className={'mr--1'}
                     color={'primary'}
                     isIconOnly
+                    onClick={handleSearch}
                     styleType={'primary'}
                 >
                     <FontAwesomeIcon icon={faSearch} />
@@ -143,22 +195,27 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                     onChange={setUseAISearch}
                 />
                 <SelectComponent
-                    className={'mb--2'}
+                    className={'mb--3'}
                     label={'Keyword search'}
                     name={'keywordSearch'}
-                    onChange={setKeywordSearchOption}
+                    onChange={(value) => setKeywordSearchOption(value as KeywordSearchOption)}
                     options={keywordSearchOptionsList}
                     value={keywordSearchOption}
                 />
                 <FlexboxComponent
-                    alignItems={'flex-start'}
                     className={`${displayName}__date-search-block`}
+                    layoutDefault={{
+                        flexDirection: 'column'
+                    }}
+                    layoutDesktop={{
+                        flexDirection: 'row'
+                    }}
                 >
                     <SelectComponent
                         className={'mb--2'}
                         label={'Date search'}
                         name={'dateSearch'}
-                        onChange={setDateSearchOption}
+                        onChange={(value) => setDateSearchOption(value as DateSearchOption)}
                         options={dateSearchOptionsList}
                         value={dateSearchOption}
                     />
@@ -167,9 +224,9 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                             <InputComponent
                                 label={'Entry date'}
                                 name={'entryDate'}
-                                onChange={() => {}}
+                                onChange={setEntryDate}
                                 type={'date'}
-                                value={''}
+                                value={entryDate}
                             />
                         )
                     }
@@ -179,16 +236,16 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                                 <InputComponent
                                     label={'Start date'}
                                     name={'startDate'}
-                                    onChange={() => {}}
+                                    onChange={setSearchStartDate}
                                     type={'date'}
-                                    value={''}
+                                    value={searchStartDate}
                                 />
                                 <InputComponent
                                     label={'End date'}
                                     name={'endDate'}
-                                    onChange={() => {}}
+                                    onChange={setSearchEndDate}
                                     type={'date'}
-                                    value={''}
+                                    value={searchEndDate}
                                 />
                             </>
                         )
@@ -203,6 +260,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                     </ButtonComponent>
                     <ButtonComponent
                         color={'primary'}
+                        onClick={handleSearch}
                         styleType={'primary'}
                     >{'Apply'}
                     </ButtonComponent>

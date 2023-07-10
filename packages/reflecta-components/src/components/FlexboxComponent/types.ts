@@ -27,11 +27,16 @@ export type JustifyContent =
   | 'left'
   | 'right';
 
-export interface IFlexboxComponent {
+export type Layout = {
     alignItems?: AlignItems;
-    children: ReactNode | ReactNode[];
-    className?: string;
     flexDirection?: FlexDirection;
     isFullHeight?: boolean;
     justifyContent?: JustifyContent;
-}
+};
+
+export type IFlexboxComponent = {
+    children: ReactNode | ReactNode[];
+    className?: string;
+    layoutDefault?:Layout;
+    layoutDesktop?:Layout;
+};

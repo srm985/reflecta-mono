@@ -12,12 +12,10 @@ import './styles.scss';
 
 const FlexboxComponent: FC<IFlexboxComponent> = (props) => {
     const {
-        alignItems,
         children,
         className,
-        flexDirection,
-        isFullHeight,
-        justifyContent
+        layoutDefault,
+        layoutDesktop
     } = props;
 
     const {
@@ -28,10 +26,14 @@ const FlexboxComponent: FC<IFlexboxComponent> = (props) => {
         displayName,
         className,
         {
-            [`${displayName}__align-items--${alignItems}`]: !!alignItems,
-            [`${displayName}__height--full`]: !!isFullHeight,
-            [`${displayName}__flex-direction--${flexDirection}`]: !!flexDirection,
-            [`${displayName}__justify-content--${justifyContent}`]: !!justifyContent
+            [`${displayName}__default--align-items-${layoutDefault?.alignItems}`]: !!layoutDefault?.alignItems,
+            [`${displayName}__default--height-full`]: !!layoutDefault?.isFullHeight,
+            [`${displayName}__default--flex-direction-${layoutDefault?.flexDirection}`]: !!layoutDefault?.flexDirection,
+            [`${displayName}__default--justify-content-${layoutDefault?.justifyContent}`]: !!layoutDefault?.justifyContent,
+            [`${displayName}__desktop--align-items-${layoutDesktop?.alignItems}`]: !!layoutDesktop?.alignItems,
+            [`${displayName}__desktop--height-full`]: !!layoutDesktop?.isFullHeight,
+            [`${displayName}__desktop--flex-direction-${layoutDesktop?.flexDirection}`]: !!layoutDesktop?.flexDirection,
+            [`${displayName}__desktop--justify-content-${layoutDesktop?.justifyContent}`]: !!layoutDesktop?.justifyContent
         }
     );
 

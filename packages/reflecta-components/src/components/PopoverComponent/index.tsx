@@ -124,8 +124,10 @@ const PopoverComponent: FC<IPopoverComponent> = (props) => {
                         }}
                     >
                         <FlexboxComponent
-                            alignItems={'flex-start'}
-                            justifyContent={'space-between'}
+                            layoutDefault={{
+                                alignItems: 'flex-start',
+                                justifyContent: 'space-between'
+                            }}
                         >
                             <h3>{label}</h3>
                             <button

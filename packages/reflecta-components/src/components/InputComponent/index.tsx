@@ -49,8 +49,10 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
     return (
         <FlexboxComponent
             className={componentClassNames}
-            flexDirection={'column'}
-            justifyContent={'space-between'}
+            layoutDefault={{
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+            }}
         >
             <label
                 className={displayName}

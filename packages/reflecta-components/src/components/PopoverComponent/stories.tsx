@@ -60,8 +60,14 @@ export const Default: Story = {
             height: 1000
         }}
         >
-            <FlexboxComponent justifyContent={'space-between'}>
-                <FlexboxComponent alignItems={'center'}>
+            <FlexboxComponent layoutDefault={{
+                justifyContent: 'space-between'
+            }}
+            >
+                <FlexboxComponent layoutDefault={{
+                    alignItems: 'center'
+                }}
+                >
                     <PopoverComponent
                         {...args}
                         label={'Test drop - left'}
@@ -69,8 +75,10 @@ export const Default: Story = {
                     <p className={'ml--2'}>{'Left-aligned'}</p>
                 </FlexboxComponent>
                 <FlexboxComponent
-                    alignItems={'center'}
-                    justifyContent={'flex-end'}
+                    layoutDefault={{
+                        alignItems: 'center',
+                        justifyContent: 'flex-end'
+                    }}
                 >
                     <p className={'mr--2'}>{'Right-aligned'}</p>
                     <PopoverComponent

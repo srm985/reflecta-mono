@@ -70,8 +70,10 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
             onSubmit={handleEntrySubmission}
         >
             <FlexboxComponent
-                alignItems={'center'}
                 className={`${displayName}__input`}
+                layoutDefault={{
+                    alignItems: 'center'
+                }}
             >
                 <label htmlFor={'title'}>
                     <span>{'Title (optional):'}</span>
@@ -85,8 +87,10 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                 />
             </FlexboxComponent>
             <FlexboxComponent
-                alignItems={'center'}
                 className={`${displayName}__input`}
+                layoutDefault={{
+                    alignItems: 'center'
+                }}
             >
                 <label htmlFor={'date'}>
                     <span>{'Entry date:'}</span>

@@ -28,7 +28,10 @@ const NavigationBarComponent: FC<INavigationBarComponent> = (props) => {
 
     return (
         <nav className={displayName}>
-            <FlexboxComponent justifyContent={'flex-end'}>
+            <FlexboxComponent layoutDefault={{
+                justifyContent: 'flex-end'
+            }}
+            >
                 <PopoverComponent
                     actions={[
                         {

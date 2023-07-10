@@ -4,7 +4,7 @@ import GridItemComponent from '@components/GridItemComponent';
 import SearchComponent from './index';
 
 import {
-    ISearchComponent
+    ISearchComponent, Search
 } from './types';
 
 export default {
@@ -12,12 +12,21 @@ export default {
     title: 'Search'
 };
 
-const Template = (args: ISearchComponent) => (
-    <GridContainerComponent>
-        <GridItemComponent>
-            <SearchComponent {...args} />
-        </GridItemComponent>
-    </GridContainerComponent>
-);
+const Template = (args: ISearchComponent) => {
+    const handleSearch = (search: Search) => {
+        console.log(search);
+    };
+
+    return (
+        <GridContainerComponent>
+            <GridItemComponent>
+                <SearchComponent
+                    {...args}
+                    onSearch={handleSearch}
+                />
+            </GridItemComponent>
+        </GridContainerComponent>
+    );
+};
 
 export const Default = Template.bind({});

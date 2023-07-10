@@ -1,3 +1,5 @@
+@import '../../styles/styles';
+
 $align-items-options: (flex-start, flex-end, center, baseline, stretch);
 $flex-direction-options: (row, row-reverse, column, column-reverse);
 $justify-content-options: (flex-start, flex-end, center, space-between, space-around, space-evenly, start, end, left, right);
@@ -6,24 +8,51 @@ $justify-content-options: (flex-start, flex-end, center, space-between, space-ar
     display: flex !important;
     width: 100%;
 
-    &__height--full {
-        height: 100%;
-    }
-
-    @each $option in $align-items-options {
-        &__align-items--#{$option} {
-            align-items: $option;
+    &__default {
+        &--height-full {
             height: 100%;
         }
-    }
-    @each $option in $flex-direction-options {
-        &__flex-direction--#{$option} {
-            flex-direction: $option;
+
+        @each $option in $align-items-options {
+            &--align-items-#{$option} {
+                align-items: $option;
+                height: 100%;
+            }
+        }
+        @each $option in $flex-direction-options {
+            &--flex-direction-#{$option} {
+                flex-direction: $option;
+            }
+        }
+        @each $option in $justify-content-options {
+            &--justify-content-#{$option} {
+                justify-content: $option;
+            }
         }
     }
-    @each $option in $justify-content-options {
-        &__justify-content--#{$option} {
-            justify-content: $option;
+
+    &__desktop {
+        @media only screen and (min-width: $breakpoint-begin-medium) {
+            &--height-full {
+                height: 100%;
+            }
+
+            @each $option in $align-items-options {
+                &--align-items-#{$option} {
+                    align-items: $option;
+                    height: 100%;
+                }
+            }
+            @each $option in $flex-direction-options {
+                &--flex-direction-#{$option} {
+                    flex-direction: $option;
+                }
+            }
+            @each $option in $justify-content-options {
+                &--justify-content-#{$option} {
+                    justify-content: $option;
+                }
+            }
         }
     }
 }

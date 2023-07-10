@@ -42,7 +42,10 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
     return (
         <CardComponent className={componentClassNames}>
             <div className={`${displayName}__content-wrapper`}>
-                <FlexboxComponent justifyContent={'space-between'}>
+                <FlexboxComponent layoutDefault={{
+                    justifyContent: 'space-between'
+                }}
+                >
                     <h3>{title}</h3>
                     <PopoverComponent
                         actions={[

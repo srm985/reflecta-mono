@@ -103,7 +103,7 @@ router.post('/journal-entry', [
     }
 });
 
-router.put('/journal-entry', [
+router.patch('/journal-entry', [
     rateLimiter.limited,
     authentication.required,
     ...inputValidationsUpdate

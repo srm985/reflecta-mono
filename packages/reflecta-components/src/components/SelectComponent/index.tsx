@@ -36,7 +36,7 @@ const SelectComponent: FC<ISelectComponent> = (props) => {
 
     const selectOptions = options.map((optionDetails) => (
         <option
-            selected={optionDetails.value === value}
+            key={optionDetails.value}
             value={optionDetails.value}
         >{optionDetails.label}
         </option>
@@ -47,7 +47,7 @@ const SelectComponent: FC<ISelectComponent> = (props) => {
             aria-label={'default'}
             disabled
             hidden
-            selected
+            key={'default-***'}
             value={''}
         >{placeholder || ''}
         </option>
@@ -68,8 +68,10 @@ const SelectComponent: FC<ISelectComponent> = (props) => {
     return (
         <FlexboxComponent
             className={componentClassNames}
-            flexDirection={'column'}
-            justifyContent={'space-between'}
+            layoutDefault={{
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+            }}
         >
             <label
                 className={displayName}

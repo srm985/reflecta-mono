@@ -32,10 +32,12 @@ const GridContainerComponent: FC<IGridContainerComponent> = (props) => {
 
     return (
         <FlexboxComponent
-            alignItems={alignItems}
             className={componentClassNames}
-            isFullHeight={isFullHeight}
-            justifyContent={'center'}
+            layoutDefault={{
+                alignItems,
+                isFullHeight,
+                justifyContent: 'center'
+            }}
         >
             <div
                 className={`${displayName}__grid`}

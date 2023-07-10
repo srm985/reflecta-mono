@@ -113,8 +113,16 @@ export const Default: Story = {
                     <SelectComponent
                         {...args}
                         disabled
+                        label={'Preselected'}
                         onChange={() => {}}
                         value={'d'}
+                    />
+                    <SelectComponent
+                        {...args}
+                        label={'Placeholder'}
+                        onChange={setSelectedOption3}
+                        placeholder={'Select an option'}
+                        value={selectedOption3}
                     />
                 </StorybookExampleComponent>
             </>

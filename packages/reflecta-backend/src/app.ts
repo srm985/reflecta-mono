@@ -34,8 +34,8 @@ app.use(cors({
     methods: [
         'DELETE',
         'GET',
-        'POST',
-        'PUT'
+        'PATCH',
+        'POST'
     ],
     origin: BASE_URL_APPLICATION
 }));
