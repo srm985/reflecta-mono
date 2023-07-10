@@ -23,7 +23,7 @@ const ContainerComponent = () => {
     return (
         <>
             {isAuthenticated && <NavigationBarComponent onLogout={handleLogout} />}
-            <div className={'mx--2 mt--9'}>
+            <div className={'mx--2 mt--10'}>
                 <Outlet />
             </div>
             <footer />

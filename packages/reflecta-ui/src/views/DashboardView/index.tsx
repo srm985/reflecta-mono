@@ -11,11 +11,12 @@ import GridItemComponent from '@components/remotes/GridItemComponent';
 import JournalEntryDisplayComponent from '@components/remotes/JournalEntryDisplayComponent';
 import JournalEntryInputComponent from '@components/remotes/JournalEntryInputComponent';
 import ModalComponent from '@components/remotes/ModalComponent';
+import SearchComponent from '@components/remotes/SearchComponent';
 
 import Client from '@utils/Client';
 
 import {
-    ROUTE_API_JOURNAL_ENTRY
+    ROUTE_API_JOURNAL_ENTRY, ROUTE_API_SEARCH
 } from '@routes';
 
 import withReducer from './withReducer';
@@ -24,7 +25,8 @@ import {
     EntryID,
     IDashboardView,
     JournalEntry,
-    PendingJournalEntry
+    PendingJournalEntry,
+    Search
 } from './types';
 
 const client = new Client();
@@ -107,6 +109,22 @@ const DashboardView: FC<IDashboardView> = (props) => {
         await fetchJournalEntries();
     };
 
+    const handleSearch = async (searchDetails: Search) => {
+        console.log({
+            searchDetails
+        });
+        const payload = await client.get<JournalEntry[]>(ROUTE_API_SEARCH, searchDetails);
+
+        if ('errorMessage' in payload) {
+            console.log(payload.errorMessage);
+        } else {
+            dispatch({
+                payload,
+                type: 'SET_JOURNAL_ENTRIES_LIST'
+            });
+        }
+    };
+
     useEffect(() => {
         fetchJournalEntries();
     }, []);
@@ -135,6 +153,11 @@ const DashboardView: FC<IDashboardView> = (props) => {
 
     return (
         <main className={displayName}>
+            <GridContainerComponent className={'mb--8'}>
+                <GridItemComponent>
+                    <SearchComponent onSearch={handleSearch} />
+                </GridItemComponent>
+            </GridContainerComponent>
             <GridContainerComponent>
                 {generatedJournalEntriesList}
             </GridContainerComponent>

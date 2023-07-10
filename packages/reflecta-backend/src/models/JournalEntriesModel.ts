@@ -117,6 +117,29 @@ class JournalEntriesModel {
 
         return pool.query(query, values);
     };
+
+    keywordsSearch = async (userID: number, keywordList: string[], join: 'AND' | 'OR'): Promise<JournalEntriesSchema[]> => {
+        const bodySearch = keywordList.map(() => 'keywords LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
+        const keywordSearch = keywordList.map(() => 'body LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
+
+        const preparedSearch = `${bodySearch} ${join === 'AND' ? ' AND ' : ' OR '} ${keywordSearch}`;
+
+        const searchValues = keywordList.map((keyword) => `%${keyword}%`);
+
+        const query = `SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND (${preparedSearch})`;
+        const values = [
+            this.TABLE_NAME,
+            userID,
+            ...searchValues,
+            ...searchValues
+        ];
+
+        const [
+            results = []
+        ] = await pool.query<JournalEntriesSchema[] & RowDataPacket[][]>(query, values);
+
+        return results;
+    };
 }
 
 export default JournalEntriesModel;

@@ -1,4 +1,5 @@
 import JournalEntriesModel, {
+    JournalEntriesSchema,
     JournalEntry
 } from '@models/JournalEntriesModel';
 
@@ -10,6 +11,21 @@ export type JournalEntryAPIInput = Pick<JournalEntry, 'body' | 'occurredAt' | 't
 export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'occurredAt' | 'title' | 'updatedAt'>;
 
 export type AnalyzedEntry = Pick<JournalEntry, 'isHighInterest' | 'keywords' | 'title'>;
+
+export type KeywordSearchOption = 'disabled' | 'matchesAny' | 'matchesAll';
+export type DateSearchOption = 'disabled' | 'entryDate' | 'dateRange';
+export type SearchKeyword = string | number;
+
+export type Search = {
+    dateSearchOption: DateSearchOption;
+    entryDate: string;
+    keywordSearchOption: KeywordSearchOption;
+    searchEndDate: string;
+    searchKeywordsList: SearchKeyword[];
+    searchStartDate: string;
+    searchString: string;
+    useAISearch: boolean;
+};
 
 class JournalingController {
     private readonly journalEntriesModel: JournalEntriesModel;
@@ -50,6 +66,15 @@ class JournalingController {
             title
         });
     };
+
+    private mapEntryForResponse = (rawJournalEntry: JournalEntriesSchema): JournalEntryResponse => ({
+        body: rawJournalEntry.body,
+        entryID: rawJournalEntry.entry_id,
+        isHighInterest: rawJournalEntry.is_high_interest,
+        occurredAt: rawJournalEntry.occurred_at,
+        title: rawJournalEntry.title,
+        updatedAt: rawJournalEntry.updated_at
+    });
 
     insertJournalEntry = async (userID: number, entryDetails: JournalEntryAPIInput) => {
         const {
@@ -103,14 +128,7 @@ class JournalingController {
         });
     };
 
-    getAllEntriesByUserID = async (userID: number): Promise<JournalEntryResponse[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map((entryDetails): JournalEntryResponse => ({
-        body: entryDetails.body,
-        entryID: entryDetails.entry_id,
-        isHighInterest: entryDetails.is_high_interest,
-        occurredAt: entryDetails.occurred_at,
-        title: entryDetails.title,
-        updatedAt: entryDetails.updated_at
-    }));
+    getAllEntriesByUserID = async (userID: number): Promise<JournalEntryResponse[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map(this.mapEntryForResponse);
 
     deleteJournalEntry = async (userID: number, entryID: number) => {
         const existingEntryDetails = await this.journalEntriesModel.journalEntry(entryID);
@@ -134,6 +152,47 @@ class JournalingController {
 
         // Everything looks good so we can go ahead and update the journal entry
         await this.journalEntriesModel.deleteJournalEntry(entryID);
+    };
+
+    search = async (userID: number, searchDetails: Search): Promise<JournalEntryResponse[]> => {
+        const {
+            dateSearchOption,
+            entryDate,
+            keywordSearchOption,
+            searchEndDate,
+            searchKeywordsList,
+            searchStartDate,
+            searchString,
+            useAISearch
+        } = searchDetails;
+
+        if (dateSearchOption === 'entryDate' && entryDate) {
+            console.log('entry date search...');
+        }
+
+        if (dateSearchOption === 'dateRange' && searchStartDate && searchEndDate) {
+            console.log('date range search...');
+        }
+
+        if (keywordSearchOption === 'matchesAll' && searchKeywordsList.length) {
+            console.log('keyword all search...');
+        }
+
+        if (keywordSearchOption === 'matchesAny' && searchKeywordsList.length) {
+            console.log('keyword any search...');
+        }
+
+        if (searchString) {
+            console.log({
+                useAISearch
+            });
+
+            return (await this.journalEntriesModel.keywordsSearch(userID, [
+                searchString
+            ], 'OR')).map(this.mapEntryForResponse);
+        }
+
+        return ([]);
     };
 }
 

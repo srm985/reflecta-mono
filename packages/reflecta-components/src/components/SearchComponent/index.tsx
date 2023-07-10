@@ -55,7 +55,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
     const [
         isAdvancedSearchVisible,
         setAdvancedSearchVisible
-    ] = useState<boolean>(true);
+    ] = useState<boolean>(false);
 
     const [
         useAISearch,
@@ -100,9 +100,6 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
     );
 
     const handleSearch = () => {
-        // Just a placeholder
-        updateSearchKeywordsList([]);
-
         onSearch({
             dateSearchOption,
             entryDate,
@@ -119,6 +116,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
         setUseAISearch(true);
         setKeywordSearchOption('disabled');
         setDateSearchOption('disabled');
+        updateSearchKeywordsList([]);
     };
 
     const keywordSearchOptionsList = [

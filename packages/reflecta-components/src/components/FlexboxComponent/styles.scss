@@ -16,7 +16,6 @@ $justify-content-options: (flex-start, flex-end, center, space-between, space-ar
         @each $option in $align-items-options {
             &--align-items-#{$option} {
                 align-items: $option;
-                height: 100%;
             }
         }
         @each $option in $flex-direction-options {
@@ -40,7 +39,6 @@ $justify-content-options: (flex-start, flex-end, center, space-between, space-ar
             @each $option in $align-items-options {
                 &--align-items-#{$option} {
                     align-items: $option;
-                    height: 100%;
                 }
             }
             @each $option in $flex-direction-options {

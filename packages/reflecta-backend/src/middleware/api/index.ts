@@ -4,6 +4,7 @@ import enroll from './routes/enroll';
 import inviteUser from './routes/invite-user';
 import journalEntry from './routes/journal-entry';
 import login from './routes/login';
+import search from './routes/search';
 import updatePassword from './routes/update-password';
 import verify from './routes/verify';
 
@@ -14,6 +15,7 @@ export default [
     inviteUser,
     journalEntry,
     login,
+    search,
     updatePassword,
     verify
 ];

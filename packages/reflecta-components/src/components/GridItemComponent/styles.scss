@@ -8,7 +8,12 @@ $breakpoints: (
 );
 
 .GridItemComponent {
+    display: flex;
     grid-column: span 12;
+
+    & > * {
+        width: 100%;
+    }
 
     @each $breakpoint, $breakpoint-value in $breakpoints {
         &__#{$breakpoint} {
