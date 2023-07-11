@@ -7,10 +7,6 @@
     background-color: $color-neutral-200;
 
     & > * {
-        margin-bottom: $margin-large;
-
-        &:last-of-type {
-            margin-bottom: 0;
-        }
+        flex: 0 0 100%;
     }
 }

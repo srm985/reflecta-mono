@@ -2,6 +2,8 @@ import {
     FC
 } from 'react';
 
+import FlexboxComponent from '@components/FlexboxComponent';
+
 import classNames from '@utils/classNames';
 
 import {
@@ -29,7 +31,14 @@ const StorybookExampleComponent: FC<IStorybookExampleComponent> = (props) => {
     return (
         <div className={componentClassNames}>
             {label && <p className={'mb--2 bold'}>{label}</p>}
-            <div className={`${displayName}__card`}>{children}</div>
+            <FlexboxComponent
+                className={`${displayName}__card`}
+                layoutDefault={{
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between'
+                }}
+            >{children}
+            </FlexboxComponent>
         </div>
     );
 };

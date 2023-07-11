@@ -2,6 +2,8 @@ import {
     FC
 } from 'react';
 
+import FlexboxComponent from '@components/FlexboxComponent';
+
 import classNames from '@utils/classNames';
 
 import {
@@ -25,7 +27,16 @@ const StorybookStylerComponent: FC<IStorybookStylerComponent> = (props) => {
         className
     );
 
-    return (<div className={componentClassNames}>{children}</div>);
+    return (
+        <FlexboxComponent
+            className={componentClassNames}
+            layoutDefault={{
+                flexWrap: 'wrap',
+                rowGap: 'large'
+            }}
+        >{children}
+        </FlexboxComponent>
+    );
 };
 
 StorybookStylerComponent.displayName = 'StorybookStylerComponent';

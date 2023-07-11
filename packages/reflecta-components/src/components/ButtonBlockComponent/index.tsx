@@ -31,7 +31,13 @@ const ButtonBlockComponent: FC<IButtonBlockComponent> = (props) => {
         <FlexboxComponent
             className={componentClassNames}
             layoutDefault={{
-                justifyContent: 'flex-end'
+                flexDirection: 'column-reverse',
+                justifyContent: 'flex-end',
+                rowGap: 'medium'
+            }}
+            layoutDesktop={{
+                columnGap: 'medium',
+                flexDirection: 'row'
             }}
         >
             {children}

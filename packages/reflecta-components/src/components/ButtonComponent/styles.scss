@@ -26,6 +26,7 @@ $letter-spacing: 0.05em;
         letter-spacing: $letter-spacing;
 
         border-radius: $border-radius-small;
+        box-shadow: $box-shadow-200;
 
         &-icon-only {
             padding: $padding-small $padding-medium;

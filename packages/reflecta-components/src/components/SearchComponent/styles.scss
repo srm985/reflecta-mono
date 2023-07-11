@@ -16,22 +16,4 @@
             display: inline-block;
         }
     }
-
-    &__date-search-block {
-        & > * {
-            margin-bottom: $margin-medium;
-
-            &:last-of-type {
-                margin-right: 0;
-            }
-
-            @media only screen and (min-width: $breakpoint-begin-medium) {
-                margin-right: $margin-medium;
-
-                &:last-of-type {
-                    margin-right: 0;
-                }
-            }
-        }
-    }
 }

@@ -29,11 +29,17 @@ const FlexboxComponent: FC<IFlexboxComponent> = (props) => {
             [`${displayName}__default--align-items-${layoutDefault?.alignItems}`]: !!layoutDefault?.alignItems,
             [`${displayName}__default--height-full`]: !!layoutDefault?.isFullHeight,
             [`${displayName}__default--flex-direction-${layoutDefault?.flexDirection}`]: !!layoutDefault?.flexDirection,
+            [`${displayName}__default--flex-wrap-${layoutDefault?.flexWrap}`]: !!layoutDefault?.flexWrap,
             [`${displayName}__default--justify-content-${layoutDefault?.justifyContent}`]: !!layoutDefault?.justifyContent,
+            [`${displayName}__default--column-gap-${layoutDefault?.columnGap}`]: !!layoutDefault?.columnGap,
+            [`${displayName}__default--row-gap-${layoutDefault?.rowGap}`]: !!layoutDefault?.rowGap,
             [`${displayName}__desktop--align-items-${layoutDesktop?.alignItems}`]: !!layoutDesktop?.alignItems,
             [`${displayName}__desktop--height-full`]: !!layoutDesktop?.isFullHeight,
             [`${displayName}__desktop--flex-direction-${layoutDesktop?.flexDirection}`]: !!layoutDesktop?.flexDirection,
-            [`${displayName}__desktop--justify-content-${layoutDesktop?.justifyContent}`]: !!layoutDesktop?.justifyContent
+            [`${displayName}__desktop--flex-wrap-${layoutDesktop?.flexWrap}`]: !!layoutDesktop?.flexWrap,
+            [`${displayName}__desktop--justify-content-${layoutDesktop?.justifyContent}`]: !!layoutDesktop?.justifyContent,
+            [`${displayName}__desktop--column-gap-${layoutDesktop?.columnGap}`]: !!layoutDesktop?.columnGap,
+            [`${displayName}__desktop--row-gap-${layoutDesktop?.rowGap}`]: !!layoutDesktop?.rowGap
         }
     );
 

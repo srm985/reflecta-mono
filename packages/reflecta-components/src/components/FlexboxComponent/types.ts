@@ -15,6 +15,11 @@ export type FlexDirection =
   | 'column'
   | 'column-reverse';
 
+export type FlexWrap =
+  | 'nowrap'
+  | 'wrap'
+  | 'wrap-reverse';
+
 export type JustifyContent =
   | 'flex-start'
   | 'flex-end'
@@ -27,11 +32,24 @@ export type JustifyContent =
   | 'left'
   | 'right';
 
+export type ColumnGap =
+| 'small'
+| 'medium'
+| 'large';
+
+export type RowGap =
+| 'small'
+| 'medium'
+| 'large';
+
 export type Layout = {
     alignItems?: AlignItems;
+    columnGap?: ColumnGap;
     flexDirection?: FlexDirection;
+    flexWrap?: FlexWrap;
     isFullHeight?: boolean;
     justifyContent?: JustifyContent;
+    rowGap?: RowGap;
 };
 
 export type IFlexboxComponent = {

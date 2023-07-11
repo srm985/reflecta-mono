@@ -1,6 +1,6 @@
 @import '../../styles/styles';
 
-@mixin unstyled-button {
+%unstyled-button {
     padding: 0;
 
     background: transparent;
@@ -13,7 +13,7 @@
     position: relative;
 
     &__control {
-        @include unstyled-button();
+        @extend %unstyled-button;
 
         display: flex;
         flex-direction: column;
@@ -42,7 +42,7 @@
         background-color: $color-neutral-100;
         border: none;
         border-radius: $border-radius-medium;
-        box-shadow: $box-shadow-dark;
+        box-shadow: $box-shadow-400;
 
         h3 {
             display: inline-block;
@@ -54,7 +54,7 @@
     }
 
     &__close {
-        @include unstyled-button();
+        @extend %unstyled-button;
 
         display: flex;
         align-items: center;
@@ -105,7 +105,7 @@
     }
 
     &__action-item {
-        @include unstyled-button();
+        @extend %unstyled-button;
 
         display: inline-block;
         width: 100%;

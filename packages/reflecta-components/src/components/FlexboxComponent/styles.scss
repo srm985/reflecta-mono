@@ -2,7 +2,18 @@
 
 $align-items-options: (flex-start, flex-end, center, baseline, stretch);
 $flex-direction-options: (row, row-reverse, column, column-reverse);
+$flex-wrap-options: (nowrap, wrap, wrap-reverse);
 $justify-content-options: (flex-start, flex-end, center, space-between, space-around, space-evenly, start, end, left, right);
+$column-gap-options: (
+    'small': $margin-small,
+    'medium': $margin-medium,
+    'large': $margin-large
+);
+$row-gap-options: (
+    'small': $margin-small,
+    'medium': $margin-medium,
+    'large': $margin-large
+);
 
 .FlexboxComponent {
     display: flex !important;
@@ -23,9 +34,24 @@ $justify-content-options: (flex-start, flex-end, center, space-between, space-ar
                 flex-direction: $option;
             }
         }
+        @each $option in $flex-wrap-options {
+            &--flex-wrap-#{$option} {
+                flex-wrap: $option;
+            }
+        }
         @each $option in $justify-content-options {
             &--justify-content-#{$option} {
                 justify-content: $option;
+            }
+        }
+        @each $option, $value in $column-gap-options {
+            &--column-gap-#{$option} {
+                column-gap: $value;
+            }
+        }
+        @each $option, $value in $row-gap-options {
+            &--row-gap-#{$option} {
+                row-gap: $value;
             }
         }
     }
@@ -46,9 +72,24 @@ $justify-content-options: (flex-start, flex-end, center, space-between, space-ar
                     flex-direction: $option;
                 }
             }
+            @each $option in $flex-wrap-options {
+                &--flex-wrap-#{$option} {
+                    flex-wrap: $option;
+                }
+            }
             @each $option in $justify-content-options {
                 &--justify-content-#{$option} {
                     justify-content: $option;
+                }
+            }
+            @each $option, $value in $column-gap-options {
+                &--column-gap-#{$option} {
+                    column-gap: $value;
+                }
+            }
+            @each $option, $value in $row-gap-options {
+                &--row-gap-#{$option} {
+                    row-gap: $value;
                 }
             }
         }

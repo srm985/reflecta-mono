@@ -201,16 +201,17 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                     value={keywordSearchOption}
                 />
                 <FlexboxComponent
-                    className={`${displayName}__date-search-block`}
+                    className={'mb--7'}
                     layoutDefault={{
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        rowGap: 'medium'
                     }}
                     layoutDesktop={{
+                        columnGap: 'medium',
                         flexDirection: 'row'
                     }}
                 >
                     <SelectComponent
-                        className={'mb--2'}
                         label={'Date search'}
                         name={'dateSearch'}
                         onChange={(value) => setDateSearchOption(value as DateSearchOption)}
@@ -249,7 +250,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                         )
                     }
                 </FlexboxComponent>
-                <ButtonBlockComponent className={'mt--4'}>
+                <ButtonBlockComponent>
                     <ButtonComponent
                         color={'warning'}
                         onClick={handleReset}

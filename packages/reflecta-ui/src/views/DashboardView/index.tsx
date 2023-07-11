@@ -154,7 +154,11 @@ const DashboardView: FC<IDashboardView> = (props) => {
     return (
         <main className={displayName}>
             <GridContainerComponent className={'mb--8'}>
-                <GridItemComponent>
+                <GridItemComponent
+                    breakpointLarge={{
+                        span: 8
+                    }}
+                >
                     <SearchComponent onSearch={handleSearch} />
                 </GridItemComponent>
             </GridContainerComponent>
