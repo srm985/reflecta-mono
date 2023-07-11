@@ -23,6 +23,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
         body,
         className,
         entryID,
+        isHighInterest,
         occurredAt,
         onDelete,
         onEdit,
@@ -33,6 +34,25 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
     const {
         displayName
     } = JournalEntryDisplayComponent;
+
+    const bodySummary = body.split(/(?<=[.!?])\s+(?=[A-Z¡¿])/).slice(0, isHighInterest ? 6 : 3).join(' ');
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    };
+
+    const dateTimeOccurredAt = new Date(occurredAt);
+    const dateTimeUpdatedAt = new Date(updatedAt || '');
+
+    const formattedOccurredAt = dateTimeOccurredAt.toLocaleDateString(undefined, dateOptions);
+    const formattedUpdatedAt = dateTimeUpdatedAt.toLocaleDateString(undefined, {
+        ...dateOptions,
+        hour: '2-digit',
+        hour12: false,
+        minute: '2-digit'
+    }).replace(' at ', ' ');
 
     const componentClassNames = classNames(
         displayName,
@@ -46,7 +66,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
                     justifyContent: 'space-between'
                 }}
                 >
-                    <h3>{title}</h3>
+                    <h3 className={'mb--1'}>{title}</h3>
                     <PopoverComponent
                         actions={[
                             {
@@ -68,13 +88,13 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
                         label={'Actions'}
                     />
                 </FlexboxComponent>
-                <p>{occurredAt}</p>
+                <p className={'font--small'}><span>{'Entry: '}</span><span className={'bold'}>{formattedOccurredAt}</span></p>
                 {
                     updatedAt && (
-                        <p>{updatedAt}</p>
+                        <p className={'font--small italic'}><span>{'Edited: '}</span><span className={'bold'}>{formattedUpdatedAt}</span></p>
                     )
                 }
-                <p>{body}</p>
+                <p className={'mt--3'}>{bodySummary}</p>
             </div>
         </CardComponent>
     );

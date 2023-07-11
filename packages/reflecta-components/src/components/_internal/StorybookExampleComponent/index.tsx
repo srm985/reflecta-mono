@@ -34,8 +34,10 @@ const StorybookExampleComponent: FC<IStorybookExampleComponent> = (props) => {
             <FlexboxComponent
                 className={`${displayName}__card`}
                 layoutDefault={{
+                    columnGap: 'medium',
                     flexWrap: 'wrap',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    rowGap: 'medium'
                 }}
             >{children}
             </FlexboxComponent>

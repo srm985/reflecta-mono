@@ -5,7 +5,6 @@
     max-width: calc($planck-length * 100);
 
     &__card {
-        gap: $margin-medium;
         padding: $padding-medium $padding-medium $padding-large;
 
         background-color: $color-neutral-100;

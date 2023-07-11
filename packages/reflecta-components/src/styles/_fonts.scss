@@ -8,6 +8,14 @@ $font-size-small: 16px;
 $font-size-regular: 18px;
 $font-size-large: 22px;
 
+// List of font sizes
+$font-sizes: (
+    'xsmall': $font-size-xsmall,
+    'small': $font-size-small,
+    'medium': $font-size-regular,
+    'large': $font-size-large
+);
+
 // Font families for display and reading
 $font-family-default: 'Comfortaa', sans-serif;
 $font-family-text-block: 'Cormorant', serif;

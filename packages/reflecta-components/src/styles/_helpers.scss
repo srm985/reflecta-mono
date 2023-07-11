@@ -83,11 +83,23 @@
     font-weight: bold;
 }
 
+.italic {
+    font-style: italic;
+}
+
+// Generate coloring helper classes
 @each $key, $value in $color-names-list {
     .background--#{$key} {
         background-color: $value;
     }
     .color--#{$key} {
         color: $value;
+    }
+}
+
+// Generate font sizes helper classes
+@each $key, $value in $font-sizes {
+    .font--#{$key} {
+        font-size: $value;
     }
 }

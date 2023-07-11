@@ -4,6 +4,7 @@ export type IJournalEntryDisplayComponent = {
     body: string;
     className?: string;
     entryID: EntryID
+    isHighInterest: boolean;
     occurredAt: string;
     onDelete: (entryID: number) => void;
     onEdit: (entryID: EntryID) => void;

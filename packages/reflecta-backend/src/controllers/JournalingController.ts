@@ -38,7 +38,9 @@ class JournalingController {
         this.openAIService = new OpenAIService();
     }
 
-    private prepareAnalyzeEntry = async (title: string, body: string): Promise<AnalyzedEntry> => {
+    private sanitize = (body: string = ''): string => body.replace(/\t+/g, ' ').replace(/[ ]{2, }/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+
+    private prepareAnalyzeEntry = async (sanitizedTitle: string, sanitizedBody: string): Promise<AnalyzedEntry> => {
         const {
             env: {
                 JOURNAL_ENTRY_MINIMUM_BODY_WORDS_FOR_TITLE = ''
@@ -46,16 +48,16 @@ class JournalingController {
         } = process;
 
         const minimumWordCount = parseInt(JOURNAL_ENTRY_MINIMUM_BODY_WORDS_FOR_TITLE, 10);
-        const isBodyMinimumWordCount = body.split(' ').length >= minimumWordCount;
+        const isBodyMinimumWordCount = sanitizedBody.split(' ').length >= minimumWordCount;
 
         if (isBodyMinimumWordCount) {
-            const analyzedEntryDetails = await this.openAIService.analyze(body);
+            const analyzedEntryDetails = await this.openAIService.analyze(sanitizedBody);
 
             if (analyzedEntryDetails) {
                 return ({
                     isHighInterest: analyzedEntryDetails.isHighInterest,
                     keywords: analyzedEntryDetails.keywords.toLowerCase(),
-                    title: title || analyzedEntryDetails.title
+                    title: sanitizedTitle || this.sanitize(analyzedEntryDetails.title)
                 });
             }
         }
@@ -63,7 +65,7 @@ class JournalingController {
         return ({
             isHighInterest: false,
             keywords: null,
-            title
+            title: sanitizedTitle
         });
     };
 
@@ -77,14 +79,18 @@ class JournalingController {
     });
 
     insertJournalEntry = async (userID: number, entryDetails: JournalEntryAPIInput) => {
+        const sanitizedTitle = this.sanitize(entryDetails.title);
+        const sanitizedBody = this.sanitize(entryDetails.body);
+
         const {
             isHighInterest,
             keywords,
             title
-        } = await this.prepareAnalyzeEntry(entryDetails.title, entryDetails.body);
+        } = await this.prepareAnalyzeEntry(sanitizedTitle, sanitizedBody);
 
         await this.journalEntriesModel.insertJournalEntry(userID, {
             ...entryDetails,
+            body: sanitizedBody,
             isHighInterest,
             keywords,
             occurredAt: entryDetails.occurredAt.slice(0, 10),
@@ -112,6 +118,19 @@ class JournalingController {
             });
         }
 
+        const sanitizedTitle = this.sanitize(entryDetails.title);
+        const sanitizedBody = this.sanitize(entryDetails.body);
+
+        // No point in processing if nothing has changed
+        if (
+            sanitizedTitle
+            && sanitizedTitle === existingEntryDetails.title
+            && sanitizedBody === existingEntryDetails.body
+            && existingEntryDetails.keywords
+        ) {
+            return undefined;
+        }
+
         const {
             isHighInterest,
             keywords,
@@ -119,12 +138,13 @@ class JournalingController {
         } = await this.prepareAnalyzeEntry(entryDetails.title, entryDetails.body);
 
         // Everything looks good so we can go ahead and update the journal entry
-        await this.journalEntriesModel.modifyJournalEntry(entryID, {
+        return this.journalEntriesModel.modifyJournalEntry(entryID, {
             ...entryDetails,
+            body: sanitizedBody,
             isHighInterest,
             keywords,
             occurredAt: entryDetails.occurredAt.slice(0, 10),
-            title
+            title: this.sanitize(title)
         });
     };
 
