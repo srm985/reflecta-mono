@@ -1,4 +1,6 @@
 import {
+    ChatCompletionRequestMessage,
+    ChatCompletionResponseMessage,
     Configuration,
     OpenAIApi
 } from 'openai';
@@ -7,8 +9,14 @@ import logger from '@utils/logger';
 
 export type AnalysisResponse = {
     isHighInterest: boolean;
-    keywords: string;
+    keywords: string[];
     title: string;
+};
+
+export type ChatDetails = {
+    maxTokens: number;
+    messagesList: ChatCompletionRequestMessage[];
+    temperature?: number;
 };
 
 class OpenAIService {
@@ -33,43 +41,137 @@ class OpenAIService {
         this.OPENAI_MODEL = OPENAI_MODEL;
     }
 
+    private chat = async (chatDetails: ChatDetails): Promise<ChatCompletionResponseMessage | undefined> => {
+        const {
+            data: {
+                choices: [
+                    {
+                        message
+                    }
+                ]
+            }
+        } = await this.openAI.createChatCompletion({
+            frequency_penalty: 0,
+            max_tokens: chatDetails.maxTokens,
+            messages: chatDetails.messagesList,
+            model: this.OPENAI_MODEL,
+            presence_penalty: 0,
+            temperature: chatDetails.temperature || 1,
+            top_p: 1
+        });
+
+        return message;
+    };
+
     analyze = async (entryBody: string): Promise<AnalysisResponse | undefined> => {
+        const messageHistory: ChatCompletionRequestMessage[] = [
+            {
+                content: 'As a poetic writer, evaluate the following text and return a whimsical title which summarizes it well.',
+                role: 'system'
+            },
+            {
+                content: entryBody.replace(/\s{2,}/g, ' ').trim(),
+                role: 'user'
+            }
+        ];
+
         try {
-            const {
-                data: {
-                    choices: [
-                        {
-                            text
-                        }
-                    ]
-                }
-            } = await this.openAI.createCompletion({
-                max_tokens: 250,
-                model: this.OPENAI_MODEL,
-                prompt: `[INSTRUCTIONS] As a thoughtful and insightful digital diary, evaluate the following {text}. Begin by generating a poetic title which summarizes the {text}. This title must be at least 8 words long and a maximum of 15 words. Then compare the {text} to everyday life and determine if the events that occurred on this given day are more interesting than normal. If so, you'll return the flag isHighInterest=true. Finally generate a list of broader keywords which will allow fuzzy searching of the text. Ensure you return specific keywords and also expanded out concepts such as geographical locations. For example, if I wrote about a city you might also include the state or country. Generate at least 10 keywords with a maximum of 50 keywords for longer {text}. Return your results as a strictly-formatted JSON string with the following schema: {"title": string, "isHighInterest": boolean; "keywords": string}\n\ntext = '${entryBody.trim()}'`,
-                temperature: 0.7
+            const titleMessage = await this.chat({
+                maxTokens: 20,
+                messagesList: messageHistory,
+                temperature: 1
             });
 
-            if (!text) {
+            if (!titleMessage?.content) {
                 return undefined;
             }
 
-            const {
-                isHighInterest,
-                keywords,
-                title
-            } = JSON.parse(text.replace(/\n/g, '').trim()) as AnalysisResponse;
+            const title = titleMessage.content.replace(/\s+/g, ' ').trim();
+
+            messageHistory.push(titleMessage);
+
+            messageHistory.push({
+                content: 'As an observer, compare the text to everyday life.  Return true if the events are extreme or more exciting or interesting than normal. Otherwise return false.',
+                role: 'user'
+            });
+
+            const isHighInterestMessage = await this.chat({
+                maxTokens: 20,
+                messagesList: messageHistory,
+                temperature: 1
+            });
+
+            if (!isHighInterestMessage?.content) {
+                return undefined;
+            }
+
+            const isHighInterest = isHighInterestMessage.content.trim().toLowerCase() === 'true';
+
+            messageHistory.push(isHighInterestMessage);
+
+            const keywordsList = await this.generateSearchKeywords(entryBody);
 
             return ({
                 isHighInterest,
-                keywords: keywords.trim(),
-                title: title.trim()
+                keywords: keywordsList,
+                title
             });
         } catch (error) {
             logger.error(error);
         }
 
         return undefined;
+    };
+
+    generateSearchKeywords = async (searchString: string): Promise<string[]> => {
+        const MAX_TOKENS = 250;
+        const TEMPERATURE = 1.2;
+
+        const messageHistory: ChatCompletionRequestMessage[] = [
+            {
+                content: 'As a search engine, generate a list of keywords which could then be used later as fuzzy search matches. Include synonyms and common words. Expand concepts and geographical locations to broader or more common terms. Return the list as a stringified JSON array.',
+                role: 'system'
+            },
+            {
+                content: searchString.replace(/\s{2,}/g, ' ').trim(),
+                role: 'user'
+            }
+        ];
+
+        try {
+            const message = await this.chat({
+                maxTokens: MAX_TOKENS,
+                messagesList: messageHistory,
+                temperature: TEMPERATURE
+            });
+
+            if (!message?.content) {
+                return ([]);
+            }
+
+            messageHistory.push(message);
+
+            messageHistory.push({
+                content: 'Please slightly expand the list and add common synonyms.',
+                role: 'user'
+            });
+
+            const finalMessage = await this.chat({
+                maxTokens: MAX_TOKENS,
+                messagesList: messageHistory,
+                temperature: TEMPERATURE
+            });
+
+            if (!finalMessage?.content) {
+                return ([]);
+            }
+
+            return JSON.parse(finalMessage.content.replace(/\n/g, '').trim());
+        } catch (error) {
+            logger.error(error);
+        }
+
+        return ([]);
     };
 }
 

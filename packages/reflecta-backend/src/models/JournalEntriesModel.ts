@@ -108,17 +108,7 @@ class JournalEntriesModel {
         return results[0];
     };
 
-    deleteJournalEntry = async (entryID: number) => {
-        const query = 'UPDATE ?? SET deleted_at = CURRENT_TIMESTAMP WHERE entry_id = ?';
-        const values = [
-            this.TABLE_NAME,
-            entryID
-        ];
-
-        return pool.query(query, values);
-    };
-
-    keywordsSearch = async (userID: number, keywordList: string[], join: 'AND' | 'OR'): Promise<JournalEntriesSchema[]> => {
+    journalEntryByKeywords = async (userID: number, keywordList: string[], join: 'AND' | 'OR'): Promise<JournalEntriesSchema[]> => {
         const bodySearch = keywordList.map(() => 'keywords LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
         const keywordSearch = keywordList.map(() => 'body LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
 
@@ -139,6 +129,47 @@ class JournalEntriesModel {
         ] = await pool.query<JournalEntriesSchema[] & RowDataPacket[][]>(query, values);
 
         return results;
+    };
+
+    journalEntriesByDate = async (userID: number, entryDate: string): Promise<JournalEntriesSchema[]> => {
+        const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND occurred_at = ?';
+        const values = [
+            this.TABLE_NAME,
+            userID,
+            entryDate
+        ];
+
+        const [
+            results = []
+        ] = await pool.query<JournalEntriesSchema[] & RowDataPacket[][]>(query, values);
+
+        return results;
+    };
+
+    journalEntriesByDateRange = async (userID: number, startDate: string, endDate: string): Promise<JournalEntriesSchema[]> => {
+        const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND occurred_at >= ? and occurred_at <= ?';
+        const values = [
+            this.TABLE_NAME,
+            userID,
+            startDate,
+            endDate
+        ];
+
+        const [
+            results = []
+        ] = await pool.query<JournalEntriesSchema[] & RowDataPacket[][]>(query, values);
+
+        return results;
+    };
+
+    deleteJournalEntry = async (entryID: number) => {
+        const query = 'UPDATE ?? SET deleted_at = CURRENT_TIMESTAMP WHERE entry_id = ?';
+        const values = [
+            this.TABLE_NAME,
+            entryID
+        ];
+
+        return pool.query(query, values);
     };
 }
 

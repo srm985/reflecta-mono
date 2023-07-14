@@ -56,7 +56,7 @@ class JournalingController {
             if (analyzedEntryDetails) {
                 return ({
                     isHighInterest: analyzedEntryDetails.isHighInterest,
-                    keywords: analyzedEntryDetails.keywords.toLowerCase(),
+                    keywords: analyzedEntryDetails.keywords.map((keyword) => keyword.toLowerCase()).join(', '),
                     title: sanitizedTitle || this.sanitize(analyzedEntryDetails.title)
                 });
             }
@@ -186,12 +186,14 @@ class JournalingController {
             useAISearch
         } = searchDetails;
 
+        // Return all journal entries matching the date - there could be more than one
         if (dateSearchOption === 'entryDate' && entryDate) {
-            console.log('entry date search...');
+            return (await this.journalEntriesModel.journalEntriesByDate(userID, entryDate)).map(this.mapEntryForResponse);
         }
 
+        // Return all entries in the range (inclusive) with no additional filtering
         if (dateSearchOption === 'dateRange' && searchStartDate && searchEndDate) {
-            console.log('date range search...');
+            return (await this.journalEntriesModel.journalEntriesByDateRange(userID, searchStartDate, searchEndDate)).map(this.mapEntryForResponse);
         }
 
         if (keywordSearchOption === 'matchesAll' && searchKeywordsList.length) {
@@ -203,12 +205,17 @@ class JournalingController {
         }
 
         if (searchString) {
-            console.log({
-                useAISearch
-            });
+            const fuzzyKeywordsList: string[] = [];
 
-            return (await this.journalEntriesModel.keywordsSearch(userID, [
-                searchString
+            if (useAISearch) {
+                const generatedKeywordsList = await this.openAIService.generateSearchKeywords(searchString);
+
+                fuzzyKeywordsList.push(...generatedKeywordsList);
+            }
+
+            return (await this.journalEntriesModel.journalEntryByKeywords(userID, [
+                searchString,
+                ...fuzzyKeywordsList
             ], 'OR')).map(this.mapEntryForResponse);
         }
 

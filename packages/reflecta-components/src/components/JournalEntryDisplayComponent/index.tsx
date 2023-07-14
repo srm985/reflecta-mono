@@ -43,7 +43,13 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
         year: 'numeric'
     };
 
-    const dateTimeOccurredAt = new Date(occurredAt);
+    const [
+        year,
+        month,
+        day
+    ] = occurredAt.slice(0, 10).split('-').map((value) => parseInt(value, 10));
+
+    const dateTimeOccurredAt = new Date(year, month - 1, day);
     const dateTimeUpdatedAt = new Date(updatedAt || '');
 
     const formattedOccurredAt = dateTimeOccurredAt.toLocaleDateString(undefined, dateOptions);
@@ -88,10 +94,10 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
                         label={'Actions'}
                     />
                 </FlexboxComponent>
-                <p className={'font--small'}><span>{'Entry: '}</span><span className={'bold'}>{formattedOccurredAt}</span></p>
+                <p className={'font--small bold color--accent'}>{formattedOccurredAt}</p>
                 {
                     updatedAt && (
-                        <p className={'font--small italic'}><span>{'Edited: '}</span><span className={'bold'}>{formattedUpdatedAt}</span></p>
+                        <p className={'font--xsmall italic'}><span>{'Edited: '}</span><span className={'bold'}>{formattedUpdatedAt}</span></p>
                     )
                 }
                 <p className={'mt--3'}>{bodySummary}</p>
