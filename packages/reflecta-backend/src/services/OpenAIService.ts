@@ -124,7 +124,7 @@ class OpenAIService {
     };
 
     generateSearchKeywords = async (searchString: string): Promise<string[]> => {
-        const MAX_TOKENS = 250;
+        const MAX_TOKENS = 500;
         const TEMPERATURE = 1.2;
 
         const messageHistory: ChatCompletionRequestMessage[] = [
