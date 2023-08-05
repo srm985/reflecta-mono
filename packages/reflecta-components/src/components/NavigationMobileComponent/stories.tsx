@@ -3,7 +3,8 @@ import {
     faPenToSquare
 } from '@fortawesome/free-regular-svg-icons';
 import {
-    faGear, faHouse
+    faGear,
+    faHouse
 } from '@fortawesome/free-solid-svg-icons';
 import {
     Meta,
