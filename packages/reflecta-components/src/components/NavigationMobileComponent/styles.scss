@@ -1,0 +1,69 @@
+@import '../../styles/styles';
+
+// Variables
+$primary-button-diameter: calc($planck-length * 7);
+$background-color: $color-neutral-500;
+
+%button-default {
+    width: calc($planck-length * 5);
+    height: calc($planck-length * 5);
+    margin: 0;
+    padding: 0;
+
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.NavigationMobileComponent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: $z-index-navigation;
+
+    width: 100%;
+    height: calc($planck-length * 6);
+
+    &__side-navigation {
+        background-color: $background-color;
+
+        button {
+            @extend %button-default;
+
+            color: $color-neutral-100;
+            font-size: $font-size-large;
+        }
+    }
+
+    &__primary-navigation {
+        position: relative;
+
+        width: 50%;
+
+        button {
+            @extend %button-default;
+
+            position: absolute;
+            top: calc($primary-button-diameter / -2);
+            left: calc(50% - ($primary-button-diameter / 2));
+
+            width: $primary-button-diameter;
+            height: $primary-button-diameter;
+
+            color: $color-neutral-100;
+            font-size: $font-size-large;
+
+            background-color: $color-accent-300;
+            border-radius: 50%;
+        }
+    }
+
+    &__center-background {
+        width: 100%;
+        height: 100%;
+
+        background-color: $background-color;
+
+        mask-image: radial-gradient(circle calc(($primary-button-diameter / 2) + $planck-length) at 50% 0, transparent 0, transparent calc(($primary-button-diameter / 2) + $planck-length), $color-neutral-600);
+    }
+}

@@ -12,7 +12,7 @@ module.exports = async ({
                 loader: 'css-loader',
                 options: {
                     modules: {
-                        auto: (resourcePath) => resourcePath.endsWith('colors.scss')
+                        auto: /^.*(colors|units).scss$/
                     }
                 }
             },

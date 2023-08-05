@@ -1,3 +1,7 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
+
+/* stylelint-disable scss/declaration-nested-properties */
+
 // Application Minimum Spacing Unit
 $planck-length: 8px;
 
@@ -18,3 +22,12 @@ $z-index-modal: 9999;
 $z-index-popover: 9998;
 $z-index-navigation: 9997;
 $z-index-footer: 9996;
+
+:export {
+    breakpoints: {
+        breakpointBeginLarge: $breakpoint-begin-large;
+        breakpointBeginMedium: $breakpoint-begin-medium;
+        breakpointBeginSmall: $breakpoint-begin-small;
+        breakpointBeginXlarge: $breakpoint-begin-xlarge;
+    }
+}
