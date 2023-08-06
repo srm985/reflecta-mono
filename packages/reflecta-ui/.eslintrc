@@ -54,6 +54,11 @@
                     },
                     {
                         "group": "parent",
+                        "pattern": "@views/**/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
                         "pattern": "@modules/*",
                         "position": "after"
                     },
@@ -79,6 +84,16 @@
                     },
                     {
                         "group": "parent",
+                        "pattern": "@store",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "@store/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
                         "pattern": "@utils/*",
                         "position": "after"
                     },
@@ -95,6 +110,16 @@
                     {
                         "group": "parent",
                         "pattern": "./withReducer",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "./slice",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "@types",
                         "position": "after"
                     },
                     {

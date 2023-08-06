@@ -1,9 +1,18 @@
 import {
+    fetchJournalEntries,
+    selectAllJournalEntries
+} from '@store/slices/journalEntriesSlice';
+import {
     FC,
     memo,
     useEffect,
     useMemo
 } from 'react';
+
+import {
+    useAppDispatch,
+    useAppSelector
+} from '../../hooks';
 
 import ButtonComponent from '@components/remotes/ButtonComponent';
 import GridContainerComponent from '@components/remotes/GridContainerComponent';
@@ -16,7 +25,8 @@ import SearchComponent from '@components/remotes/SearchComponent';
 import Client from '@utils/Client';
 
 import {
-    ROUTE_API_JOURNAL_ENTRY, ROUTE_API_SEARCH
+    ROUTE_API_JOURNAL_ENTRY,
+    ROUTE_API_SEARCH
 } from '@routes';
 
 import withReducer from './withReducer';
@@ -33,7 +43,6 @@ const client = new Client();
 
 const DashboardView: FC<IDashboardView> = (props) => {
     const {
-        dispatch,
         state
     } = props;
 
@@ -41,22 +50,26 @@ const DashboardView: FC<IDashboardView> = (props) => {
         displayName
     } = DashboardView;
 
+    const dispatch = useAppDispatch();
+
+    const journalEntriesList = useAppSelector(selectAllJournalEntries);
+
     console.log({
         state
     });
 
-    const fetchJournalEntries = async () => {
-        const payload = await client.get<JournalEntry[]>(ROUTE_API_JOURNAL_ENTRY);
+    // const fetchJournalEntries = async () => {
+    //     const payload = await client.get<JournalEntry[]>(ROUTE_API_JOURNAL_ENTRY);
 
-        if ('errorMessage' in payload) {
-            console.log(payload.errorMessage);
-        } else {
-            dispatch({
-                payload,
-                type: 'SET_JOURNAL_ENTRIES_LIST'
-            });
-        }
-    };
+    //     if ('errorMessage' in payload) {
+    //         console.log(payload.errorMessage);
+    //     } else {
+    //         dispatch({
+    //             payload,
+    //             type: 'SET_JOURNAL_ENTRIES_LIST'
+    //         });
+    //     }
+    // };
 
     const handleEntrySubmission = async (journalEntry: PendingJournalEntry) => {
         const {
@@ -85,7 +98,7 @@ const DashboardView: FC<IDashboardView> = (props) => {
             type: 'CLEAR_JOURNAL_ENTRY'
         });
 
-        await fetchJournalEntries();
+        // await fetchJournalEntries();
     };
 
     const handleEntryConclusion = () => {
@@ -106,7 +119,7 @@ const DashboardView: FC<IDashboardView> = (props) => {
             entryID
         });
 
-        await fetchJournalEntries();
+        // await fetchJournalEntries();
     };
 
     const handleSearch = async (searchDetails: Search) => {
@@ -126,10 +139,10 @@ const DashboardView: FC<IDashboardView> = (props) => {
     };
 
     useEffect(() => {
-        fetchJournalEntries();
+        dispatch(fetchJournalEntries());
     }, []);
 
-    const generatedJournalEntriesList = useMemo(() => state.journalEntriesList.map((journalEntryDetails) => (
+    const generatedJournalEntriesList = useMemo(() => journalEntriesList.map((journalEntryDetails) => (
         <GridItemComponent
             breakpointLarge={{
                 span: 4
@@ -148,7 +161,7 @@ const DashboardView: FC<IDashboardView> = (props) => {
             />
         </GridItemComponent>
     )), [
-        state.journalEntriesList
+        journalEntriesList
     ]);
 
     return (
