@@ -57,20 +57,24 @@ const ContainerComponent = () => {
         }
     ];
 
+    const navigationComponent = (
+        <ViewportRendererComponent>
+            <NavigationMobileComponent
+                navigationItems={navigationItemsList}
+                primaryNavigationItem={primaryNavigationItem}
+            />
+        </ViewportRendererComponent>
+    );
+
     return (
         <>
             {isAuthenticated && (
-                <ViewportRendererComponent viewportOptions={{
-                    breakpointBeginMedium: <NavigationBarComponent onLogout={handleLogout} />
-                }}
-                >
-                    <NavigationMobileComponent
-                        navigationItems={navigationItemsList}
-                        primaryNavigationItem={primaryNavigationItem}
-                    />
-                </ViewportRendererComponent>
+                <>
+                    <NavigationBarComponent onLogout={handleLogout} />
+                    {navigationComponent}
+                </>
             )}
-            <div className={'mx--2 mt--10'}>
+            <div className={'mx--2 my--10'}>
                 <Outlet />
             </div>
             <footer />

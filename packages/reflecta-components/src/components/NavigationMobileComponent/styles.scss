@@ -24,6 +24,8 @@ $background-color: $color-neutral-500;
     width: 100%;
     height: calc($planck-length * 6);
 
+    backdrop-filter: blur(1px);
+
     &__side-navigation {
         background-color: $background-color;
 
@@ -64,6 +66,6 @@ $background-color: $color-neutral-500;
 
         background-color: $background-color;
 
-        mask-image: radial-gradient(circle calc(($primary-button-diameter / 2) + $planck-length) at 50% 0, transparent 0, transparent calc(($primary-button-diameter / 2) + $planck-length), $color-neutral-600);
+        mask-image: radial-gradient(circle calc(($primary-button-diameter / 2) + ($planck-length / 2)) at 50% 0, transparent 0, transparent calc(($primary-button-diameter / 2) + ($planck-length / 2)), $color-neutral-600);
     }
 }
