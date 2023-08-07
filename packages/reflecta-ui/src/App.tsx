@@ -3,41 +3,46 @@ import React, {
     Suspense
 } from 'react';
 import {
-    Provider
-} from 'react-redux';
-import {
     BrowserRouter,
     Navigate,
     Route,
     Routes
 } from 'react-router-dom';
 
-import JournalEntryView from '@views/JournalEntryView';
-
+import LoadingIndicatorComponent from '@components/remotes/LoadingIndicatorComponent';
 import RootStylingComponent from '@components/remotes/RootStylingComponent';
 
 import AuthenticatedRouteComponent from '@components/enhancers/AuthenticatedRouteComponent';
 import ContainerComponent from '@components/enhancers/ContainerComponent';
 
-import store from '@store/index';
+import {
+    useAppSelector
+} from '@hooks';
 
 import {
-    ROUTE_UI_DASHBOARD, ROUTE_UI_DEFAULT, ROUTE_UI_JOURNAL_ENTRY, ROUTE_UI_LOGIN
+    fetchLoadingStatus
+} from '@store/slices/loadingSlice';
+
+import {
+    ROUTE_UI_DASHBOARD,
+    ROUTE_UI_DEFAULT,
+    ROUTE_UI_JOURNAL_ENTRY,
+    ROUTE_UI_LOGIN
 } from '@routes';
 
 const DashboardView = React.lazy(() => import('@views/DashboardView') as unknown as Promise<{ default: FC }>);
+const JournalEntryView = React.lazy(() => import('@views/JournalEntryView') as unknown as Promise<{ default: FC }>);
 const LoginView = React.lazy(() => import('@views/LoginView') as unknown as Promise<{ default: FC }>);
 
-const App = () => (
-    <Suspense fallback={'loading...'}>
-        <RootStylingComponent />
-        <Provider
-            noopCheck={'always'}
-            stabilityCheck={'always'}
-            store={store}
-        >
+const App = () => {
+    const isLoading = useAppSelector(fetchLoadingStatus);
+
+    return (
+        <Suspense fallback={'loading...'}>
+            <RootStylingComponent />
+            <LoadingIndicatorComponent isVisible={isLoading} />
             <BrowserRouter>
-                <Routes>
+                <Routes key={window.location.pathname}>
                     <Route element={<ContainerComponent />}>
                         <Route
                             element={<Navigate to={ROUTE_UI_DASHBOARD} />}
@@ -62,14 +67,13 @@ const App = () => (
                                     element={<JournalEntryView />}
                                     path={'create'}
                                 />
-
                             </Route>
                         </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>
-        </Provider>
-    </Suspense>
-);
+        </Suspense>
+    );
+};
 
 export default App;

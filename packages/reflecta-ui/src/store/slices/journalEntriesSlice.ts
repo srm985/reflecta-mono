@@ -20,7 +20,8 @@ import {
 } from '@types';
 
 import {
-    setIsLoading
+    requestLoadingHide,
+    requestLoadingShow
 } from './loadingSlice';
 
 const client = new Client();
@@ -53,7 +54,7 @@ export const fetchJournalEntries = (shouldReload?: boolean): ThunkAction<void, R
         return undefined;
     }
 
-    dispatch(setIsLoading(true));
+    dispatch(requestLoadingShow());
 
     try {
         const payload = await client.get<JournalEntry[]>(ROUTE_API_JOURNAL_ENTRY);
@@ -67,11 +68,11 @@ export const fetchJournalEntries = (shouldReload?: boolean): ThunkAction<void, R
         console.log(error);
     }
 
-    return dispatch(setIsLoading(false));
+    return dispatch(requestLoadingHide());
 };
 
 export const createJournalEntry = (submissionPayload: JournalEntrySubmissionPayload): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
-    dispatch(setIsLoading(true));
+    dispatch(requestLoadingShow());
 
     try {
         await client.post(ROUTE_API_JOURNAL_ENTRY, {
@@ -83,15 +84,13 @@ export const createJournalEntry = (submissionPayload: JournalEntrySubmissionPayl
         dispatch(fetchJournalEntries(true));
     } catch (error) {
         console.log(error);
-
-        dispatch(setIsLoading(false));
     }
+
+    dispatch(requestLoadingHide());
 };
 
 export const updateJournalEntry = (submissionPayload: JournalEntrySubmissionPayload): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
-    dispatch(setIsLoading(true));
-
-    console.log('updating...');
+    dispatch(requestLoadingShow());
 
     try {
         await client.patch(ROUTE_API_JOURNAL_ENTRY, {
@@ -104,13 +103,13 @@ export const updateJournalEntry = (submissionPayload: JournalEntrySubmissionPayl
         dispatch(fetchJournalEntries(true));
     } catch (error) {
         console.log(error);
-
-        dispatch(setIsLoading(false));
     }
+
+    dispatch(requestLoadingHide());
 };
 
 export const deleteJournalEntry = (entryID: JournalEntryID): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
-    dispatch(setIsLoading(true));
+    dispatch(requestLoadingShow());
 
     try {
         await client.delete(ROUTE_API_JOURNAL_ENTRY, {
@@ -120,9 +119,9 @@ export const deleteJournalEntry = (entryID: JournalEntryID): ThunkAction<void, R
         dispatch(fetchJournalEntries(true));
     } catch (error) {
         console.log(error);
-
-        dispatch(setIsLoading(false));
     }
+
+    dispatch(requestLoadingHide());
 };
 
 export const selectAllJournalEntries = (state: RootState): JournalEntry[] => state.journalEntries.journalEntriesList;

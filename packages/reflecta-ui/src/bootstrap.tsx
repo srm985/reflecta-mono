@@ -4,6 +4,11 @@ import {
 import {
     createRoot
 } from 'react-dom/client';
+import {
+    Provider
+} from 'react-redux';
+
+import store from '@store/index';
 
 import App from './App';
 
@@ -16,6 +21,12 @@ if (!rootElement) {
 const root = createRoot(rootElement);
 root.render(
     <StrictMode>
-        <App />
+        <Provider
+            noopCheck={'always'}
+            stabilityCheck={'always'}
+            store={store}
+        >
+            <App />
+        </Provider>
     </StrictMode>
 );

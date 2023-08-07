@@ -10,7 +10,8 @@ import {
 import JournalEntryInputComponent from '@components/remotes/JournalEntryInputComponent';
 
 import {
-    useAppDispatch, useAppSelector
+    useAppDispatch,
+    useAppSelector
 } from '@hooks';
 
 import {
@@ -53,12 +54,12 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
 
     const handleSubmit = async (journalEntry: JournalEntrySubmissionPayload) => {
         if (journalEntry.entryID) {
-            await dispatch(updateJournalEntry(journalEntry));
+            dispatch(updateJournalEntry(journalEntry));
         } else {
-            await dispatch(createJournalEntry(journalEntry));
+            dispatch(createJournalEntry(journalEntry));
         }
 
-        // navigate(ROUTE_UI_DASHBOARD);
+        navigate(ROUTE_UI_DASHBOARD);
     };
 
     const handleDiscard = () => {

@@ -1,5 +1,4 @@
 import {
-    PayloadAction,
     createSlice
 } from '@reduxjs/toolkit';
 
@@ -8,32 +7,33 @@ import type {
 } from '@store/index';
 
 type State = {
-    isLoading: boolean;
+    loadingIndicatorRequestCount: number;
 };
 
 const initialState: State = {
-    isLoading: false
+    loadingIndicatorRequestCount: 0
 };
 
 export const loadingSlice = createSlice({
     initialState,
     name: 'loading',
     reducers: {
-        setIsLoading: (state, action: PayloadAction<boolean>) => {
-            console.log('loading dispatch received...', action.payload);
-
-            return ({
-                ...state,
-                isLoading: action.payload
-            });
-        }
+        requestLoadingHide: (state) => ({
+            ...state,
+            loadingIndicatorRequestCount: Math.max(state.loadingIndicatorRequestCount - 1, 0)
+        }),
+        requestLoadingShow: (state) => ({
+            ...state,
+            loadingIndicatorRequestCount: state.loadingIndicatorRequestCount + 1
+        })
     }
 });
 
 export const {
-    setIsLoading
+    requestLoadingHide,
+    requestLoadingShow
 } = loadingSlice.actions;
 
-export const fetchIsLoading = (state: RootState): boolean => state.loading.isLoading;
+export const fetchLoadingStatus = (state: RootState): boolean => state.loading.loadingIndicatorRequestCount > 0;
 
 export default loadingSlice.reducer;

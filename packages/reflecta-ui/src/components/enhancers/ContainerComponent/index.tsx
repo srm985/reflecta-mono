@@ -13,18 +13,9 @@ import {
     NavigationItem
 } from 'reflecta-components/declarations/src/components/NavigationMobileComponent/types';
 
-import LoadingIndicatorComponent from '@components/remotes/LoadingIndicatorComponent';
 import NavigationBarComponent from '@components/remotes/NavigationBarComponent';
 import NavigationMobileComponent from '@components/remotes/NavigationMobileComponent';
 import ViewportRendererComponent from '@components/remotes/ViewportRendererComponent';
-
-import {
-    useAppSelector
-} from '@hooks';
-
-import {
-    fetchIsLoading
-} from '@store/slices/loadingSlice';
 
 import Authentication from '@utils/Authentication';
 
@@ -38,12 +29,6 @@ const authentication = new Authentication();
 
 const ContainerComponent = () => {
     const navigate = useNavigate();
-
-    const isLoading = useAppSelector(fetchIsLoading);
-
-    console.log({
-        isLoading
-    });
 
     const handleLogout = () => {
         authentication.deAuthenticate();
@@ -74,7 +59,6 @@ const ContainerComponent = () => {
 
     return (
         <>
-            <LoadingIndicatorComponent isVisible={isLoading} />
             {isAuthenticated && (
                 <ViewportRendererComponent viewportOptions={{
                     breakpointBeginMedium: <NavigationBarComponent onLogout={handleLogout} />
@@ -90,7 +74,6 @@ const ContainerComponent = () => {
                 <Outlet />
             </div>
             <footer />
-
         </>
     );
 };
