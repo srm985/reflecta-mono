@@ -15,7 +15,7 @@ import Authentication from '@utils/Authentication';
 import Client from '@utils/Client';
 
 import {
-    ROUTE_API_LOGIN
+    ROUTE_API_LOGIN, ROUTE_UI_DASHBOARD
 } from '@routes';
 
 import withReducer from './withReducer';
@@ -52,7 +52,7 @@ const LoginView: React.FC<ILoginView> = (props) => {
 
     useEffect(() => {
         if (state.isAuthenticated) {
-            navigate('/dashboard');
+            navigate(ROUTE_UI_DASHBOARD);
         }
     }, [
         state.isAuthenticated

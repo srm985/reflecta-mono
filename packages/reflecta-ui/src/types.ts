@@ -11,3 +11,10 @@ export type JournalEntry = {
     title: JournalEntryTitle;
     updatedAt: string | null;
 };
+
+export type JournalEntrySubmissionPayload = {
+    body: JournalEntryBody;
+    entryID?: JournalEntryID;
+    occurredAt: JournalEntryDate;
+    title: JournalEntryTitle;
+};

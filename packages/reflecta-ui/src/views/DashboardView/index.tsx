@@ -1,131 +1,73 @@
 import {
-    fetchJournalEntries,
-    selectAllJournalEntries
-} from '@store/slices/journalEntriesSlice';
-import {
     FC,
     memo,
     useEffect,
     useMemo
 } from 'react';
+import {
+    useNavigate
+} from 'react-router-dom';
 
 import {
     useAppDispatch,
     useAppSelector
 } from '../../hooks';
 
-import ButtonComponent from '@components/remotes/ButtonComponent';
 import GridContainerComponent from '@components/remotes/GridContainerComponent';
 import GridItemComponent from '@components/remotes/GridItemComponent';
 import JournalEntryDisplayComponent from '@components/remotes/JournalEntryDisplayComponent';
-import JournalEntryInputComponent from '@components/remotes/JournalEntryInputComponent';
-import ModalComponent from '@components/remotes/ModalComponent';
 import SearchComponent from '@components/remotes/SearchComponent';
+
+import {
+    deleteJournalEntry,
+    fetchJournalEntries,
+    selectAllJournalEntries
+} from '@store/slices/journalEntriesSlice';
 
 import Client from '@utils/Client';
 
 import {
-    ROUTE_API_JOURNAL_ENTRY,
-    ROUTE_API_SEARCH
+    ROUTE_API_SEARCH,
+    ROUTE_UI_JOURNAL_ENTRY
 } from '@routes';
 
-import withReducer from './withReducer';
+import {
+    JournalEntry,
+    JournalEntryID
+} from '@types';
 
 import {
-    EntryID,
     IDashboardView,
-    JournalEntry,
-    PendingJournalEntry,
     Search
 } from './types';
 
 const client = new Client();
 
-const DashboardView: FC<IDashboardView> = (props) => {
-    const {
-        state
-    } = props;
-
+const DashboardView: FC<IDashboardView> = () => {
     const {
         displayName
     } = DashboardView;
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const journalEntriesList = useAppSelector(selectAllJournalEntries);
 
-    console.log({
-        state
-    });
+    useEffect(() => {
+        dispatch(fetchJournalEntries());
+    }, [
+        dispatch
+    ]);
 
-    // const fetchJournalEntries = async () => {
-    //     const payload = await client.get<JournalEntry[]>(ROUTE_API_JOURNAL_ENTRY);
-
-    //     if ('errorMessage' in payload) {
-    //         console.log(payload.errorMessage);
-    //     } else {
-    //         dispatch({
-    //             payload,
-    //             type: 'SET_JOURNAL_ENTRIES_LIST'
-    //         });
-    //     }
-    // };
-
-    const handleEntrySubmission = async (journalEntry: PendingJournalEntry) => {
-        const {
-            body,
-            entryID,
-            occurredAt,
-            title
-        } = journalEntry;
-
-        if (entryID) {
-            await client.patch(ROUTE_API_JOURNAL_ENTRY, {
-                entryBody: body,
-                entryID,
-                entryOccurredAt: occurredAt,
-                entryTitle: title
-            });
-        } else {
-            await client.post(ROUTE_API_JOURNAL_ENTRY, {
-                entryBody: body,
-                entryOccurredAt: occurredAt,
-                entryTitle: title
-            });
-        }
-
-        dispatch({
-            type: 'CLEAR_JOURNAL_ENTRY'
-        });
-
-        // await fetchJournalEntries();
+    const handleEntryEdit = (entryID: JournalEntryID) => {
+        navigate(`${ROUTE_UI_JOURNAL_ENTRY}/edit/${entryID}`);
     };
 
-    const handleEntryConclusion = () => {
-        dispatch({
-            type: 'CLEAR_JOURNAL_ENTRY'
-        });
-    };
-
-    const handleEntryEdit = (entryDetails: Required<PendingJournalEntry>) => {
-        dispatch({
-            payload: entryDetails,
-            type: 'SET_EDITING_JOURNAL_ENTRY'
-        });
-    };
-
-    const handleEntryDelete = async (entryID: EntryID) => {
-        await client.delete(ROUTE_API_JOURNAL_ENTRY, {
-            entryID
-        });
-
-        // await fetchJournalEntries();
+    const handleEntryDelete = async (entryID: JournalEntryID) => {
+        dispatch(deleteJournalEntry(entryID));
     };
 
     const handleSearch = async (searchDetails: Search) => {
-        console.log({
-            searchDetails
-        });
         const payload = await client.get<JournalEntry[]>(ROUTE_API_SEARCH, searchDetails);
 
         if ('errorMessage' in payload) {
@@ -137,10 +79,6 @@ const DashboardView: FC<IDashboardView> = (props) => {
             });
         }
     };
-
-    useEffect(() => {
-        dispatch(fetchJournalEntries());
-    }, []);
 
     const generatedJournalEntriesList = useMemo(() => journalEntriesList.map((journalEntryDetails) => (
         <GridItemComponent
@@ -157,7 +95,7 @@ const DashboardView: FC<IDashboardView> = (props) => {
                 {...journalEntryDetails}
                 key={journalEntryDetails.entryID}
                 onDelete={() => handleEntryDelete(journalEntryDetails.entryID)}
-                onEdit={() => handleEntryEdit(journalEntryDetails)}
+                onEdit={() => handleEntryEdit(journalEntryDetails.entryID)}
             />
         </GridItemComponent>
     )), [
@@ -178,31 +116,10 @@ const DashboardView: FC<IDashboardView> = (props) => {
             <GridContainerComponent>
                 {generatedJournalEntriesList}
             </GridContainerComponent>
-            <ButtonComponent
-                color={'accent'}
-                onClick={() => dispatch({
-                    type: 'SET_CREATING_JOURNAL_ENTRY'
-                })}
-            >{'Add Entry'}
-            </ButtonComponent>
-            {
-                state.isEntryEditorVisible && (
-                    <ModalComponent onClose={handleEntryConclusion}>
-                        <JournalEntryInputComponent
-                            entryID={state.editingEntryID}
-                            initialBody={state.editingEntryBody}
-                            initialOccurredAt={state.editingEntryOccurredAt}
-                            initialTitle={state.editingEntryTitle}
-                            onDiscard={handleEntryConclusion}
-                            onSubmit={handleEntrySubmission}
-                        />
-                    </ModalComponent>
-                )
-            }
         </main>
     );
 };
 
 DashboardView.displayName = 'DashboardView';
 
-export default withReducer(memo(DashboardView));
+export default memo(DashboardView);

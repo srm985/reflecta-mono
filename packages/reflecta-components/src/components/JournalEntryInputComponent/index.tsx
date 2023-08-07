@@ -1,5 +1,6 @@
 import {
     FormEvent,
+    useEffect,
     useState
 } from 'react';
 
@@ -36,17 +37,35 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     const [
         title,
         setTitle
-    ] = useState<string>(initialTitle || '');
+    ] = useState<string>('');
 
     const [
         body,
         setBody
-    ] = useState<string>(initialBody || '');
+    ] = useState<string>('');
 
     const [
         occurredAt,
         setOccurredAt
-    ] = useState<string>((initialOccurredAt || '').split('T')[0] || now);
+    ] = useState<string>(now);
+
+    useEffect(() => {
+        if (initialBody) {
+            setBody(initialBody);
+        }
+
+        if (initialOccurredAt) {
+            setOccurredAt((initialOccurredAt || '').split('T')[0]);
+        }
+
+        if (initialTitle) {
+            setTitle(initialTitle);
+        }
+    }, [
+        initialBody,
+        initialOccurredAt,
+        initialTitle
+    ]);
 
     const handleEntrySubmission = (event: FormEvent) => {
         event.preventDefault();

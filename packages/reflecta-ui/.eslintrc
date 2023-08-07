@@ -79,6 +79,11 @@
                     },
                     {
                         "group": "parent",
+                        "pattern": "@hooks",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
                         "pattern": "@services/*",
                         "position": "after"
                     },
@@ -90,6 +95,11 @@
                     {
                         "group": "parent",
                         "pattern": "@store/*",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
+                        "pattern": "@store/**/*",
                         "position": "after"
                     },
                     {

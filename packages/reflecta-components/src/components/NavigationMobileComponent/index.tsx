@@ -28,7 +28,10 @@ const NavigationMobileComponent: FC<INavigationMobileComponent> = (props) => {
 
     const renderNavigationItem = (navigationItem: NavigationItem) => (
         <div key={navigationItem.label}>
-            <button type={'button'}>
+            <button
+                onClick={navigationItem.onClick}
+                type={'button'}
+            >
                 <FontAwesomeIcon icon={navigationItem.icon} />
             </button>
         </div>

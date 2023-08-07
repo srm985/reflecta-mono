@@ -1,0 +1,59 @@
+@import '../../styles/styles';
+
+// Constants
+$tick-count: 20;
+$expansion-offset: -130px;
+
+.LoadingIndicatorComponent {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: $z-index-loading;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba($color-neutral-600, 0.9);
+
+    &__tick {
+        position: absolute;
+
+        &::before {
+            position: absolute;
+            left: -1px;
+
+            width: 2px;
+            height: 12px;
+
+            background-color: $color-accent-200;
+            transform: translateY($expansion-offset);
+
+            animation: construct;
+            animation-duration: 2s;
+            animation-timing-function: ease-out;
+            animation-iteration-count: infinite;
+
+            content: '';
+        }
+
+        @for $i from 0 through $tick-count - 1 {
+            &-#{$i} {
+                transform: rotate(calc(360deg / $tick-count) * $i);
+            }
+        }
+    }
+}
+
+@keyframes construct {
+    0%,
+    100% {
+        transform: translateY($expansion-offset);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}

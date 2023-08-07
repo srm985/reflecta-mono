@@ -127,7 +127,8 @@ module.exports = () => {
         output: {
             clean: true,
             filename: 'bundle.[fullhash].js',
-            path: path.resolve(__dirname, 'dist')
+            path: path.resolve(__dirname, 'dist'),
+            publicPath: '/'
         },
         plugins,
         resolve: {
@@ -135,6 +136,7 @@ module.exports = () => {
                 '@assets': path.resolve(__dirname, 'src/assets'),
                 '@components': path.resolve(__dirname, 'src/components'),
                 '@constants': path.resolve(__dirname, 'src/constants.ts'),
+                '@hooks': path.resolve(__dirname, 'src/hooks.ts'),
                 '@modules': path.resolve(__dirname, 'src/modules'),
                 '@routes': path.resolve(__dirname, 'src/routes.ts'),
                 '@services': path.resolve(__dirname, 'src/services'),
