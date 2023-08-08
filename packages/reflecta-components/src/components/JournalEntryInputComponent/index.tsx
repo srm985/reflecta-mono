@@ -1,4 +1,11 @@
 import {
+    faFloppyDisk,
+    faTrashCan
+} from '@fortawesome/free-regular-svg-icons';
+import {
+    FontAwesomeIcon
+} from '@fortawesome/react-fontawesome';
+import {
     FormEvent,
     useEffect,
     useState
@@ -88,6 +95,34 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
             className={componentClassNames}
             onSubmit={handleEntrySubmission}
         >
+            <FlexboxComponent>
+                <ButtonBlockComponent
+                    className={'mb--2'}
+                    isAlwaysInline
+                >
+                    <ButtonComponent
+                        color={'danger'}
+                        onClick={onDiscard}
+                        styleType={'inline'}
+                        type={'button'}
+                    >
+                        <FontAwesomeIcon
+                            className={'font--large'}
+                            icon={faTrashCan}
+                        />
+                    </ButtonComponent>
+                    <ButtonComponent
+                        color={'accent'}
+                        styleType={'inline'}
+                        type={'submit'}
+                    >
+                        <FontAwesomeIcon
+                            className={'font--large'}
+                            icon={faFloppyDisk}
+                        />
+                    </ButtonComponent>
+                </ButtonBlockComponent>
+            </FlexboxComponent>
             <FlexboxComponent
                 className={`${displayName}__input`}
                 layoutDefault={{
@@ -128,22 +163,6 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                 onChange={(event) => setBody(event.target.value)}
                 value={body}
             />
-            <ButtonBlockComponent>
-                <ButtonComponent
-                    color={'danger'}
-                    onClick={onDiscard}
-                    styleType={'inline'}
-                    type={'button'}
-                >
-                    {'Discard'}
-                </ButtonComponent>
-                <ButtonComponent
-                    color={'accent'}
-                    type={'submit'}
-                >
-                    {'Save'}
-                </ButtonComponent>
-            </ButtonBlockComponent>
         </FormComponent>
     );
 };

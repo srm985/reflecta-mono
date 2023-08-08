@@ -13,6 +13,7 @@ $background-color: $color-neutral-500;
     background-color: transparent;
     border: none;
     outline: none;
+    cursor: pointer;
 }
 
 .NavigationMobileComponent {
@@ -48,6 +49,7 @@ $background-color: $color-neutral-500;
             position: absolute;
             top: calc($primary-button-diameter / -2);
             left: calc(50% - ($primary-button-diameter / 2));
+            z-index: 1;
 
             width: $primary-button-diameter;
             height: $primary-button-diameter;

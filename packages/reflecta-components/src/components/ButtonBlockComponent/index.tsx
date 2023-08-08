@@ -4,6 +4,10 @@ import {
 
 import FlexboxComponent from '@components/FlexboxComponent';
 
+import type {
+    Layout
+} from '@components/FlexboxComponent/types';
+
 import classNames from '@utils/classNames';
 
 import {
@@ -15,7 +19,8 @@ import './styles.scss';
 const ButtonBlockComponent: FC<IButtonBlockComponent> = (props) => {
     const {
         children,
-        className
+        className,
+        isAlwaysInline
     } = props;
 
     const {
@@ -27,18 +32,26 @@ const ButtonBlockComponent: FC<IButtonBlockComponent> = (props) => {
         className
     );
 
+    const layoutDefault: Layout | undefined = !isAlwaysInline ? ({
+        flexDirection: 'column-reverse',
+        justifyContent: 'flex-end',
+        rowGap: 'medium'
+    }) : ({
+        columnGap: 'large',
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    });
+
+    const layoutDesktop: Layout | undefined = !isAlwaysInline ? ({
+        columnGap: 'medium',
+        flexDirection: 'row'
+    }) : undefined;
+
     return (
         <FlexboxComponent
             className={componentClassNames}
-            layoutDefault={{
-                flexDirection: 'column-reverse',
-                justifyContent: 'flex-end',
-                rowGap: 'medium'
-            }}
-            layoutDesktop={{
-                columnGap: 'medium',
-                flexDirection: 'row'
-            }}
+            layoutDefault={layoutDefault}
+            layoutDesktop={layoutDesktop}
         >
             {children}
         </FlexboxComponent>

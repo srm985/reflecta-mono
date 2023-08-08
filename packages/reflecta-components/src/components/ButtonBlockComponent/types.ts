@@ -9,4 +9,5 @@ import {
 export type IButtonBlockComponent = {
     children: ReactElement<IButtonComponent> | ReactElement<IButtonComponent>[];
     className?: string;
+    isAlwaysInline?: boolean;
 };

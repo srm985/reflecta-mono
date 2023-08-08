@@ -55,6 +55,6 @@ export type Layout = {
 export type IFlexboxComponent = {
     children: ReactNode | ReactNode[];
     className?: string;
-    layoutDefault?:Layout;
-    layoutDesktop?:Layout;
+    layoutDefault?: Layout;
+    layoutDesktop?: Layout | undefined;
 };
