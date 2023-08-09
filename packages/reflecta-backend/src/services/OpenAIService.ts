@@ -86,7 +86,7 @@ class OpenAIService {
                 return undefined;
             }
 
-            const title = titleMessage.content.replace(/\s+/g, ' ').trim();
+            const title = titleMessage.content.replace(/\s+/g, ' ').replace(/^"(.*)"$/, '$1').trim();
 
             messageHistory.push(titleMessage);
 
