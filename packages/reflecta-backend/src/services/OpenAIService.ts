@@ -24,11 +24,23 @@ class OpenAIService {
 
     private readonly OPENAI_MODEL: string;
 
+    private readonly OPENAI_PROMPT_EVALUATION: string;
+
+    private readonly OPENAI_PROMPT_KEYWORDS_EXPANSION: string;
+
+    private readonly OPENAI_PROMPT_KEYWORDS: string;
+
+    private readonly OPENAI_PROMPT_TITLE: string;
+
     constructor() {
         const {
             env: {
                 OPENAI_API_KEY,
-                OPENAI_MODEL = ''
+                OPENAI_MODEL = '',
+                OPENAI_PROMPT_EVALUATION = '',
+                OPENAI_PROMPT_KEYWORDS = '',
+                OPENAI_PROMPT_KEYWORDS_EXPANSION = '',
+                OPENAI_PROMPT_TITLE = ''
             }
         } = process;
 
@@ -39,6 +51,11 @@ class OpenAIService {
         this.openAI = new OpenAIApi(configuration);
 
         this.OPENAI_MODEL = OPENAI_MODEL;
+
+        this.OPENAI_PROMPT_EVALUATION = OPENAI_PROMPT_EVALUATION;
+        this.OPENAI_PROMPT_KEYWORDS = OPENAI_PROMPT_KEYWORDS;
+        this.OPENAI_PROMPT_KEYWORDS_EXPANSION = OPENAI_PROMPT_KEYWORDS_EXPANSION;
+        this.OPENAI_PROMPT_TITLE = OPENAI_PROMPT_TITLE;
     }
 
     private chat = async (chatDetails: ChatDetails): Promise<ChatCompletionResponseMessage | undefined> => {
@@ -66,7 +83,7 @@ class OpenAIService {
     analyze = async (entryBody: string): Promise<AnalysisResponse | undefined> => {
         const messageHistory: ChatCompletionRequestMessage[] = [
             {
-                content: 'As a poetic writer, evaluate the following text and return a whimsical title which summarizes it well.',
+                content: this.OPENAI_PROMPT_TITLE,
                 role: 'system'
             },
             {
@@ -91,7 +108,7 @@ class OpenAIService {
             messageHistory.push(titleMessage);
 
             messageHistory.push({
-                content: 'As an observer, compare the text to everyday life.  Return true if the events are extreme or more exciting or interesting than normal. Otherwise return false.',
+                content: this.OPENAI_PROMPT_EVALUATION,
                 role: 'user'
             });
 
@@ -129,7 +146,7 @@ class OpenAIService {
 
         const messageHistory: ChatCompletionRequestMessage[] = [
             {
-                content: 'As a search engine, generate a list of keywords which could then be used later as fuzzy search matches. Include synonyms and common words. Expand concepts and geographical locations to broader or more common terms. Return the list as a stringified JSON array.',
+                content: this.OPENAI_PROMPT_KEYWORDS,
                 role: 'system'
             },
             {
@@ -152,7 +169,7 @@ class OpenAIService {
             messageHistory.push(message);
 
             messageHistory.push({
-                content: 'Please slightly expand the list and add common synonyms.',
+                content: this.OPENAI_PROMPT_KEYWORDS_EXPANSION,
                 role: 'user'
             });
 
