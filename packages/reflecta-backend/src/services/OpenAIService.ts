@@ -1,9 +1,8 @@
+import OpenAI from 'openai';
 import {
-    ChatCompletionRequestMessage,
-    ChatCompletionResponseMessage,
-    Configuration,
-    OpenAIApi
-} from 'openai';
+    ChatCompletionMessage,
+    ChatCompletionMessageParam
+} from 'openai/resources/chat';
 
 import logger from '@utils/logger';
 
@@ -15,12 +14,12 @@ export type AnalysisResponse = {
 
 export type ChatDetails = {
     maxTokens: number;
-    messagesList: ChatCompletionRequestMessage[];
+    messagesList: ChatCompletionMessageParam[];
     temperature?: number;
 };
 
 class OpenAIService {
-    private readonly openAI: OpenAIApi;
+    private readonly openAI: OpenAI;
 
     private readonly OPENAI_MODEL: string;
 
@@ -44,11 +43,9 @@ class OpenAIService {
             }
         } = process;
 
-        const configuration = new Configuration({
+        this.openAI = new OpenAI({
             apiKey: OPENAI_API_KEY
         });
-
-        this.openAI = new OpenAIApi(configuration);
 
         this.OPENAI_MODEL = OPENAI_MODEL;
 
@@ -58,16 +55,14 @@ class OpenAIService {
         this.OPENAI_PROMPT_TITLE = OPENAI_PROMPT_TITLE;
     }
 
-    private chat = async (chatDetails: ChatDetails): Promise<ChatCompletionResponseMessage | undefined> => {
+    private chat = async (chatDetails: ChatDetails): Promise<ChatCompletionMessage | undefined> => {
         const {
-            data: {
-                choices: [
-                    {
-                        message
-                    }
-                ]
-            }
-        } = await this.openAI.createChatCompletion({
+            choices: [
+                {
+                    message
+                }
+            ]
+        } = await this.openAI.chat.completions.create({
             frequency_penalty: 0,
             max_tokens: chatDetails.maxTokens,
             messages: chatDetails.messagesList,
@@ -81,7 +76,7 @@ class OpenAIService {
     };
 
     analyze = async (entryBody: string): Promise<AnalysisResponse | undefined> => {
-        const messageHistory: ChatCompletionRequestMessage[] = [
+        const messageHistory: ChatCompletionMessageParam[] = [
             {
                 content: this.OPENAI_PROMPT_TITLE,
                 role: 'system'
@@ -103,7 +98,7 @@ class OpenAIService {
                 return undefined;
             }
 
-            const title = titleMessage.content.replace(/\s+/g, ' ').replace(/^"*(.*)"*$/, '$1').trim();
+            const title = titleMessage.content.replace(/\s+/g, ' ').replace(/^"*(.*?)"*$/g, '$1').trim();
 
             messageHistory.push(titleMessage);
 
@@ -144,7 +139,7 @@ class OpenAIService {
         const MAX_TOKENS = 500;
         const TEMPERATURE = 1.2;
 
-        const messageHistory: ChatCompletionRequestMessage[] = [
+        const messageHistory: ChatCompletionMessageParam[] = [
             {
                 content: this.OPENAI_PROMPT_KEYWORDS,
                 role: 'system'
