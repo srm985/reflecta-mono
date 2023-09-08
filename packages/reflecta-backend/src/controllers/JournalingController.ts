@@ -6,8 +6,10 @@ import JournalEntriesModel, {
 import OpenAIService from '@services/OpenAIService';
 
 import CustomError from '@utils/CustomError';
+import dateStamp from '@utils/dateStamp';
 
 export type JournalEntryAPIInput = Pick<JournalEntry, 'body' | 'occurredAt' | 'title'>;
+export type JournalEntryChangeLog = Partial<JournalEntryAPIInput>;
 export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'occurredAt' | 'title' | 'updatedAt'>;
 
 export type AnalyzedEntry = Pick<JournalEntry, 'isHighInterest' | 'keywords' | 'title'>;
@@ -78,6 +80,19 @@ class JournalingController {
         updatedAt: rawJournalEntry.updated_at
     });
 
+    private changeLog = (entrySubmissionDetails: JournalEntryAPIInput, existingEntryDetails: JournalEntriesSchema): JournalEntryChangeLog => {
+        const sanitizedTitle = this.sanitize(entrySubmissionDetails.title);
+        const sanitizedBody = this.sanitize(entrySubmissionDetails.body);
+
+        const dateSubset = entrySubmissionDetails.occurredAt.slice(0, 10);
+
+        return ({
+            body: sanitizedBody !== existingEntryDetails.body ? sanitizedBody : undefined,
+            occurredAt: dateSubset !== dateStamp(existingEntryDetails.occurred_at) ? dateSubset : undefined,
+            title: sanitizedTitle !== existingEntryDetails.title ? sanitizedTitle : undefined
+        });
+    };
+
     insertJournalEntry = async (userID: number, entryDetails: JournalEntryAPIInput) => {
         const sanitizedTitle = this.sanitize(entryDetails.title);
         const sanitizedBody = this.sanitize(entryDetails.body);
@@ -118,34 +133,39 @@ class JournalingController {
             });
         }
 
-        const sanitizedTitle = this.sanitize(entryDetails.title);
-        const sanitizedBody = this.sanitize(entryDetails.body);
+        const updatedEntryDetails = this.changeLog(entryDetails, existingEntryDetails);
 
-        // No point in processing if nothing has changed
-        if (
-            sanitizedTitle
-            && sanitizedTitle === existingEntryDetails.title
-            && sanitizedBody === existingEntryDetails.body
-            && existingEntryDetails.keywords
-        ) {
-            return undefined;
+        // We need to do a full update i.e. body or keyword changes
+        if (updatedEntryDetails.body || !existingEntryDetails.keywords) {
+            const {
+                isHighInterest,
+                keywords,
+                title
+            } = await this.prepareAnalyzeEntry(entryDetails.title, entryDetails.body);
+
+            // Everything looks good so we can go ahead and update the journal entry
+            return this.journalEntriesModel.modifyJournalEntry(entryID, {
+                ...entryDetails,
+                body: updatedEntryDetails.body || existingEntryDetails.body,
+                isHighInterest,
+                keywords,
+                occurredAt: entryDetails.occurredAt.slice(0, 10),
+                title: this.sanitize(title)
+            });
         }
 
-        const {
-            isHighInterest,
-            keywords,
-            title
-        } = await this.prepareAnalyzeEntry(entryDetails.title, entryDetails.body);
+        // Just quickly update the title
+        if (updatedEntryDetails.title) {
+            return this.journalEntriesModel.modifyTitle(entryID, updatedEntryDetails.title);
+        }
 
-        // Everything looks good so we can go ahead and update the journal entry
-        return this.journalEntriesModel.modifyJournalEntry(entryID, {
-            ...entryDetails,
-            body: sanitizedBody,
-            isHighInterest,
-            keywords,
-            occurredAt: entryDetails.occurredAt.slice(0, 10),
-            title: this.sanitize(title)
-        });
+        // Just quickly update the entry date
+        if (updatedEntryDetails.occurredAt) {
+            return this.journalEntriesModel.modifyOccurredAt(entryID, updatedEntryDetails.occurredAt);
+        }
+
+        // No changes made
+        return undefined;
     };
 
     getAllEntriesByUserID = async (userID: number): Promise<JournalEntryResponse[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map(this.mapEntryForResponse);

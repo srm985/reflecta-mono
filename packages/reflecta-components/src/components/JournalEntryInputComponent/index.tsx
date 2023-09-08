@@ -17,6 +17,7 @@ import FlexboxComponent from '@components/FlexboxComponent';
 import FormComponent from '@components/FormComponent';
 
 import classNames from '@utils/classNames';
+import dateStamp from '@utils/dateStamp';
 
 import {
     IJournalEntryInputComponent
@@ -39,7 +40,7 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         displayName
     } = JournalEntryInputComponent;
 
-    const now = new Date().toISOString().split('T')[0];
+    const now = dateStamp();
 
     const [
         title,

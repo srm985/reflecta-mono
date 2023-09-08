@@ -20,6 +20,7 @@ import InputComponent from '@components/InputComponent';
 import SelectComponent from '@components/SelectComponent';
 
 import classNames from '@utils/classNames';
+import dateStamp from '@utils/dateStamp';
 
 import {
     DateSearchOption,
@@ -40,7 +41,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
         displayName
     } = SearchComponent;
 
-    const now = useMemo(() => new Date().toISOString().split('T')[0], []);
+    const now = useMemo(() => dateStamp(), []);
 
     const [
         searchString,

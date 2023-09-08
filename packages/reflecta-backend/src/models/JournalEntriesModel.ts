@@ -5,30 +5,41 @@ import {
 
 import pool from '../db';
 
+export type Body = string;
+export type CreatedAt = string;
+export type DeletedAt = string | null;
+export type EntryID = number;
+export type IsHighInterest = boolean;
+export type Keywords = string | null;
+export type OccurredAt = string;
+export type Title = string;
+export type UpdatedAt = string | null;
+export type UserID = number;
+
 export interface JournalEntriesSchema {
-    body: string;
-    created_at: string;
-    deleted_at: string | null;
-    entry_id?: number;
-    is_high_interest: boolean;
-    keywords: string | null;
-    occurred_at: string;
-    title: string;
-    updated_at: string | null;
-    user_id: number;
+    body: Body;
+    created_at: CreatedAt;
+    deleted_at: DeletedAt;
+    entry_id?: EntryID;
+    is_high_interest: IsHighInterest;
+    keywords: Keywords;
+    occurred_at: OccurredAt;
+    title: Title;
+    updated_at: UpdatedAt;
+    user_id: UserID;
 }
 
 export interface JournalEntry {
-    body: string;
-    createdAt?: string;
-    deletedAt?: string | null;
-    entryID?: number;
-    isHighInterest?: boolean;
-    keywords: string | null;
-    occurredAt: string;
-    title: string;
-    updatedAt?: string | null;
-    userID?: number;
+    body: Body;
+    createdAt?: CreatedAt;
+    deletedAt?: DeletedAt;
+    entryID?: EntryID;
+    isHighInterest?: IsHighInterest;
+    keywords: Keywords;
+    occurredAt: OccurredAt;
+    title: Title;
+    updatedAt?: UpdatedAt;
+    userID?: UserID;
 }
 
 class JournalEntriesModel {
@@ -73,6 +84,28 @@ class JournalEntriesModel {
             body,
             keywords,
             isHighInterest,
+            occurredAt,
+            entryID
+        ];
+
+        await pool.query(query, values);
+    };
+
+    modifyTitle = async (entryID: number, title: Title) => {
+        const query = 'UPDATE ?? SET title = ? WHERE entry_id = ?';
+        const values = [
+            this.TABLE_NAME,
+            title,
+            entryID
+        ];
+
+        await pool.query(query, values);
+    };
+
+    modifyOccurredAt = async (entryID: number, occurredAt: OccurredAt) => {
+        const query = 'UPDATE ?? SET occurred_at = ? WHERE entry_id = ?';
+        const values = [
+            this.TABLE_NAME,
             occurredAt,
             entryID
         ];
