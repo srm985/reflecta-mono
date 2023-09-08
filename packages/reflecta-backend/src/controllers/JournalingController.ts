@@ -26,7 +26,7 @@ export type Search = {
     searchKeywordsList: SearchKeyword[];
     searchStartDate: string;
     searchString: string;
-    useAISearch: boolean;
+    useAISearch: boolean | string;
 };
 
 class JournalingController {

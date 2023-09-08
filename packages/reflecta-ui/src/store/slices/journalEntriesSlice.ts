@@ -5,6 +5,10 @@ import {
     createSlice
 } from '@reduxjs/toolkit';
 
+import {
+    Search
+} from '@views/DashboardView/types';
+
 import type {
     RootState
 } from '@store/index';
@@ -12,7 +16,7 @@ import type {
 import Client from '@utils/Client';
 
 import {
-    ROUTE_API_JOURNAL_ENTRY
+    ROUTE_API_JOURNAL_ENTRY, ROUTE_API_SEARCH
 } from '@routes';
 
 import {
@@ -127,5 +131,23 @@ export const deleteJournalEntry = (entryID: JournalEntryID): ThunkAction<void, R
 export const selectAllJournalEntries = (state: RootState): JournalEntry[] => state.journalEntries.journalEntriesList;
 
 export const selectJournalEntryByID = (state: RootState, entryID: JournalEntryID): JournalEntry | undefined => state.journalEntries.journalEntriesList.find((entryDetails) => entryDetails.entryID === entryID);
+
+export const searchJournalEntries = (searchDetails: Search): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+    dispatch(requestLoadingShow());
+
+    try {
+        const payload = await client.get<JournalEntry[]>(ROUTE_API_SEARCH, searchDetails);
+
+        if ('errorMessage' in payload) {
+            console.log(payload.errorMessage);
+        } else {
+            dispatch(journalEntriesFetched(payload));
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    dispatch(requestLoadingHide());
+};
 
 export default dashboardSlice.reducer;

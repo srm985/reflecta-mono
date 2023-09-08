@@ -149,6 +149,7 @@ class JournalEntriesModel {
 
         const searchValues = keywordList.map((keyword) => `%${keyword}%`);
 
+        // Template literal is safe here because it's coming from hard coded values above
         const query = `SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND (${preparedSearch})`;
         const values = [
             this.TABLE_NAME,

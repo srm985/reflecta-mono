@@ -78,7 +78,10 @@ router.get('/search', [
             }
         } = response;
 
-        const journalEntriesList = await journalingController.search(userID, searchDetails);
+        const journalEntriesList = await journalingController.search(userID, {
+            ...searchDetails,
+            useAISearch: searchDetails.useAISearch === 'true'
+        });
 
         return response.status(200).send(journalEntriesList);
     } catch (error) {

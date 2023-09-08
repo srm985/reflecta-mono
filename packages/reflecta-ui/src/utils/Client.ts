@@ -45,7 +45,7 @@ class Client {
                     key,
                     value
                 ]) => {
-                    if (!value) {
+                    if (value === undefined) {
                         return undefined;
                     }
 

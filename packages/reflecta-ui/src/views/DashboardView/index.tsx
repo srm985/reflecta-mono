@@ -21,18 +21,15 @@ import SearchComponent from '@components/remotes/SearchComponent';
 import {
     deleteJournalEntry,
     fetchJournalEntries,
+    searchJournalEntries,
     selectAllJournalEntries
 } from '@store/slices/journalEntriesSlice';
 
-import Client from '@utils/Client';
-
 import {
-    ROUTE_API_SEARCH,
     ROUTE_UI_JOURNAL_ENTRY
 } from '@routes';
 
 import {
-    JournalEntry,
     JournalEntryID
 } from '@types';
 
@@ -40,8 +37,6 @@ import {
     IDashboardView,
     Search
 } from './types';
-
-const client = new Client();
 
 const DashboardView: FC<IDashboardView> = () => {
     const {
@@ -68,16 +63,7 @@ const DashboardView: FC<IDashboardView> = () => {
     };
 
     const handleSearch = async (searchDetails: Search) => {
-        const payload = await client.get<JournalEntry[]>(ROUTE_API_SEARCH, searchDetails);
-
-        if ('errorMessage' in payload) {
-            console.log(payload.errorMessage);
-        } else {
-            dispatch({
-                payload,
-                type: 'SET_JOURNAL_ENTRIES_LIST'
-            });
-        }
+        dispatch(searchJournalEntries(searchDetails));
     };
 
     const generatedJournalEntriesList = useMemo(() => journalEntriesList.map((journalEntryDetails) => (
