@@ -1,3 +1,7 @@
+import {
+    useState
+} from 'react';
+
 import classNames from '@utils/classNames';
 
 import {
@@ -10,12 +14,26 @@ const FormComponent: React.FC<IFormComponent> = (props) => {
     const {
         children,
         className,
+        onDirty = () => {},
         onSubmit
     } = props;
 
     const {
         displayName
     } = FormComponent;
+
+    const [
+        isDirty,
+        setIsDirty
+    ] = useState<boolean>(false);
+
+    const handleSetDirty = () => {
+        if (!isDirty) {
+            onDirty();
+
+            setIsDirty(true);
+        }
+    };
 
     const componentClassNames = classNames(
         displayName,
@@ -25,6 +43,7 @@ const FormComponent: React.FC<IFormComponent> = (props) => {
     return (
         <form
             className={componentClassNames}
+            onChange={handleSetDirty}
             onSubmit={onSubmit}
         >
             {children}

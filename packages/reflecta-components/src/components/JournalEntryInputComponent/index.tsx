@@ -1,6 +1,5 @@
 import {
-    faFloppyDisk,
-    faTrashCan
+    faFloppyDisk
 } from '@fortawesome/free-regular-svg-icons';
 import {
     FontAwesomeIcon
@@ -60,6 +59,16 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         setOccurredAt
     ] = useState<string>(now);
 
+    const [
+        intervalID,
+        setIntervalID
+    ] = useState<NodeJS.Timeout | null>(null);
+
+    const [
+        isDirty,
+        setIsDirty
+    ] = useState<boolean>(false);
+
     const entryIDReference = useRef(entryID);
     const titleReference = useRef(title);
     const bodyReference = useRef(body);
@@ -99,30 +108,34 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     };
 
     useEffect(() => {
+        if (!isDirty || (isDirty && intervalID)) {
+            return undefined;
+        }
+
         const autoSaveInterval = setInterval(() => {
             handleSave();
         }, autoSaveIntervalMS);
 
+        setIntervalID(autoSaveInterval);
+
         return () => clearInterval(autoSaveInterval);
-    }, []);
+    }, [
+        isDirty
+    ]);
 
     useEffect(() => {
-        if (initialBody) {
-            setBody(initialBody);
-        }
-
-        if (initialOccurredAt) {
-            setOccurredAt((initialOccurredAt || '').split('T')[0]);
-        }
-
-        if (initialTitle) {
-            setTitle(initialTitle);
-        }
+        setBody(initialBody || '');
+        setOccurredAt(dateStamp(initialOccurredAt) || now);
+        setTitle(initialTitle || '');
     }, [
         initialBody,
         initialOccurredAt,
         initialTitle
     ]);
+
+    const handleSetDirty = () => {
+        setIsDirty(true);
+    };
 
     const handleEntrySubmission = (event: FormEvent) => {
         event.preventDefault();
@@ -143,6 +156,7 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     return (
         <FormComponent
             className={componentClassNames}
+            onDirty={handleSetDirty}
             onSubmit={handleEntrySubmission}
         >
             <FlexboxComponent>
@@ -156,10 +170,7 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                         styleType={'inline'}
                         type={'button'}
                     >
-                        <FontAwesomeIcon
-                            className={'font--large'}
-                            icon={faTrashCan}
-                        />
+                        {'discard'}
                     </ButtonComponent>
                     <ButtonComponent
                         color={'accent'}

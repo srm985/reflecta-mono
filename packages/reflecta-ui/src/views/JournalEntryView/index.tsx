@@ -15,24 +15,23 @@ import {
 } from '@hooks';
 
 import {
+    autoSaveJournalEntry,
     createJournalEntry,
+    deleteAutoSaveJournalEntry,
     fetchJournalEntries,
+    selectAutoSavedJournalEntryByID,
     selectJournalEntryByID,
     updateJournalEntry
 } from '@store/slices/journalEntriesSlice';
 
 import HTTPError from '@utils/HTTPError';
-import Storage from '@utils/Storage';
 
 import {
     ROUTE_UI_DASHBOARD
 } from '@routes';
 
 import {
-    LOCAL_STORAGE_AUTO_SAVE_KEY
-} from '@constants';
-
-import {
+    JournalEntry,
     JournalEntrySubmissionPayload
 } from '@types';
 
@@ -48,8 +47,10 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const {
-        entryID
+        entryID: entryIDString
     } = useParams();
+
+    const entryID = parseInt(entryIDString || '', 10);
 
     useEffect(() => {
         dispatch(fetchJournalEntries());
@@ -57,32 +58,15 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
         dispatch
     ]);
 
-    const storage = new Storage();
+    const existingEntryDetails = useAppSelector((state) => selectJournalEntryByID(state, entryID));
 
-    const getAutoSaveStorageKey = (): string => (entryID ? `${LOCAL_STORAGE_AUTO_SAVE_KEY}-${entryID}` : `${LOCAL_STORAGE_AUTO_SAVE_KEY}`);
+    // If there is an existing entry or new entry i.e. ID = 0
+    const autoSavedEntryDetails = useAppSelector((state) => selectAutoSavedJournalEntryByID(state, entryID || 0));
 
-    const existingEntryDetails = useAppSelector((state) => {
-        const storageKey = getAutoSaveStorageKey();
-
-        const entryDetails = storage.readKeyLocal<JournalEntrySubmissionPayload | undefined>(storageKey);
-
-        if (entryDetails) {
-            return entryDetails;
-        }
-
-        return selectJournalEntryByID(state, parseInt(entryID || '', 10));
-    });
-
-    const clearStorage = () => {
-        const storageKey = getAutoSaveStorageKey();
-
-        storage.clearKeyLocal(storageKey);
-    };
+    const selectedEntryDetails: JournalEntry | JournalEntrySubmissionPayload | undefined = autoSavedEntryDetails || existingEntryDetails;
 
     const handleAutoSave = (entryDetails: JournalEntrySubmissionPayload) => {
-        const storageKey = getAutoSaveStorageKey();
-
-        storage.writeKeyLocal(storageKey, entryDetails);
+        dispatch(autoSaveJournalEntry(entryDetails));
     };
 
     const handleSubmit = async (journalEntry: JournalEntrySubmissionPayload) => {
@@ -95,14 +79,14 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
         if (response instanceof HTTPError) {
             console.log(response.errorMessage);
         } else {
-            clearStorage();
+            dispatch(deleteAutoSaveJournalEntry(entryID));
 
             navigate(ROUTE_UI_DASHBOARD);
         }
     };
 
     const handleDiscard = () => {
-        clearStorage();
+        dispatch(deleteAutoSaveJournalEntry(entryID));
 
         navigate(ROUTE_UI_DASHBOARD);
     };
@@ -111,10 +95,10 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
         <main className={displayName}>
             <JournalEntryInputComponent
                 autoSaveIntervalMS={1000}
-                entryID={existingEntryDetails?.entryID}
-                initialBody={existingEntryDetails?.body}
-                initialOccurredAt={existingEntryDetails?.occurredAt}
-                initialTitle={existingEntryDetails?.title}
+                entryID={selectedEntryDetails?.entryID}
+                initialBody={selectedEntryDetails?.body}
+                initialOccurredAt={selectedEntryDetails?.occurredAt}
+                initialTitle={selectedEntryDetails?.title}
                 onAutoSave={handleAutoSave}
                 onDiscard={handleDiscard}
                 onSubmit={handleSubmit}

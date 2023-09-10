@@ -20,6 +20,7 @@ import SearchComponent from '@components/remotes/SearchComponent';
 
 import {
     deleteJournalEntry,
+    fetchAutoSavedJournalEntries,
     fetchJournalEntries,
     searchJournalEntries,
     selectAllJournalEntries
@@ -50,6 +51,7 @@ const DashboardView: FC<IDashboardView> = () => {
 
     useEffect(() => {
         dispatch(fetchJournalEntries());
+        dispatch(fetchAutoSavedJournalEntries());
     }, [
         dispatch
     ]);
