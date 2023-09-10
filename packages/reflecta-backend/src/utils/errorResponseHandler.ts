@@ -12,7 +12,7 @@ export type ReturnedError = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const errorResponseHandler = (errorDetails: any, response: Response<ReturnedError>) => {
+const errorResponseHandler = (errorDetails: any, response: Response) => {
     logger.error(JSON.stringify(errorDetails));
 
     if (errorDetails instanceof CustomError) {
@@ -30,7 +30,7 @@ const errorResponseHandler = (errorDetails: any, response: Response<ReturnedErro
     return response.status(500).send({
         errorMessage: 'Unknown error',
         statusCode: 500
-    });
+    } as ReturnedError);
 };
 
 export default errorResponseHandler;
