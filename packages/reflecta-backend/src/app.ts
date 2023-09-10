@@ -1,7 +1,9 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, {
-    Application
+    Application,
+    Request,
+    Response
 } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -10,6 +12,8 @@ import {
     AddressInfo
 } from 'net';
 
+import CustomError from '@utils/CustomError';
+import errorResponseHandler from '@utils/errorResponseHandler';
 import logger from '@utils/logger';
 
 import middleware from '@middleware/index';
@@ -45,6 +49,20 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(middleware);
+
+// Handling generic 404 errors
+app.use((request: Request, response: Response) => {
+    try {
+        // Throwing an error here so instanceof matches in the error handler
+        throw new CustomError({
+            privateMessage: `attempting to navigate to ${request.url} not found...`,
+            statusCode: 404,
+            userMessage: 'Page not found'
+        });
+    } catch (error) {
+        return errorResponseHandler(error, response);
+    }
+});
 
 // Start Server
 const server = app.listen(SERVER_PORT || 3100, async () => {

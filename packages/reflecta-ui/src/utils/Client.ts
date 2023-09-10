@@ -8,9 +8,13 @@ import {
 } from '@constants';
 
 import Authentication from './Authentication';
+import HTTPError, {
+    HTTPErrorDetails
+} from './HTTPError';
 
 export interface ErrorResponse {
     errorMessage: string;
+    statusCode?: number;
 }
 
 class Client {
@@ -20,7 +24,7 @@ class Client {
         this.authentication = new Authentication();
     }
 
-    private makeCall = async <ResponsePayload>(serviceURL: string, method: Method, payload?: object): Promise<ResponsePayload | ErrorResponse> => {
+    private makeCall = async <ResponsePayload>(serviceURL: string, method: Method, payload?: object): Promise<ResponsePayload> => {
         try {
             const tokenSignature = this.authentication.retrieve();
 
@@ -62,22 +66,22 @@ class Client {
             return response.data;
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response) {
-                return error.response.data as ErrorResponse;
+                throw new HTTPError(error.response.data as HTTPErrorDetails);
             }
 
-            return ({
+            throw new HTTPError({
                 errorMessage: 'An unknown error occurred...'
             });
         }
     };
 
-    delete = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload | ErrorResponse> => this.makeCall<ResponsePayload>(serviceURL, 'DELETE', payload);
+    delete = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'DELETE', payload);
 
-    get = async <ResponsePayload>(serviceURL: string, params?: object): Promise<ResponsePayload | ErrorResponse> => this.makeCall<ResponsePayload>(serviceURL, 'GET', params);
+    get = async <ResponsePayload>(serviceURL: string, params?: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'GET', params);
 
-    patch = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload | ErrorResponse> => this.makeCall<ResponsePayload>(serviceURL, 'PATCH', payload);
+    patch = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'PATCH', payload);
 
-    post = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload | ErrorResponse> => this.makeCall<ResponsePayload>(serviceURL, 'POST', payload);
+    post = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'POST', payload);
 }
 
 export default Client;

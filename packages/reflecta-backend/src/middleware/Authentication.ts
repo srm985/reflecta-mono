@@ -1,6 +1,7 @@
 import {
     NextFunction,
-    Request, Response
+    Request,
+    Response
 } from 'express';
 
 import {

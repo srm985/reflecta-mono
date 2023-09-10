@@ -21,9 +21,16 @@ import {
     updateJournalEntry
 } from '@store/slices/journalEntriesSlice';
 
+import HTTPError from '@utils/HTTPError';
+import Storage from '@utils/Storage';
+
 import {
     ROUTE_UI_DASHBOARD
 } from '@routes';
+
+import {
+    LOCAL_STORAGE_AUTO_SAVE_KEY
+} from '@constants';
 
 import {
     JournalEntrySubmissionPayload
@@ -50,29 +57,65 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
         dispatch
     ]);
 
-    const existingEntryDetails = useAppSelector((state) => selectJournalEntryByID(state, parseInt(entryID || '', 10)));
+    const storage = new Storage();
 
-    const handleSubmit = async (journalEntry: JournalEntrySubmissionPayload) => {
-        if (journalEntry.entryID) {
-            dispatch(updateJournalEntry(journalEntry));
-        } else {
-            dispatch(createJournalEntry(journalEntry));
+    const getAutoSaveStorageKey = (): string => (entryID ? `${LOCAL_STORAGE_AUTO_SAVE_KEY}-${entryID}` : `${LOCAL_STORAGE_AUTO_SAVE_KEY}`);
+
+    const existingEntryDetails = useAppSelector((state) => {
+        const storageKey = getAutoSaveStorageKey();
+
+        const entryDetails = storage.readKeyLocal<JournalEntrySubmissionPayload | undefined>(storageKey);
+
+        if (entryDetails) {
+            return entryDetails;
         }
 
-        navigate(ROUTE_UI_DASHBOARD);
+        return selectJournalEntryByID(state, parseInt(entryID || '', 10));
+    });
+
+    const clearStorage = () => {
+        const storageKey = getAutoSaveStorageKey();
+
+        storage.clearKeyLocal(storageKey);
+    };
+
+    const handleAutoSave = (entryDetails: JournalEntrySubmissionPayload) => {
+        const storageKey = getAutoSaveStorageKey();
+
+        storage.writeKeyLocal(storageKey, entryDetails);
+    };
+
+    const handleSubmit = async (journalEntry: JournalEntrySubmissionPayload) => {
+        // We're either creating or updating
+        const entryAction = journalEntry.entryID ? updateJournalEntry : createJournalEntry;
+
+        const response = await dispatch(entryAction(journalEntry));
+
+        // See if there was an error submitting our journal entry
+        if (response instanceof HTTPError) {
+            console.log(response.errorMessage);
+        } else {
+            clearStorage();
+
+            navigate(ROUTE_UI_DASHBOARD);
+        }
     };
 
     const handleDiscard = () => {
+        clearStorage();
+
         navigate(ROUTE_UI_DASHBOARD);
     };
 
     return (
         <main className={displayName}>
             <JournalEntryInputComponent
+                autoSaveIntervalMS={1000}
                 entryID={existingEntryDetails?.entryID}
                 initialBody={existingEntryDetails?.body}
                 initialOccurredAt={existingEntryDetails?.occurredAt}
                 initialTitle={existingEntryDetails?.title}
+                onAutoSave={handleAutoSave}
                 onDiscard={handleDiscard}
                 onSubmit={handleSubmit}
             />

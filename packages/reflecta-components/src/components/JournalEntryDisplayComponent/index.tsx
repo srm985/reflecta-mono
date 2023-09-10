@@ -35,7 +35,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
         displayName
     } = JournalEntryDisplayComponent;
 
-    const bodySummary = body.split(/(?<=[.!?])\s+(?=[A-Z¡¿])/).slice(0, isHighInterest ? 6 : 3).join(' ');
+    const bodySummary = body.split(/(?<=[.!?])\s+(?=[A-Z¡¿])/).slice(0, isHighInterest ? 8 : 3).join(' ');
 
     const dateOptions: Intl.DateTimeFormatOptions = {
         day: 'numeric',

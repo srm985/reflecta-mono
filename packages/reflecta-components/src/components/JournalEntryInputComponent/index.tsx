@@ -8,6 +8,7 @@ import {
 import {
     FormEvent,
     useEffect,
+    useRef,
     useState
 } from 'react';
 
@@ -27,11 +28,13 @@ import './styles.scss';
 
 const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props) => {
     const {
+        autoSaveIntervalMS = 5000,
         className,
         entryID,
         initialBody,
         initialOccurredAt,
         initialTitle,
+        onAutoSave,
         onDiscard,
         onSubmit
     } = props;
@@ -56,6 +59,52 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         occurredAt,
         setOccurredAt
     ] = useState<string>(now);
+
+    const entryIDReference = useRef(entryID);
+    const titleReference = useRef(title);
+    const bodyReference = useRef(body);
+    const occurredAtReference = useRef(occurredAt);
+
+    useEffect(() => {
+        entryIDReference.current = entryID;
+    }, [
+        entryID
+    ]);
+
+    useEffect(() => {
+        titleReference.current = title;
+    }, [
+        title
+    ]);
+
+    useEffect(() => {
+        bodyReference.current = body;
+    }, [
+        body
+    ]);
+
+    useEffect(() => {
+        occurredAtReference.current = occurredAt;
+    }, [
+        occurredAt
+    ]);
+
+    const handleSave = () => {
+        onAutoSave({
+            body: bodyReference.current,
+            entryID: entryIDReference.current,
+            occurredAt: occurredAtReference.current,
+            title: titleReference.current
+        });
+    };
+
+    useEffect(() => {
+        const autoSaveInterval = setInterval(() => {
+            handleSave();
+        }, autoSaveIntervalMS);
+
+        return () => clearInterval(autoSaveInterval);
+    }, []);
 
     useEffect(() => {
         if (initialBody) {

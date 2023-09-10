@@ -14,11 +14,13 @@ export type JournalEntry = {
 };
 
 export type IJournalEntryInputComponent = {
+    autoSaveIntervalMS?: number;
     className?: string;
     entryID?: EntryID;
     initialBody?: Body;
     initialOccurredAt?: Date;
     initialTitle?: Title;
+    onAutoSave: (journalEntryDetails: JournalEntry) => void;
     onDiscard: () => void;
-    onSubmit: (argument: JournalEntry) => void;
+    onSubmit: (journalEntryDetails: JournalEntry) => void;
 };

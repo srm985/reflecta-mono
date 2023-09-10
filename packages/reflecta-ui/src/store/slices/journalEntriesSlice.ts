@@ -14,6 +14,7 @@ import type {
 } from '@store/index';
 
 import Client from '@utils/Client';
+import HTTPError from '@utils/HTTPError';
 
 import {
     ROUTE_API_JOURNAL_ENTRY, ROUTE_API_SEARCH
@@ -75,41 +76,49 @@ export const fetchJournalEntries = (shouldReload?: boolean): ThunkAction<void, R
     return dispatch(requestLoadingHide());
 };
 
-export const createJournalEntry = (submissionPayload: JournalEntrySubmissionPayload): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+export const createJournalEntry = (submissionPayload: JournalEntrySubmissionPayload): ThunkAction<Promise<JournalEntry | HTTPError>, RootState, unknown, AnyAction> => async (dispatch) => {
     dispatch(requestLoadingShow());
 
     try {
-        await client.post(ROUTE_API_JOURNAL_ENTRY, {
+        const response = await client.post<JournalEntry>(ROUTE_API_JOURNAL_ENTRY, {
             entryBody: submissionPayload.body,
             entryOccurredAt: submissionPayload.occurredAt,
             entryTitle: submissionPayload.title
         });
 
-        dispatch(fetchJournalEntries(true));
-    } catch (error) {
-        console.log(error);
-    }
+        dispatch(requestLoadingHide());
 
-    dispatch(requestLoadingHide());
+        dispatch(fetchJournalEntries(true));
+
+        return response;
+    } catch (error) {
+        dispatch(requestLoadingHide());
+
+        return error as HTTPError;
+    }
 };
 
-export const updateJournalEntry = (submissionPayload: JournalEntrySubmissionPayload): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+export const updateJournalEntry = (submissionPayload: JournalEntrySubmissionPayload): ThunkAction<Promise<JournalEntry | HTTPError>, RootState, unknown, AnyAction> => async (dispatch) => {
     dispatch(requestLoadingShow());
 
     try {
-        await client.patch(ROUTE_API_JOURNAL_ENTRY, {
+        const response = await client.patch<JournalEntry>('ROUTE_API_JOURNAL_ENTRY', {
             entryBody: submissionPayload.body,
             entryID: submissionPayload.entryID,
             entryOccurredAt: submissionPayload.occurredAt,
             entryTitle: submissionPayload.title
         });
 
-        dispatch(fetchJournalEntries(true));
-    } catch (error) {
-        console.log(error);
-    }
+        dispatch(requestLoadingHide());
 
-    dispatch(requestLoadingHide());
+        dispatch(fetchJournalEntries(true));
+
+        return response;
+    } catch (error) {
+        dispatch(requestLoadingHide());
+
+        return error as HTTPError;
+    }
 };
 
 export const deleteJournalEntry = (entryID: JournalEntryID): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
