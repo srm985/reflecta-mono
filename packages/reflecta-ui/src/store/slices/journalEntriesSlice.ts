@@ -203,7 +203,7 @@ export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload
     dispatch(fetchAutoSavedJournalEntries());
 };
 
-export const deleteAutoSaveJournalEntry = (entryID: JournalEntryID): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
+export const deleteAutoSaveJournalEntry = (entryID: JournalEntryID | undefined): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
     try {
         const {
             autoSavedJournalEntriesList
@@ -211,8 +211,8 @@ export const deleteAutoSaveJournalEntry = (entryID: JournalEntryID): ThunkAction
 
         const entriesList: JournalEntrySubmissionPayload[] = JSON.parse(JSON.stringify(autoSavedJournalEntriesList));
 
-        // See if we have an existing value to update
-        const entryIndex = entriesList.findIndex((existingEntryDetails) => existingEntryDetails.entryID === entryID);
+        // See if we have an existing value to update - new entries use 0 as their ID
+        const entryIndex = entriesList.findIndex((existingEntryDetails) => existingEntryDetails.entryID === (entryID || 0));
 
         // We should never get here theoretically so just stop
         if (entryIndex === -1) {
@@ -236,7 +236,13 @@ export const selectAllJournalEntries = (state: RootState): JournalEntry[] => sta
 export const selectAllAutoSavedJournalEntries = (state: RootState): JournalEntrySubmissionPayload[] => state.journalEntries.autoSavedJournalEntriesList;
 
 // Fetching ID-specific entries
-export const selectJournalEntryByID = (state: RootState, entryID: JournalEntryID): JournalEntry | undefined => state.journalEntries.journalEntriesList.find((entryDetails) => entryDetails.entryID === entryID);
+export const selectJournalEntryByID = (state: RootState, entryID: JournalEntryID | undefined): JournalEntry | undefined => {
+    if (entryID === undefined) {
+        return undefined;
+    }
+
+    return state.journalEntries.journalEntriesList.find((entryDetails) => entryDetails.entryID === entryID);
+};
 
 export const selectAutoSavedJournalEntryByID = (state: RootState, entryID: JournalEntryID): JournalEntrySubmissionPayload | undefined => state.journalEntries.autoSavedJournalEntriesList.find((entryDetails) => entryDetails.entryID === entryID);
 

@@ -50,7 +50,8 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
         entryID: entryIDString
     } = useParams();
 
-    const entryID = parseInt(entryIDString || '', 10);
+    // This could be empty for new entries
+    const entryID: number | undefined = !entryIDString ? undefined : parseInt(entryIDString, 10);
 
     useEffect(() => {
         dispatch(fetchJournalEntries());
