@@ -9,6 +9,10 @@ import generateRandom from '@utils/generateRandom';
 import JWT from '@utils/JWT';
 import Secret from '@utils/Secret';
 
+import {
+    UserID
+} from '@types';
+
 export interface EnrollingUserDetails {
     emailAddress: string;
     firstName: string;
@@ -18,7 +22,7 @@ export interface EnrollingUserDetails {
 }
 
 export interface EnrollmentTokenPayload {
-    userID: number;
+    userID: UserID;
 }
 
 class EnrollmentController {

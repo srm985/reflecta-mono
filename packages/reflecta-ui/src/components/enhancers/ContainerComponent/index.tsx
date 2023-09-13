@@ -20,6 +20,7 @@ import ViewportRendererComponent from '@components/remotes/ViewportRendererCompo
 import Authentication from '@utils/Authentication';
 
 import {
+    ROUTE_UI_ACCOUNT,
     ROUTE_UI_DASHBOARD,
     ROUTE_UI_DEFAULT,
     ROUTE_UI_JOURNAL_ENTRY
@@ -53,7 +54,7 @@ const ContainerComponent = () => {
         {
             icon: faGear,
             label: 'Settings',
-            onClick: () => {}
+            onClick: () => navigate(ROUTE_UI_ACCOUNT)
         }
     ];
 

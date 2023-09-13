@@ -4,6 +4,10 @@ import {
 
 import pool from '../db';
 
+import {
+    UserID
+} from '@types';
+
 export interface AuthenticationTokensSchema {
     created_at: string;
     is_active: string;
@@ -17,13 +21,13 @@ export interface AuthenticationToken {
     isActive: string;
     tokenID: string;
     updatedAt: string | null;
-    userID: number;
+    userID: UserID;
 }
 
 class AuthenticationTokensModel {
     private readonly TABLE_NAME = 'authentication_tokens';
 
-    insertAuthenticationToken = async (userID: number, tokenID: string): Promise<boolean> => {
+    insertAuthenticationToken = async (userID: UserID, tokenID: string): Promise<boolean> => {
         const query = 'INSERT INTO ?? (user_id, token_id, is_active) VALUES (?, ?, TRUE)';
         const values = [
             this.TABLE_NAME,

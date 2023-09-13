@@ -1,3 +1,4 @@
+import accountDetails from './routes/account-details';
 import alive from './routes/alive';
 import aliveAuth from './routes/alive-auth';
 import enroll from './routes/enroll';
@@ -9,6 +10,7 @@ import updatePassword from './routes/update-password';
 import verify from './routes/verify';
 
 export default [
+    accountDetails,
     alive,
     aliveAuth,
     enroll,

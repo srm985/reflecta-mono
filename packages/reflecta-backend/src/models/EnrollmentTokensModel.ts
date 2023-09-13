@@ -4,6 +4,10 @@ import {
 
 import pool from '../db';
 
+import {
+    UserID
+} from '@types';
+
 export interface EnrollmentTokensSchema {
     created_at: string;
     is_active: string;
@@ -17,13 +21,13 @@ export interface EnrollmentToken {
     isActive: string;
     tokenID: string;
     updatedAt: string | null;
-    userID: number;
+    userID: UserID;
 }
 
 class EnrollmentTokensModel {
     private readonly TABLE_NAME = 'enrollment_tokens';
 
-    insertEnrollmentToken = async (userID: number, tokenID: string) => {
+    insertEnrollmentToken = async (userID: UserID, tokenID: string) => {
         const query = 'INSERT INTO ?? (user_id, token_id, is_active) VALUES (?, ?, TRUE) ON DUPLICATE KEY UPDATE token_id = VALUES(token_id), is_active = TRUE';
         const values = [
             this.TABLE_NAME,
@@ -34,7 +38,7 @@ class EnrollmentTokensModel {
         await pool.query(query, values);
     };
 
-    enrollmentTokenByUserID = async (userID: number): Promise<EnrollmentTokensSchema | undefined> => {
+    enrollmentTokenByUserID = async (userID: UserID): Promise<EnrollmentTokensSchema | undefined> => {
         const query = 'SELECT * FROM ?? WHERE user_id = ? AND is_active = TRUE';
         const values = [
             this.TABLE_NAME,

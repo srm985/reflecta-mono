@@ -81,6 +81,11 @@
                     },
                     {
                         "group": "parent",
+                        "pattern": "@types",
+                        "position": "after"
+                    },
+                    {
+                        "group": "parent",
                         "pattern": "@constants",
                         "position": "after"
                     }

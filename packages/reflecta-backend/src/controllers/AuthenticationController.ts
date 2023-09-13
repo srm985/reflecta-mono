@@ -7,12 +7,16 @@ import JWT from '@utils/JWT';
 import Secret from '@utils/Secret';
 import TokenHandler from '@utils/TokenHandler';
 
+import {
+    UserID
+} from '@types';
+
 export interface AuthenticationTokenPayload {
     emailAddress: string;
     firstName: string;
     isAdmin: boolean;
     lastName: string;
-    userID: number
+    userID: UserID
 }
 export interface AuthenticationTokenPayloadLocals {
     authenticationTokenPayload: AuthenticationTokenPayload

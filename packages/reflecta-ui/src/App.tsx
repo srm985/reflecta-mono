@@ -9,6 +9,8 @@ import {
     Routes
 } from 'react-router-dom';
 
+import AccountView from '@views/AccountView';
+
 import LoadingIndicatorComponent from '@components/remotes/LoadingIndicatorComponent';
 import RootStylingComponent from '@components/remotes/RootStylingComponent';
 
@@ -24,6 +26,7 @@ import {
 } from '@store/slices/loadingSlice';
 
 import {
+    ROUTE_UI_ACCOUNT,
     ROUTE_UI_DASHBOARD,
     ROUTE_UI_DEFAULT,
     ROUTE_UI_JOURNAL_ENTRY,
@@ -68,6 +71,10 @@ const App = () => {
                                     path={'create'}
                                 />
                             </Route>
+                            <Route
+                                element={<AccountView />}
+                                path={ROUTE_UI_ACCOUNT}
+                            />
                         </Route>
                     </Route>
                 </Routes>

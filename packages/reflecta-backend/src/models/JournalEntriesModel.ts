@@ -5,6 +5,10 @@ import {
 
 import pool from '../db';
 
+import {
+    UserID
+} from '@types';
+
 export type Body = string;
 export type CreatedAt = string;
 export type DeletedAt = string | null;
@@ -14,7 +18,6 @@ export type Keywords = string | null;
 export type OccurredAt = string;
 export type Title = string;
 export type UpdatedAt = string | null;
-export type UserID = number;
 
 export interface JournalEntriesSchema {
     body: Body;
@@ -45,7 +48,7 @@ export interface JournalEntry {
 class JournalEntriesModel {
     private readonly TABLE_NAME = 'journal_entries';
 
-    insertJournalEntry = async (userID: number, entryDetails: JournalEntry) => {
+    insertJournalEntry = async (userID: UserID, entryDetails: JournalEntry) => {
         const {
             body,
             isHighInterest,
@@ -113,7 +116,7 @@ class JournalEntriesModel {
         await pool.query(query, values);
     };
 
-    allJournalEntriesByUserID = async (userID: number): Promise<JournalEntriesSchema[]> => {
+    allJournalEntriesByUserID = async (userID: UserID): Promise<JournalEntriesSchema[]> => {
         const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL ORDER BY occurred_at DESC';
         const values = [
             this.TABLE_NAME,
@@ -141,7 +144,7 @@ class JournalEntriesModel {
         return results[0];
     };
 
-    journalEntryByKeywords = async (userID: number, keywordList: string[], join: 'AND' | 'OR'): Promise<JournalEntriesSchema[]> => {
+    journalEntryByKeywords = async (userID: UserID, keywordList: string[], join: 'AND' | 'OR'): Promise<JournalEntriesSchema[]> => {
         const bodySearch = keywordList.map(() => 'keywords LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
         const keywordSearch = keywordList.map(() => 'body LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
 
@@ -165,7 +168,7 @@ class JournalEntriesModel {
         return results;
     };
 
-    journalEntriesByDate = async (userID: number, entryDate: string): Promise<JournalEntriesSchema[]> => {
+    journalEntriesByDate = async (userID: UserID, entryDate: string): Promise<JournalEntriesSchema[]> => {
         const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND occurred_at = ?';
         const values = [
             this.TABLE_NAME,
@@ -180,7 +183,7 @@ class JournalEntriesModel {
         return results;
     };
 
-    journalEntriesByDateRange = async (userID: number, startDate: string, endDate: string): Promise<JournalEntriesSchema[]> => {
+    journalEntriesByDateRange = async (userID: UserID, startDate: string, endDate: string): Promise<JournalEntriesSchema[]> => {
         const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND occurred_at >= ? and occurred_at <= ?';
         const values = [
             this.TABLE_NAME,

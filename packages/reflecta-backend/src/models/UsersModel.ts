@@ -5,6 +5,10 @@ import {
 
 import pool from '../db';
 
+import {
+    UserID
+} from '@types';
+
 export interface UsersSchema {
     created_at: string;
     email_address: string;
@@ -47,13 +51,28 @@ class UsersModel {
         return results[0];
     };
 
+    userDetailsByID = async (userID: UserID, isActiveUser: boolean = true): Promise<UsersSchema | undefined> => {
+        const query = 'SELECT * FROM ?? WHERE user_id = ? AND is_active = ?';
+        const values = [
+            this.TABLE_NAME,
+            userID,
+            isActiveUser
+        ];
+
+        const [
+            results = []
+        ] = await pool.query<UsersSchema[] & RowDataPacket[][]>(query, values);
+
+        return results[0];
+    };
+
     isActiveUser = async (emailAddress: string) => {
         const userDetails = await this.userDetailsByEmailAddress(emailAddress, true);
 
         return !!userDetails;
     };
 
-    activateUser = async (userID: number) => {
+    activateUser = async (userID: UserID) => {
         const query = 'UPDATE ?? SET is_active = TRUE WHERE user_id = ?';
         const values = [
             this.TABLE_NAME,
@@ -99,7 +118,7 @@ class UsersModel {
         return userID;
     };
 
-    updatePassword = async (userID: number, password: string) => {
+    updatePassword = async (userID: UserID, password: string) => {
         const query = 'UPDATE ?? SET password = ? WHERE user_id = ?';
         const values = [
             this.TABLE_NAME,

@@ -8,6 +8,10 @@ import OpenAIService from '@services/OpenAIService';
 import CustomError from '@utils/CustomError';
 import dateStamp from '@utils/dateStamp';
 
+import {
+    UserID
+} from '@types';
+
 export type JournalEntryAPIInput = Pick<JournalEntry, 'body' | 'occurredAt' | 'title'>;
 export type JournalEntryChangeLog = Partial<JournalEntryAPIInput>;
 export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'occurredAt' | 'title' | 'updatedAt'>;
@@ -93,7 +97,7 @@ class JournalingController {
         });
     };
 
-    insertJournalEntry = async (userID: number, entryDetails: JournalEntryAPIInput) => {
+    insertJournalEntry = async (userID: UserID, entryDetails: JournalEntryAPIInput) => {
         const sanitizedTitle = this.sanitize(entryDetails.title);
         const sanitizedBody = this.sanitize(entryDetails.body);
 
@@ -113,7 +117,7 @@ class JournalingController {
         });
     };
 
-    modifyJournalEntry = async (userID: number, entryID: number, entryDetails: JournalEntryAPIInput) => {
+    modifyJournalEntry = async (userID: UserID, entryID: number, entryDetails: JournalEntryAPIInput) => {
         const existingEntryDetails = await this.journalEntriesModel.journalEntry(entryID);
 
         // Quick sanity check to ensure we actually found a valid journal entry
@@ -168,9 +172,9 @@ class JournalingController {
         return undefined;
     };
 
-    getAllEntriesByUserID = async (userID: number): Promise<JournalEntryResponse[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map(this.mapEntryForResponse);
+    getAllEntriesByUserID = async (userID: UserID): Promise<JournalEntryResponse[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map(this.mapEntryForResponse);
 
-    deleteJournalEntry = async (userID: number, entryID: number) => {
+    deleteJournalEntry = async (userID: UserID, entryID: number) => {
         const existingEntryDetails = await this.journalEntriesModel.journalEntry(entryID);
 
         // Quick sanity check to ensure we actually found a valid journal entry
@@ -194,7 +198,7 @@ class JournalingController {
         await this.journalEntriesModel.deleteJournalEntry(entryID);
     };
 
-    search = async (userID: number, searchDetails: Search): Promise<JournalEntryResponse[]> => {
+    search = async (userID: UserID, searchDetails: Search): Promise<JournalEntryResponse[]> => {
         const {
             dateSearchOption,
             entryDate,
