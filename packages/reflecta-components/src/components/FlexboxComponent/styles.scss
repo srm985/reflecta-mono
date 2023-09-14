@@ -7,12 +7,14 @@ $justify-content-options: (flex-start, flex-end, center, space-between, space-ar
 $column-gap-options: (
     'small': $margin-small,
     'medium': $margin-medium,
-    'large': $margin-large
+    'large': $margin-large,
+    'xlarge': $margin-xlarge
 );
 $row-gap-options: (
     'small': $margin-small,
     'medium': $margin-medium,
-    'large': $margin-large
+    'large': $margin-large,
+    'xlarge': $margin-xlarge
 );
 
 .FlexboxComponent {

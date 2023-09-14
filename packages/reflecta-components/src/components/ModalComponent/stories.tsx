@@ -4,6 +4,8 @@ import {
 
 import ButtonComponent from '@components/ButtonComponent';
 
+import StorybookExampleComponent from '@components/_internal/StorybookExampleComponent';
+
 import ModalComponent from './index';
 
 import {
@@ -26,7 +28,7 @@ const Template = (args: IModalComponent) => {
     };
 
     return (
-        <>
+        <StorybookExampleComponent>
             {
                 isOpen && (
                     <ModalComponent
@@ -40,7 +42,7 @@ const Template = (args: IModalComponent) => {
             }
 
             <ButtonComponent onClick={toggleOpen}>{'Toggle Modal'}</ButtonComponent>
-        </>
+        </StorybookExampleComponent>
     );
 };
 

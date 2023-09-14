@@ -1,6 +1,7 @@
 import {
     FC,
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 import {
     useNavigate,
@@ -8,6 +9,7 @@ import {
 } from 'react-router-dom';
 
 import JournalEntryInputComponent from '@components/remotes/JournalEntryInputComponent';
+import PromptComponent from '@components/remotes/PromptComponent';
 
 import {
     useAppDispatch,
@@ -43,6 +45,11 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
     const {
         displayName
     } = JournalEntryView;
+
+    const [
+        isPromptOpen,
+        setPromptOpen
+    ] = useState<boolean>(false);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -101,9 +108,26 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
                 initialOccurredAt={selectedEntryDetails?.occurredAt}
                 initialTitle={selectedEntryDetails?.title}
                 onAutoSave={handleAutoSave}
-                onDiscard={handleDiscard}
+                onDiscard={() => setPromptOpen(true)}
                 onSubmit={handleSubmit}
             />
+            {
+                isPromptOpen && (
+                    <PromptComponent
+                        label={entryID ? 'Discard changes?' : 'Discard entry?'}
+                        message={entryID ? 'Are you sure you want to discard these changes? If you would like to save it for later, simply close this message and hit the Home button.' : 'Are you sure you want to discard this entry? If you would like to save it for later, simply close this message and hit the Home button.'}
+                        promptPrimary={{
+                            color: 'danger',
+                            label: entryID ? 'Discard changes' : 'Discard entry',
+                            onClick: handleDiscard
+                        }}
+                        promptSecondary={{
+                            label: entryID ? 'Continue editing' : 'Continue journaling',
+                            onClick: () => setPromptOpen(false)
+                        }}
+                    />
+                )
+            }
         </main>
     );
 };

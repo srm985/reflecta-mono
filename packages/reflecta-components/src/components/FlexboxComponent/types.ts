@@ -35,12 +35,14 @@ export type JustifyContent =
 export type ColumnGap =
 | 'small'
 | 'medium'
-| 'large';
+| 'large'
+| 'xlarge';
 
 export type RowGap =
 | 'small'
 | 'medium'
-| 'large';
+| 'large'
+| 'xlarge';
 
 export type Layout = {
     alignItems?: AlignItems;

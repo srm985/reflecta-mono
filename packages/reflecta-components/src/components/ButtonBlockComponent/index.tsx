@@ -43,7 +43,7 @@ const ButtonBlockComponent: FC<IButtonBlockComponent> = (props) => {
     });
 
     const layoutDesktop: Layout | undefined = !isAlwaysInline ? ({
-        columnGap: 'medium',
+        columnGap: 'large',
         flexDirection: 'row'
     }) : undefined;
 
