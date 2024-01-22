@@ -29,6 +29,7 @@ const NavigationMobileComponent: FC<INavigationMobileComponent> = (props) => {
     const renderNavigationItem = (navigationItem: NavigationItem) => (
         <div key={navigationItem.label}>
             <button
+                aria-label={navigationItem.label}
                 onClick={navigationItem.onClick}
                 type={'button'}
             >
