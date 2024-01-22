@@ -22,7 +22,6 @@ const root = createRoot(rootElement);
 root.render(
     <StrictMode>
         <Provider
-            noopCheck={'always'}
             stabilityCheck={'always'}
             store={store}
         >
