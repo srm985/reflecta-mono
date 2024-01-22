@@ -18,7 +18,7 @@
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": "always"
     },
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "eslint.codeActionsOnSave.mode": "all",
