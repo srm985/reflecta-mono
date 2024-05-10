@@ -89,7 +89,7 @@ class OpenAIService {
 
         try {
             const titleMessage = await this.chat({
-                maxTokens: 20,
+                maxTokens: 40,
                 messagesList: messageHistory,
                 temperature: 1
             });
