@@ -16,7 +16,7 @@
     "openai": "^4.5.0",
     "uuid": "^9.0.0",
     "winston": "^3.8.2",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "description": "Journaling application backend meant to help offer analysis and insights into journal entries.",
   "devDependencies": {
