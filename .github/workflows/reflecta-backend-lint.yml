@@ -26,7 +26,7 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm ci --legacy-peers-deps
+        run: npm ci --legacy-peer-deps
 
       # Lint JavaScript/TypeScript
       - name: Lint

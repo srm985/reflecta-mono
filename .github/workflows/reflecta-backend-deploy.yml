@@ -26,7 +26,7 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm ci --legacy-peers-deps
+        run: npm ci --legacy-peer-deps
 
       # Lint JavaScript/TypeScript
       - name: Lint
@@ -48,7 +48,7 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm ci --legacy-peers-deps
+        run: npm ci --legacy-peer-deps
 
       # Compile TypeScript
       - name: Build
@@ -56,7 +56,7 @@ jobs:
 
       # Install Production Packages
       - name: Install Production Packages
-        run: npm ci --legacy-peers-deps --only-production --ignore-scripts -w reflecta-backend
+        run: npm ci --legacy-peer-deps --only-production --ignore-scripts -w reflecta-backend
 
       # Install Production Packages
       - name: Fully Install bcrypt

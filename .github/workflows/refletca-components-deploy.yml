@@ -26,7 +26,7 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm ci --legacy-peers-deps
+        run: npm ci --legacy-peer-deps
 
       # Lint SCSS
       - name: Lint
@@ -47,7 +47,7 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm ci --legacy-peers-deps
+        run: npm ci --legacy-peer-deps
 
       # Lint JavaScript/TypeScript
       - name: Lint
@@ -70,7 +70,7 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm ci --legacy-peers-deps
+        run: npm ci --legacy-peer-deps
 
       # Build Reflecta Components
       - name: Build
@@ -102,7 +102,7 @@ jobs:
 
       # Install Node Modules
       - name: Install
-        run: npm ci --legacy-peers-deps
+        run: npm ci --legacy-peer-deps
 
       # Build Storybook Bundle
       - name: Build
