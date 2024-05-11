@@ -3,7 +3,9 @@ name: Reflecta Components - Lint
 on:
   push:
     branches: ['*', '!develop', '!main']
-    paths: [packages/reflecta-components/**]
+    paths:
+      - packages/reflecta-components/**
+      - .github/**
   workflow_dispatch:
     branches: ['*', '!develop', '!main']
     paths: [packages/reflecta-components/**]

@@ -3,7 +3,9 @@ name: Reflecta Components - Build & Deploy
 on:
   push:
     branches: [main, develop]
-    paths: [packages/reflecta-components/**]
+    paths:
+      - packages/reflecta-components/**
+      - .github/**
   workflow_dispatch:
     branches: [main, develop]
     paths: [packages/reflecta-components/**]

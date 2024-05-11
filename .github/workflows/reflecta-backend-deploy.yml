@@ -3,7 +3,9 @@ name: Reflecta Backend - Build & Deploy
 on:
   push:
     branches: [main, develop]
-    paths: [packages/reflecta-backend/**]
+    paths:
+      - packages/reflecta-backend/**
+      - .github/**
   workflow_dispatch:
     branches: [main, develop]
     paths: [packages/reflecta-backend/**]

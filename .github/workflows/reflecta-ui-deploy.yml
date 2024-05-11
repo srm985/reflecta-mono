@@ -3,7 +3,9 @@ name: Reflecta UI - Build & Deploy
 on:
   push:
     branches: [main, develop]
-    paths: [packages/reflecta-ui/**]
+    paths:
+      - packages/reflecta-ui/**
+      - .github/**
   workflow_dispatch:
     branches: [main, develop]
     paths: [packages/reflecta-ui/**]

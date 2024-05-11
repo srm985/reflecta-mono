@@ -3,7 +3,9 @@ name: Reflecta UI - Lint
 on:
   push:
     branches: ['*', '!develop', '!main']
-    paths: [packages/reflecta-ui/**]
+    paths:
+      - packages/reflecta-ui/**
+      - .github/**
   workflow_dispatch:
     branches: ['*', '!develop', '!main']
     paths: [packages/reflecta-ui/**]
