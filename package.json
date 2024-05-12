@@ -28,6 +28,9 @@
     ]
   },
   "name": "reflecta-mono",
+  "overrides": {
+    "minimatch": "5.1.6"
+  },
   "private": false,
   "repository": {
     "type": "git",
