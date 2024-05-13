@@ -83,7 +83,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bundle
+          name: bundle-mf
           path: ./packages/reflecta-components/dist/
 
   build-storybook:
@@ -112,15 +112,12 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
 
-      - name: Update Bundle
-        run: cp -Rf ./packages/reflecta-components/storybook-static/* ./bundle/
-
       # Upload Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bundle
-          path: ./bundle/
+          name: bundle-sb
+          path: ./packages/reflecta-components/storybook-static/
 
   deploy:
     name: Deploy
@@ -133,6 +130,12 @@ jobs:
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
+
+      - name: Merge Artifacts
+        run: |
+          mkdir ./bundle/
+          cp -Rf ./bundle-mf/* ./bundle/
+          cp -Rf ./bundle-sb/* ./bundle/
 
       # Deploy Reflecta Components
       - name: Deploy
