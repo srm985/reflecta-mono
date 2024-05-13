@@ -134,6 +134,8 @@ jobs:
       - name: Merge Artifacts
         run: |
           mkdir ./bundle/
+          ls
+          ls ./bundle/
           cp -Rf ./bundle-mf/* ./bundle/
           cp -Rf ./bundle-sb/* ./bundle/
 
