@@ -108,12 +108,19 @@ jobs:
       - name: Build
         run: npm run build:storybook -w reflecta-components
 
+      # Download bundle to add to it
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Update Bundle
+        run: cp -Rf ./packages/reflecta-components/storybook-static/* ./bundle/
+
       # Upload Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: bundle
-          path: ./packages/reflecta-components/storybook-static/
+          path: ./bundle/
 
   deploy:
     name: Deploy
