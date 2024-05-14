@@ -136,7 +136,6 @@ jobs:
           mkdir ./bundle/
           ls
           cp -Rf ./bundle-mf/* ./bundle/
-          cp -Rf ./bundle-sb/* ./bundle/
           ls ./bundle/
 
       # Deploy Reflecta Components
