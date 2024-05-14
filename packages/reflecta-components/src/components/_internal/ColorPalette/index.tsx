@@ -2,7 +2,7 @@ import {
     ColorGroupDetails
 } from './types';
 
-import colorVariables from '@styles/_colors.scss';
+import * as colorVariables from '@styles/_colors.scss';
 
 import './styles.scss';
 
@@ -58,6 +58,10 @@ const ColorPaletteComponent = () => {
         colorDetails,
         colorValue
     ]) => {
+        if (colorDetails === 'default') {
+            return;
+        }
+
         const groupNameDetails: string[] = colorDetails.split('_')[2].split('-');
         const groupName: string = `${capitalizeWord(groupNameDetails[0])}${groupNameDetails.length > 2 ? ` (${capitalizeWord(groupNameDetails[1])} ${capitalizeWord(groupNameDetails[2])})` : ''}`;
         const groupOrder: number = parseInt(colorDetails.split('-')[0].split('_')[1], 10) - 1;

@@ -11,7 +11,7 @@ import {
     ImportedBreakpoint
 } from './types';
 
-import breakpoints from '@styles/_units.scss';
+import * as breakpoints from '@styles/_units.scss';
 
 const ViewportRendererComponent: FC<IViewportRendererComponent> = (props) => {
     const {

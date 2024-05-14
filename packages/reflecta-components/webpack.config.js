@@ -115,8 +115,10 @@ module.exports = async () => {
                         {
                             loader: 'css-loader',
                             options: {
+                                importLoaders: 1,
                                 modules: {
-                                    auto: /^.*(colors|units).scss$/
+                                    auto: /^.*(colors|units).scss$/,
+                                    mode: 'icss'
                                 }
                             }
                         },
