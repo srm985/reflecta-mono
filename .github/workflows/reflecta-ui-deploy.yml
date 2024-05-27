@@ -116,6 +116,7 @@ jobs:
         env:
           BASE_URL_API: ${{ vars.BASE_URL_API }}
           FEDERATED_COMPONENTS_URL: ${{ vars.FEDERATED_COMPONENTS_URL }}
+          GOOGLE_MAPS_API_KEY: ${{ vars.GOOGLE_MAPS_API_KEY }}
           LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY: ${{ vars.LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY }}
           NODE_ENV: ${{ vars.NODE_ENV }}
 
