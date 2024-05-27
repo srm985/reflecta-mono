@@ -27,15 +27,21 @@ class GoogleMapsService {
             .replace('{LOCALE}', this.locale)
             .replace('{GOOGLE_MAPS_API_KEY}', this.apiKey);
 
-        const {
-            data: {
-                results
-            }
-        } = await axios.get<google.maps.GeocoderResponse>(googleMapsHydratedEndpoint);
+        try {
+            const {
+                data: {
+                    results
+                }
+            } = await axios.get<google.maps.GeocoderResponse>(googleMapsHydratedEndpoint);
 
-        const locationDetails = results.find((result) => result.types.includes('administrative_area_level_2'));
+            const locationDetails = results.find((result) => result.types.includes('administrative_area_level_2'));
 
-        return locationDetails;
+            return locationDetails;
+        } catch (error) {
+            console.log(error);
+        }
+
+        return undefined;
     };
 }
 
