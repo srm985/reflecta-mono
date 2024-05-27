@@ -29,13 +29,15 @@ class GoogleMapsService {
                 .replace('{GOOGLE_MAPS_API_KEY}', this.apiKey);
 
             const {
+                data,
                 data: {
                     results
                 }
             } = await axios.get<google.maps.GeocoderResponse>(googleMapsHydratedEndpoint);
 
             console.log('foo....');
-            console.log(results);
+            console.log(data);
+            console.log(googleMapsHydratedEndpoint);
 
             const locationDetails = results.find((result) => result.types.includes('administrative_area_level_2'));
 
