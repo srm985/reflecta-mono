@@ -21,13 +21,13 @@ class GoogleMapsService {
     }
 
     public lookupByCoordinates = async (latitude: string, longitude: string): Promise<google.maps.GeocoderResult | undefined> => {
-        const googleMapsHydratedEndpoint = this.ROUTE_GOOGLE_MAPS
-            .replace('{LATITUDE}', latitude)
-            .replace('{LONGITUDE}', longitude)
-            .replace('{LOCALE}', this.locale)
-            .replace('{GOOGLE_MAPS_API_KEY}', this.apiKey);
-
         try {
+            const googleMapsHydratedEndpoint = this.ROUTE_GOOGLE_MAPS
+                .replace('{LATITUDE}', latitude)
+                .replace('{LONGITUDE}', longitude)
+                .replace('{LOCALE}', this.locale)
+                .replace('{GOOGLE_MAPS_API_KEY}', this.apiKey);
+
             const {
                 data: {
                     results
