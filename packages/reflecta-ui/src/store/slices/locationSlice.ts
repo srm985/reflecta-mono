@@ -13,12 +13,8 @@ import Client from '@utils/Client';
 import deviceLocation from '@utils/deviceLocation';
 
 import {
-    ROUTE_EXTERNAL_GOOGLE_LOCATION
+    ROUTE_API_LOCATION
 } from '@routes';
-
-import {
-    GOOGLE_MAPS_API_KEY
-} from '@constants';
 
 import {
     JournalEntryLocation
@@ -28,6 +24,10 @@ import {
     requestLoadingHide,
     requestLoadingShow
 } from './loadingSlice';
+
+export type LocationResponse = {
+    location?: string;
+};
 
 const client = new Client();
 
@@ -60,10 +60,6 @@ export const renewLocation = (): ThunkAction<void, RootState, unknown, AnyAction
     try {
         const deviceLocationDetails = await deviceLocation();
 
-        console.log({
-            deviceLocationDetails
-        });
-
         if (!deviceLocationDetails) {
             return dispatch(setLocation(undefined));
         }
@@ -75,26 +71,14 @@ export const renewLocation = (): ThunkAction<void, RootState, unknown, AnyAction
             }
         } = deviceLocationDetails;
 
-        const googleMapsHydratedEndpoint = ROUTE_EXTERNAL_GOOGLE_LOCATION
-            .replace('{LATITUDE}', latitude.toString())
-            .replace('{LONGITUDE}', longitude.toString())
-            .replace('{GOOGLE_MAPS_API_KEY}', GOOGLE_MAPS_API_KEY);
-
         const {
-            results
-        } = await client.get<google.maps.GeocoderResponse>(googleMapsHydratedEndpoint, undefined, true);
+            location
+        } = await client.get<LocationResponse>(ROUTE_API_LOCATION, {
+            latitude,
+            longitude
+        });
 
-        const locationDetails = results.find((result) => result.types.includes('administrative_area_level_2'));
-
-        if (!locationDetails) {
-            return dispatch(setLocation(undefined));
-        }
-
-        const {
-            formatted_address: formattedAddress
-        } = locationDetails;
-
-        return dispatch(setLocation(formattedAddress));
+        return dispatch(setLocation(location));
     } catch (error) {
         return dispatch(setLocation(undefined));
     } finally {

@@ -4,6 +4,7 @@ import aliveAuth from './routes/alive-auth';
 import enroll from './routes/enroll';
 import inviteUser from './routes/invite-user';
 import journalEntry from './routes/journal-entry';
+import location from './routes/location';
 import login from './routes/login';
 import search from './routes/search';
 import updatePassword from './routes/update-password';
@@ -16,6 +17,7 @@ export default [
     enroll,
     inviteUser,
     journalEntry,
+    location,
     login,
     search,
     updatePassword,
