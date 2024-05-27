@@ -7,6 +7,7 @@ import {
     useNavigate
 } from 'react-router-dom';
 
+import ButtonBlockComponent from '@components/remotes/ButtonBlockComponent';
 import ButtonComponent from '@components/remotes/ButtonComponent';
 import FormComponent from '@components/remotes/FormComponent';
 import InputComponent from '@components/remotes/InputComponent';
@@ -89,7 +90,7 @@ const LoginView: React.FC<ILoginView> = (props) => {
                     autoCompleteType={'username'}
                     label={'Email Address'}
                     name={'emailAddress'}
-                    onChange={(payload) => dispatch({
+                    onChange={(payload: string) => dispatch({
                         payload,
                         type: 'UPDATE_EMAIL_ADDRESS'
                     })}
@@ -98,16 +99,19 @@ const LoginView: React.FC<ILoginView> = (props) => {
                 />
                 <InputComponent
                     autoCompleteType={'current-password'}
+                    className={'mt--2'}
                     label={'Password'}
                     name={'password'}
-                    onChange={(payload) => dispatch({
+                    onChange={(payload: string) => dispatch({
                         payload,
                         type: 'UPDATE_PASSWORD'
                     })}
                     type={'password'}
                     value={state.password}
                 />
-                <ButtonComponent type={'submit'}>{'Login'}</ButtonComponent>
+                <ButtonBlockComponent className={'mt--4'}>
+                    <ButtonComponent type={'submit'}>{'Login'}</ButtonComponent>
+                </ButtonBlockComponent>
             </FormComponent>
         </main>
     );

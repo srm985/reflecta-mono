@@ -60,6 +60,10 @@ export const renewLocation = (): ThunkAction<void, RootState, unknown, AnyAction
     try {
         const deviceLocationDetails = await deviceLocation();
 
+        console.log({
+            deviceLocationDetails
+        });
+
         if (!deviceLocationDetails) {
             return dispatch(setLocation(undefined));
         }
