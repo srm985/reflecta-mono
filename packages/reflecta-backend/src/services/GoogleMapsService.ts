@@ -34,6 +34,9 @@ class GoogleMapsService {
                 }
             } = await axios.get<google.maps.GeocoderResponse>(googleMapsHydratedEndpoint);
 
+            console.log('foo....');
+            console.log(results);
+
             const locationDetails = results.find((result) => result.types.includes('administrative_area_level_2'));
 
             return locationDetails;
