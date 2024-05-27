@@ -21,32 +21,19 @@ class GoogleMapsService {
     }
 
     public lookupByCoordinates = async (latitude: string, longitude: string): Promise<google.maps.GeocoderResult | undefined> => {
-        try {
-            const googleMapsHydratedEndpoint = this.ROUTE_GOOGLE_MAPS
-                .replace('{LATITUDE}', latitude)
-                .replace('{LONGITUDE}', longitude)
-                .replace('{LOCALE}', this.locale)
-                .replace('{GOOGLE_MAPS_API_KEY}', this.apiKey);
+        const googleMapsHydratedEndpoint = this.ROUTE_GOOGLE_MAPS
+            .replace('{LATITUDE}', latitude)
+            .replace('{LONGITUDE}', longitude)
+            .replace('{LOCALE}', this.locale)
+            .replace('{GOOGLE_MAPS_API_KEY}', this.apiKey);
 
-            const {
-                data,
-                data: {
-                    results
-                }
-            } = await axios.get<google.maps.GeocoderResponse>(googleMapsHydratedEndpoint);
+        const {
+            data: {
+                results
+            }
+        } = await axios.get<google.maps.GeocoderResponse>(googleMapsHydratedEndpoint);
 
-            console.log('foo....');
-            console.log(data);
-            console.log(googleMapsHydratedEndpoint);
-
-            const locationDetails = results.find((result) => result.types.includes('administrative_area_level_2'));
-
-            return locationDetails;
-        } catch (error) {
-            console.log(error);
-        }
-
-        return undefined;
+        return results.find((result) => result.types.includes('administrative_area_level_2'));
     };
 }
 
