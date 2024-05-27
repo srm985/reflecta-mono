@@ -92,10 +92,6 @@ class JournalingController {
 
         const dateSubset = entrySubmissionDetails.occurredAt.slice(0, 10);
 
-        console.log({
-            entrySubmissionDetails
-        });
-
         return ({
             body: sanitizedBody !== existingEntryDetails.body ? sanitizedBody : undefined,
             location: entrySubmissionDetails.location !== existingEntryDetails.location ? entrySubmissionDetails.location : undefined,
@@ -167,8 +163,6 @@ class JournalingController {
         }
 
         const quickUpdatesPromiseList = [];
-
-        console.log('hey....', updatedEntryDetails.location);
 
         // Just quickly update the title
         if (updatedEntryDetails.title) {

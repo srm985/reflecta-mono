@@ -24,16 +24,16 @@ class Client {
         this.authentication = new Authentication();
     }
 
-    private makeCall = async <ResponsePayload>(serviceURL: string, method: Method, payload?: object): Promise<ResponsePayload> => {
+    private makeCall = async <ResponsePayload>(serviceURL: string, method: Method, payload?: object, isExternalService?: boolean): Promise<ResponsePayload> => {
         try {
             const tokenSignature = this.authentication.retrieve();
 
             const instance: AxiosInstance = axios.create({
-                baseURL: BASE_URL_API
+                baseURL: isExternalService ? '' : BASE_URL_API
             });
 
             instance.interceptors.request.use((config) => {
-                if (tokenSignature) {
+                if (tokenSignature && !isExternalService) {
                     // eslint-disable-next-line no-param-reassign
                     config.headers.Authorization = `Bearer ${tokenSignature}`;
                 }
@@ -60,7 +60,7 @@ class Client {
                     return Array.isArray(value) ? `${key}=${value.join(`&${key}=`)}` : `${key}=${value}`;
                 }).filter((param) => param).join('&'),
                 url: serviceURL,
-                withCredentials: true
+                withCredentials: !isExternalService
             });
 
             return response.data;
@@ -75,13 +75,13 @@ class Client {
         }
     };
 
-    delete = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'DELETE', payload);
+    delete = async <ResponsePayload>(serviceURL: string, payload: object, isExternalService?: boolean): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'DELETE', payload, isExternalService);
 
-    get = async <ResponsePayload>(serviceURL: string, params?: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'GET', params);
+    get = async <ResponsePayload>(serviceURL: string, params?: object, isExternalService?: boolean): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'GET', params, isExternalService);
 
-    patch = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'PATCH', payload);
+    patch = async <ResponsePayload>(serviceURL: string, payload: object, isExternalService?: boolean): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'PATCH', payload, isExternalService);
 
-    post = async <ResponsePayload>(serviceURL: string, payload: object): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'POST', payload);
+    post = async <ResponsePayload>(serviceURL: string, payload: object, isExternalService?: boolean): Promise<ResponsePayload> => this.makeCall<ResponsePayload>(serviceURL, 'POST', payload, isExternalService);
 }
 
 export default Client;

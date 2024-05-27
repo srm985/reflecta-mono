@@ -20,11 +20,16 @@ import {
     autoSaveJournalEntry,
     createJournalEntry,
     deleteAutoSaveJournalEntry,
+    fetchAutoSavedJournalEntries,
     fetchJournalEntries,
     selectAutoSavedJournalEntryByID,
     selectJournalEntryByID,
     updateJournalEntry
 } from '@store/slices/journalEntriesSlice';
+import {
+    renewLocation,
+    selectLocation
+} from '@store/slices/locationSlice';
 
 import HTTPError from '@utils/HTTPError';
 
@@ -66,9 +71,13 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
 
     useEffect(() => {
         dispatch(fetchJournalEntries());
+        dispatch(fetchAutoSavedJournalEntries());
+        dispatch(renewLocation());
     }, [
         dispatch
     ]);
+
+    const location = useAppSelector((state) => selectLocation(state));
 
     const existingEntryDetails = useAppSelector((state) => selectJournalEntryByID(state, entryID));
 
@@ -110,7 +119,7 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
                 entryID={selectedEntryDetails?.entryID}
                 googleMapsAPIKey={GOOGLE_MAPS_API_KEY}
                 initialBody={selectedEntryDetails?.body}
-                initialLocation={selectedEntryDetails?.location}
+                initialLocation={selectedEntryDetails?.location || location}
                 initialOccurredAt={selectedEntryDetails?.occurredAt}
                 initialTitle={selectedEntryDetails?.title}
                 onAutoSave={handleAutoSave}
