@@ -1,3 +1,7 @@
+import {
+    Location
+} from '@components/JournalEntryInputComponent/types';
+
 export type EntryID = number;
 
 export type IJournalEntryDisplayComponent = {
@@ -5,6 +9,7 @@ export type IJournalEntryDisplayComponent = {
     className?: string;
     entryID: EntryID
     isHighInterest: boolean;
+    location?: Location;
     occurredAt: string;
     onDelete: (entryID: number) => void;
     onEdit: (entryID: EntryID) => void;

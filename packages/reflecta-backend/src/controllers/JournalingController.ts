@@ -12,9 +12,9 @@ import {
     UserID
 } from '@types';
 
-export type JournalEntryAPIInput = Pick<JournalEntry, 'body' | 'occurredAt' | 'title'>;
+export type JournalEntryAPIInput = Pick<JournalEntry, 'body' | 'location' | 'occurredAt' | 'title'>;
 export type JournalEntryChangeLog = Partial<JournalEntryAPIInput>;
-export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'occurredAt' | 'title' | 'updatedAt'>;
+export type JournalEntryResponse = Pick<JournalEntry, 'body' | 'entryID' | 'isHighInterest' | 'location' | 'occurredAt' | 'title' | 'updatedAt'>;
 
 export type AnalyzedEntry = Pick<JournalEntry, 'isHighInterest' | 'keywords' | 'title'>;
 
@@ -79,19 +79,26 @@ class JournalingController {
         body: rawJournalEntry.body,
         entryID: rawJournalEntry.entry_id,
         isHighInterest: rawJournalEntry.is_high_interest,
+        location: rawJournalEntry.location,
         occurredAt: rawJournalEntry.occurred_at,
         title: rawJournalEntry.title,
         updatedAt: rawJournalEntry.updated_at
     });
 
+    // Scan for diffs to save time only updating necessary parts of entry
     private changeLog = (entrySubmissionDetails: JournalEntryAPIInput, existingEntryDetails: JournalEntriesSchema): JournalEntryChangeLog => {
         const sanitizedTitle = this.sanitize(entrySubmissionDetails.title);
         const sanitizedBody = this.sanitize(entrySubmissionDetails.body);
 
         const dateSubset = entrySubmissionDetails.occurredAt.slice(0, 10);
 
+        console.log({
+            entrySubmissionDetails
+        });
+
         return ({
             body: sanitizedBody !== existingEntryDetails.body ? sanitizedBody : undefined,
+            location: entrySubmissionDetails.location !== existingEntryDetails.location ? entrySubmissionDetails.location : undefined,
             occurredAt: dateSubset !== dateStamp(existingEntryDetails.occurred_at) ? dateSubset : undefined,
             title: sanitizedTitle !== existingEntryDetails.title ? sanitizedTitle : undefined
         });
@@ -112,6 +119,7 @@ class JournalingController {
             body: sanitizedBody,
             isHighInterest,
             keywords,
+            location: entryDetails.location,
             occurredAt: entryDetails.occurredAt.slice(0, 10),
             title
         });
@@ -158,18 +166,26 @@ class JournalingController {
             });
         }
 
+        const quickUpdatesPromiseList = [];
+
+        console.log('hey....', updatedEntryDetails.location);
+
         // Just quickly update the title
         if (updatedEntryDetails.title) {
-            return this.journalEntriesModel.modifyTitle(entryID, updatedEntryDetails.title);
+            quickUpdatesPromiseList.push(this.journalEntriesModel.modifyTitle(entryID, updatedEntryDetails.title));
         }
 
         // Just quickly update the entry date
         if (updatedEntryDetails.occurredAt) {
-            return this.journalEntriesModel.modifyOccurredAt(entryID, updatedEntryDetails.occurredAt);
+            quickUpdatesPromiseList.push(this.journalEntriesModel.modifyOccurredAt(entryID, updatedEntryDetails.occurredAt));
         }
 
-        // No changes made
-        return undefined;
+        // Just quickly update the location
+        if (updatedEntryDetails.location) {
+            quickUpdatesPromiseList.push(this.journalEntriesModel.modifyLocation(entryID, updatedEntryDetails.location));
+        }
+
+        return Promise.all(quickUpdatesPromiseList);
     };
 
     getAllEntriesByUserID = async (userID: UserID): Promise<JournalEntryResponse[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map(this.mapEntryForResponse);

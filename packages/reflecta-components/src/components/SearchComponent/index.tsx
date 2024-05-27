@@ -61,7 +61,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
     const [
         useAISearch,
         setUseAISearch
-    ] = useState<boolean>(true);
+    ] = useState<boolean>(false);
 
     const [
         keywordSearchOption,

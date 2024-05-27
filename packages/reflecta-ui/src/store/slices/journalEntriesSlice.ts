@@ -115,6 +115,7 @@ export const createJournalEntry = (submissionPayload: JournalEntrySubmissionPayl
     try {
         const response = await client.post<JournalEntry>(ROUTE_API_JOURNAL_ENTRY, {
             entryBody: submissionPayload.body,
+            entryLocation: submissionPayload.location,
             entryOccurredAt: submissionPayload.occurredAt,
             entryTitle: submissionPayload.title
         });
@@ -138,6 +139,7 @@ export const updateJournalEntry = (submissionPayload: JournalEntrySubmissionPayl
         const response = await client.patch<JournalEntry>(ROUTE_API_JOURNAL_ENTRY, {
             entryBody: submissionPayload.body,
             entryID: submissionPayload.entryID,
+            entryLocation: submissionPayload.location,
             entryOccurredAt: submissionPayload.occurredAt,
             entryTitle: submissionPayload.title
         });

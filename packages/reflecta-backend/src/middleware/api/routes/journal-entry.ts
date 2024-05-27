@@ -27,6 +27,7 @@ import RateLimiter from '@middleware/RateLimiter';
 
 export interface RequestBodyCreate {
     entryBody: string;
+    entryLocation?: string;
     entryOccurredAt: string;
     entryTitle: string;
 }
@@ -49,7 +50,8 @@ const journalingController = new JournalingController();
 const inputValidationsCreate: ValidationChain[] = [
     body('entryTitle').trim().isString(),
     body('entryBody').trim().isString(),
-    body('entryOccurredAt').trim().isString()
+    body('entryOccurredAt').trim().isString(),
+    body('entryLocation').trim().isString().optional()
 ];
 
 const inputValidationsUpdate: ValidationChain[] = [
@@ -78,6 +80,7 @@ router.post('/journal-entry', [
         const {
             body: {
                 entryBody,
+                entryLocation,
                 entryOccurredAt,
                 entryTitle
             }
@@ -93,6 +96,7 @@ router.post('/journal-entry', [
 
         await journalingController.insertJournalEntry(userID, {
             body: entryBody,
+            location: entryLocation,
             occurredAt: entryOccurredAt,
             title: entryTitle
         });
@@ -121,6 +125,7 @@ router.patch('/journal-entry', [
             body: {
                 entryBody,
                 entryID,
+                entryLocation,
                 entryOccurredAt,
                 entryTitle
             }
@@ -136,6 +141,7 @@ router.patch('/journal-entry', [
 
         await journalingController.modifyJournalEntry(userID, entryID, {
             body: entryBody,
+            location: entryLocation,
             occurredAt: entryOccurredAt,
             title: entryTitle
         });

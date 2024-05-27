@@ -10,6 +10,9 @@ import {
     useRef,
     useState
 } from 'react';
+import {
+    usePlacesWidget
+} from 'react-google-autocomplete';
 
 import ButtonBlockComponent from '@components/ButtonBlockComponent';
 import ButtonComponent from '@components/ButtonComponent';
@@ -20,7 +23,8 @@ import classNames from '@utils/classNames';
 import dateStamp from '@utils/dateStamp';
 
 import {
-    IJournalEntryInputComponent
+    IJournalEntryInputComponent,
+    Location
 } from './types';
 
 import './styles.scss';
@@ -30,7 +34,9 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         autoSaveIntervalMS = 5000,
         className,
         entryID,
+        googleMapsAPIKey,
         initialBody,
+        initialLocation,
         initialOccurredAt,
         initialTitle,
         onAutoSave,
@@ -60,6 +66,11 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     ] = useState<string>(now);
 
     const [
+        location,
+        setLocation
+    ] = useState<Location | undefined>();
+
+    const [
         intervalID,
         setIntervalID
     ] = useState<NodeJS.Timeout | null>(null);
@@ -71,8 +82,9 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
 
     const entryIDReference = useRef(entryID);
     const titleReference = useRef(title);
-    const bodyReference = useRef(body);
     const occurredAtReference = useRef(occurredAt);
+    const locationReference = useRef(location);
+    const bodyReference = useRef(body);
 
     useEffect(() => {
         entryIDReference.current = entryID;
@@ -87,21 +99,40 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     ]);
 
     useEffect(() => {
-        bodyReference.current = body;
-    }, [
-        body
-    ]);
-
-    useEffect(() => {
         occurredAtReference.current = occurredAt;
     }, [
         occurredAt
     ]);
 
+    useEffect(() => {
+        locationReference.current = location;
+    }, [
+        location
+    ]);
+
+    useEffect(() => {
+        bodyReference.current = body;
+    }, [
+        body
+    ]);
+
+    const {
+        ref
+    } = usePlacesWidget<HTMLInputElement>({
+        apiKey: googleMapsAPIKey,
+        onPlaceSelected: (selectedLocation) => {
+            setLocation(selectedLocation.formatted_address);
+        },
+        options: {
+            types: []
+        }
+    });
+
     const handleSave = () => {
         onAutoSave({
             body: bodyReference.current,
             entryID: entryIDReference.current,
+            location: locationReference.current,
             occurredAt: occurredAtReference.current,
             title: titleReference.current
         });
@@ -124,11 +155,13 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     ]);
 
     useEffect(() => {
-        setBody(initialBody || '');
-        setOccurredAt(dateStamp(initialOccurredAt) || now);
         setTitle(initialTitle || '');
+        setOccurredAt(dateStamp(initialOccurredAt) || now);
+        setLocation(initialLocation);
+        setBody(initialBody || '');
     }, [
         initialBody,
+        initialLocation,
         initialOccurredAt,
         initialTitle
     ]);
@@ -143,6 +176,7 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         onSubmit({
             body,
             entryID,
+            location,
             occurredAt,
             title
         });
@@ -216,6 +250,24 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                     onChange={(event) => setOccurredAt(event.target.value)}
                     type={'date'}
                     value={occurredAt}
+                />
+            </FlexboxComponent>
+            <FlexboxComponent
+                className={`${displayName}__input`}
+                layoutDefault={{
+                    alignItems: 'center'
+                }}
+            >
+                <label htmlFor={'location'}>
+                    <span>{'Location:'}</span>
+                </label>
+                <input
+                    id={'location'}
+                    name={'location'}
+                    onChange={(event) => setLocation(event.target.value)}
+                    ref={ref}
+                    type={'search'}
+                    value={location}
                 />
             </FlexboxComponent>
             <textarea

@@ -1,6 +1,10 @@
 import {
-    faPenToSquare, faTrashCan
+    faPenToSquare,
+    faTrashCan
 } from '@fortawesome/free-regular-svg-icons';
+import {
+    faLocationDot
+} from '@fortawesome/free-solid-svg-icons';
 import {
     FontAwesomeIcon
 } from '@fortawesome/react-fontawesome';
@@ -24,6 +28,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
         className,
         entryID,
         isHighInterest,
+        location,
         occurredAt,
         onDelete,
         onEdit,
@@ -72,7 +77,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
                     justifyContent: 'space-between'
                 }}
                 >
-                    <h3 className={'mb--1'}>{title}</h3>
+                    <h3>{title}</h3>
                     <PopoverComponent
                         actions={[
                             {
@@ -94,7 +99,16 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
                         label={'Actions'}
                     />
                 </FlexboxComponent>
-                <p className={'font--small bold color--accent'}>{formattedOccurredAt}</p>
+                {
+                    location && (
+                        <p className={'font--xsmall'}><FontAwesomeIcon
+                            className={'color--accent'}
+                            icon={faLocationDot}
+                        /> {location}
+                        </p>
+                    )
+                }
+                <p className={'font--small bold color--accent mt--1'}>{formattedOccurredAt}</p>
                 {
                     updatedAt && (
                         <p className={'font--xsmall italic'}><span>{'Edited: '}</span><span className={'bold'}>{formattedUpdatedAt}</span></p>

@@ -33,6 +33,10 @@ import {
 } from '@routes';
 
 import {
+    GOOGLE_MAPS_API_KEY
+} from '@constants';
+
+import {
     JournalEntry,
     JournalEntrySubmissionPayload
 } from '@types';
@@ -104,7 +108,9 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
             <JournalEntryInputComponent
                 autoSaveIntervalMS={1000}
                 entryID={selectedEntryDetails?.entryID}
+                googleMapsAPIKey={GOOGLE_MAPS_API_KEY}
                 initialBody={selectedEntryDetails?.body}
+                initialLocation={selectedEntryDetails?.location}
                 initialOccurredAt={selectedEntryDetails?.occurredAt}
                 initialTitle={selectedEntryDetails?.title}
                 onAutoSave={handleAutoSave}

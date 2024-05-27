@@ -15,6 +15,7 @@ export type DeletedAt = string | null;
 export type EntryID = number;
 export type IsHighInterest = boolean;
 export type Keywords = string | null;
+export type Location = string;
 export type OccurredAt = string;
 export type Title = string;
 export type UpdatedAt = string | null;
@@ -26,6 +27,7 @@ export interface JournalEntriesSchema {
     entry_id?: EntryID;
     is_high_interest: IsHighInterest;
     keywords: Keywords;
+    location?: Location;
     occurred_at: OccurredAt;
     title: Title;
     updated_at: UpdatedAt;
@@ -39,6 +41,7 @@ export interface JournalEntry {
     entryID?: EntryID;
     isHighInterest?: IsHighInterest;
     keywords: Keywords;
+    location?: Location;
     occurredAt: OccurredAt;
     title: Title;
     updatedAt?: UpdatedAt;
@@ -53,11 +56,12 @@ class JournalEntriesModel {
             body,
             isHighInterest,
             keywords,
+            location,
             occurredAt,
             title
         } = entryDetails;
 
-        const query = 'INSERT INTO ?? (user_id, title, body, keywords, is_high_interest, occurred_at) VALUES (?, ?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO ?? (user_id, title, body, keywords, is_high_interest, occurred_at, location) VALUES (?, ?, ?, ?, ?, ?, ?)';
         const values = [
             this.TABLE_NAME,
             userID,
@@ -65,7 +69,8 @@ class JournalEntriesModel {
             body,
             keywords,
             isHighInterest,
-            occurredAt
+            occurredAt,
+            location
         ];
 
         await pool.query(query, values);
@@ -76,11 +81,12 @@ class JournalEntriesModel {
             body,
             isHighInterest,
             keywords,
+            location,
             occurredAt,
             title
         } = entryDetails;
 
-        const query = 'UPDATE ?? SET title = ?, body = ?, keywords = ?, is_high_interest = ?, occurred_at = ? WHERE entry_id = ?';
+        const query = 'UPDATE ?? SET title = ?, body = ?, keywords = ?, is_high_interest = ?, occurred_at = ?, location = ? WHERE entry_id = ?';
         const values = [
             this.TABLE_NAME,
             title,
@@ -88,6 +94,7 @@ class JournalEntriesModel {
             keywords,
             isHighInterest,
             occurredAt,
+            location,
             entryID
         ];
 
@@ -110,6 +117,17 @@ class JournalEntriesModel {
         const values = [
             this.TABLE_NAME,
             occurredAt,
+            entryID
+        ];
+
+        await pool.query(query, values);
+    };
+
+    modifyLocation = async (entryID: number, location: Location) => {
+        const query = 'UPDATE ?? SET location = ? WHERE entry_id = ?';
+        const values = [
+            this.TABLE_NAME,
+            location,
             entryID
         ];
 
@@ -145,10 +163,13 @@ class JournalEntriesModel {
     };
 
     journalEntryByKeywords = async (userID: UserID, keywordList: string[], join: 'AND' | 'OR'): Promise<JournalEntriesSchema[]> => {
-        const bodySearch = keywordList.map(() => 'keywords LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
-        const keywordSearch = keywordList.map(() => 'body LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
+        const keywordSearch = keywordList.map(() => 'keywords LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
+        const bodySearch = keywordList.map(() => 'body LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
+        const locationSearch = keywordList.map(() => 'location LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
 
-        const preparedSearch = `${bodySearch} ${join === 'AND' ? ' AND ' : ' OR '} ${keywordSearch}`;
+        const preparedSearch = `${bodySearch} ${join === 'AND' ? ' AND ' : ' OR '} ${keywordSearch} ${join === 'AND' ? ' AND ' : ' OR '} ${locationSearch}`;
+
+        console.log(preparedSearch);
 
         const searchValues = keywordList.map((keyword) => `%${keyword}%`);
 
@@ -157,6 +178,7 @@ class JournalEntriesModel {
         const values = [
             this.TABLE_NAME,
             userID,
+            ...searchValues,
             ...searchValues,
             ...searchValues
         ];

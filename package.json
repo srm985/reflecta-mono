@@ -43,7 +43,8 @@
     "pre-commit": "cross-env FORCE_COLOR=true lint-staged && npm run pre-commit --workspaces",
     "pre-push": "node ./scripts/branchCheck.js",
     "prepare": "husky install",
-    "start": "npm run develop"
+    "start": "npm run develop",
+    "storybook": "npm run storybook -w reflecta-components"
   },
   "version": "1.0.0",
   "workspaces": [
