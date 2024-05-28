@@ -68,6 +68,10 @@ const DashboardView: FC<IDashboardView> = () => {
         dispatch(searchJournalEntries(searchDetails));
     };
 
+    const handleReset = async () => {
+        dispatch(fetchJournalEntries(true));
+    };
+
     const generatedJournalEntriesList = useMemo(() => journalEntriesList.map((journalEntryDetails) => (
         <GridItemComponent
             breakpointLarge={{
@@ -98,7 +102,10 @@ const DashboardView: FC<IDashboardView> = () => {
                         span: 8
                     }}
                 >
-                    <SearchComponent onSearch={handleSearch} />
+                    <SearchComponent
+                        onReset={handleReset}
+                        onSearch={handleSearch}
+                    />
                 </GridItemComponent>
             </GridContainerComponent>
             <GridContainerComponent>

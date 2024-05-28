@@ -15,5 +15,6 @@ export type Search = {
 
 export type ISearchComponent = {
     className?: string;
+    onReset: () => void;
     onSearch: (search: Search) => void;
 };

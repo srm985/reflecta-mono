@@ -34,6 +34,7 @@ import './styles.scss';
 const SearchComponent: FC<ISearchComponent> = (props) => {
     const {
         className,
+        onReset,
         onSearch
     } = props;
 
@@ -88,6 +89,21 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
         setSearchEndDate
     ] = useState<string>(now);
 
+    const [
+        isDisplayingSearchResults,
+        setIsDisplayingSearchResults
+    ] = useState<boolean>(false);
+
+    const handleSearchChange = (value: string) => {
+        if (!value.trim() && isDisplayingSearchResults) {
+            setIsDisplayingSearchResults(false);
+
+            onReset();
+        }
+
+        setSearchString(value);
+    };
+
     const componentClassNames = classNames(
         displayName,
         className
@@ -101,6 +117,8 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
     );
 
     const handleSearch = () => {
+        setIsDisplayingSearchResults(true);
+
         onSearch({
             dateSearchOption,
             entryDate,
@@ -162,7 +180,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                     className={'mr--2'}
                     label={'Search your entries'}
                     name={'entrySearch'}
-                    onChange={setSearchString}
+                    onChange={handleSearchChange}
                     type={'search'}
                     value={searchString}
                 />
@@ -172,6 +190,7 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                     isIconOnly
                     onClick={handleSearch}
                     styleType={'primary'}
+                    type={'submit'}
                 >
                     <FontAwesomeIcon icon={faSearch} />
                 </ButtonComponent>
