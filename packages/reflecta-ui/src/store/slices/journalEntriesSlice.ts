@@ -172,7 +172,7 @@ export const deleteJournalEntry = (entryID: JournalEntryID): ThunkAction<void, R
     dispatch(requestLoadingHide());
 };
 
-export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
+export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload): ThunkAction<void, RootState, unknown, AnyAction> => async (_dispatch, state) => {
     try {
         const {
             autoSavedJournalEntriesList
@@ -201,8 +201,6 @@ export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload
     } catch (error) {
         console.log(error);
     }
-
-    dispatch(fetchAutoSavedJournalEntries());
 };
 
 export const deleteAutoSaveJournalEntry = (entryID: JournalEntryID | undefined): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {

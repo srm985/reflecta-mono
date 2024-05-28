@@ -54,10 +54,14 @@ export const {
     setLocation
 } = locationSlice.actions;
 
-export const renewLocation = (): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+export const fetchLocation = (): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
     dispatch(requestLoadingShow());
 
     try {
+        if (state().location.location) {
+            return undefined;
+        }
+
         const deviceLocationDetails = await deviceLocation();
 
         if (!deviceLocationDetails) {

@@ -7,6 +7,7 @@ export type Color = 'primary' | 'secondary' | 'accent' | 'success' | 'warning' |
 export type StyleType = 'primary' | 'secondary' | 'inline';
 
 export type SharedButtonProps = {
+    ariaLabel?: string;
     children: ReactNode | ReactNode[];
     className?: string;
     color?: Color;
@@ -17,9 +18,11 @@ export type SharedButtonProps = {
 
 export type ButtonFunctionality = {
     href: string;
+    isExternalLink?: boolean;
     type?: never;
 } | {
     href?: never;
+    isExternalLink?: never;
     type?: 'submit' | 'reset' | 'button';
 };
 

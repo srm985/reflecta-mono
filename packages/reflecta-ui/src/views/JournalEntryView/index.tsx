@@ -27,7 +27,7 @@ import {
     updateJournalEntry
 } from '@store/slices/journalEntriesSlice';
 import {
-    renewLocation,
+    fetchLocation,
     selectLocation
 } from '@store/slices/locationSlice';
 
@@ -72,7 +72,7 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
     useEffect(() => {
         dispatch(fetchJournalEntries());
         dispatch(fetchAutoSavedJournalEntries());
-        dispatch(renewLocation());
+        dispatch(fetchLocation());
     }, [
         dispatch
     ]);

@@ -8,12 +8,14 @@ import './styles.scss';
 
 const ButtonComponent: React.FC<IButtonComponent> = (props) => {
     const {
+        ariaLabel,
         children,
         className,
         color = 'primary',
         disabled,
         href,
         isAccented = true,
+        isExternalLink,
         isIconOnly,
         onClick,
         styleType = 'primary',
@@ -40,8 +42,11 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
     return (
         href ? (
             <a
+                aria-label={ariaLabel}
                 className={componentClassNames}
                 href={href}
+                rel={'noreferrer'}
+                target={isExternalLink ? '_blank' : '_self'}
             >
                 {children}
             </a>

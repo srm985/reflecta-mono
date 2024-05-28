@@ -12,6 +12,7 @@ import {
     FC
 } from 'react';
 
+import ButtonComponent from '@components/ButtonComponent';
 import CardComponent from '@components/CardComponent';
 import FlexboxComponent from '@components/FlexboxComponent';
 import PopoverComponent from '@components/PopoverComponent';
@@ -70,6 +71,10 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
         className
     );
 
+    const [
+        locationName
+    ] = (location || '').split(',');
+
     return (
         <CardComponent className={componentClassNames}>
             <div className={`${displayName}__content-wrapper`}>
@@ -100,11 +105,22 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
                     />
                 </FlexboxComponent>
                 {
-                    location && (
-                        <p className={'font--xsmall'}><FontAwesomeIcon
-                            className={'color--accent'}
-                            icon={faLocationDot}
-                        /> {location}
+                    locationName && (
+                        <p className={'font--xsmall mt--1 mb--2'}>
+                            <ButtonComponent
+                                ariaLabel={'entry location'}
+                                href={`https://www.google.com/maps/place/${location}`}
+                                isExternalLink
+                                isIconOnly
+                                styleType={'inline'}
+                            >
+                                <FontAwesomeIcon
+                                    className={'color--accent'}
+                                    icon={faLocationDot}
+                                />
+
+                            </ButtonComponent>
+                            <span title={location}>{` ${locationName}`}</span>
                         </p>
                     )
                 }

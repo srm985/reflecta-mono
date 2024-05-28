@@ -120,8 +120,8 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         ref
     } = usePlacesWidget<HTMLInputElement>({
         apiKey: googleMapsAPIKey,
-        onPlaceSelected: (selectedLocation) => {
-            setLocation(selectedLocation.formatted_address);
+        onPlaceSelected: () => {
+            setLocation(ref.current?.value);
         },
         options: {
             types: []
@@ -264,7 +264,13 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
                 <input
                     id={'location'}
                     name={'location'}
-                    onChange={(event) => setLocation(event.target.value)}
+                    onInput={(event) => {
+                        const {
+                            value
+                        } = (event.target as HTMLInputElement);
+
+                        setLocation(value);
+                    }}
                     ref={ref}
                     type={'search'}
                     value={location}
