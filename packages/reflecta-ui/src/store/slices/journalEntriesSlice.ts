@@ -205,11 +205,15 @@ export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload
 
 export const deleteAutoSaveJournalEntry = (entryID: JournalEntryID | undefined): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
     try {
+        dispatch(fetchAutoSavedJournalEntries());
+
         const {
             autoSavedJournalEntriesList
         } = state().journalEntries;
 
         const entriesList: JournalEntrySubmissionPayload[] = JSON.parse(JSON.stringify(autoSavedJournalEntriesList));
+
+        console.log(entriesList);
 
         // See if we have an existing value to update - new entries use 0 as their ID
         const entryIndex = entriesList.findIndex((existingEntryDetails) => existingEntryDetails.entryID === (entryID || 0));
