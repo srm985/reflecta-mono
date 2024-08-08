@@ -66,6 +66,12 @@ class Client {
             return response.data;
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response) {
+                const httpStatusCode = error.response.status;
+
+                if (httpStatusCode === 401) {
+                    this.authentication.deAuthenticate();
+                }
+
                 throw new HTTPError(error.response.data as HTTPErrorDetails);
             }
 

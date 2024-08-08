@@ -1,7 +1,8 @@
 import {
     FormEvent,
     memo,
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 import {
     useNavigate
@@ -12,14 +13,21 @@ import ButtonComponent from '@components/remotes/ButtonComponent';
 import FormComponent from '@components/remotes/FormComponent';
 import InputComponent from '@components/remotes/InputComponent';
 
+import {
+    useAppDispatch
+} from '@hooks';
+
+import {
+    requestLoadingHide,
+    requestLoadingShow
+} from '@store/slices/loadingSlice';
+
 import Authentication from '@utils/Authentication';
 import Client from '@utils/Client';
 
 import {
     ROUTE_API_LOGIN, ROUTE_UI_DASHBOARD
 } from '@routes';
-
-import withReducer from './withReducer';
 
 import {
     ILoginView,
@@ -29,59 +37,70 @@ import {
 const authentication = new Authentication();
 const client = new Client();
 
-const LoginView: React.FC<ILoginView> = (props) => {
-    const {
-        dispatch,
-        state
-    } = props;
+const LoginView: React.FC<ILoginView> = () => {
+    const [
+        emailAddress,
+        setEmailAddress
+    ] = useState<string>('');
 
-    const {
-        displayName
-    } = LoginView;
+    const [
+        password,
+        setPassword
+    ] = useState<string>('');
+
+    const [
+        isAuthenticated,
+        setIsAuthenticated
+    ] = useState<boolean>(false);
+
+    const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const isAuthenticated = authentication.isAuthenticated();
+        dispatch(requestLoadingShow());
 
-        if (isAuthenticated) {
-            dispatch({
-                type: 'SET_AUTHENTICATED'
-            });
+        const isAlreadyAuthenticated = authentication.isAuthenticated();
+
+        if (isAlreadyAuthenticated) {
+            setIsAuthenticated(true);
         }
+
+        dispatch(requestLoadingHide());
     }, []);
 
     useEffect(() => {
-        if (state.isAuthenticated) {
+        if (isAuthenticated) {
             navigate(ROUTE_UI_DASHBOARD);
         }
     }, [
-        state.isAuthenticated
+        isAuthenticated
     ]);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const {
-            emailAddress,
-            password
-        } = state;
+        dispatch(requestLoadingShow());
 
-        const payload = await client.post<LoginResponsePayload>(ROUTE_API_LOGIN, {
-            emailAddress,
-            password
-        });
+        try {
+            const payload = await client.post<LoginResponsePayload>(ROUTE_API_LOGIN, {
+                emailAddress,
+                password
+            });
 
-        if ('errorMessage' in payload) {
-            console.log(payload.errorMessage);
-        } else {
             authentication.authenticate(payload.tokenSignature);
 
-            dispatch({
-                type: 'SET_AUTHENTICATED'
-            });
+            setIsAuthenticated(true);
+        } catch (error) {
+            dispatch(requestLoadingHide());
+
+            console.log(error);
         }
     };
+
+    const {
+        displayName
+    } = LoginView;
 
     return (
         <main className={displayName}>
@@ -90,24 +109,18 @@ const LoginView: React.FC<ILoginView> = (props) => {
                     autoCompleteType={'username'}
                     label={'Email Address'}
                     name={'emailAddress'}
-                    onChange={(payload: string) => dispatch({
-                        payload,
-                        type: 'UPDATE_EMAIL_ADDRESS'
-                    })}
+                    onChange={setEmailAddress}
                     type={'email'}
-                    value={state.emailAddress}
+                    value={emailAddress}
                 />
                 <InputComponent
                     autoCompleteType={'current-password'}
                     className={'mt--2'}
                     label={'Password'}
                     name={'password'}
-                    onChange={(payload: string) => dispatch({
-                        payload,
-                        type: 'UPDATE_PASSWORD'
-                    })}
+                    onChange={setPassword}
                     type={'password'}
-                    value={state.password}
+                    value={password}
                 />
                 <ButtonBlockComponent className={'mt--4'}>
                     <ButtonComponent type={'submit'}>{'Login'}</ButtonComponent>
@@ -119,4 +132,4 @@ const LoginView: React.FC<ILoginView> = (props) => {
 
 LoginView.displayName = 'LoginView';
 
-export default withReducer(memo(LoginView));
+export default memo(LoginView);
