@@ -64,7 +64,7 @@ class OpenAIService {
             ]
         } = await this.openAI.chat.completions.create({
             frequency_penalty: 0,
-            max_tokens: chatDetails.maxTokens,
+            max_completion_tokens: chatDetails.maxTokens,
             messages: chatDetails.messagesList,
             model: this.OPENAI_MODEL,
             presence_penalty: 0,
