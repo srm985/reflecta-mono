@@ -83,7 +83,8 @@
     "watch:js": "onchange --delay 500 \"src/**/*.(ts|tsx)\" -- npm run lint:js --silent",
     "watch:prettier": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent",
     "watch:scss": "onchange --delay 500 \"src/**/*.scss\" -- npm run lint:scss --silent",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "npm run generate:remotes && tsc --noEmit",
+    "generate:remotes": "node ./scripts/generateRemoteComponents.js"
   },
   "version": "1.0.0"
 }

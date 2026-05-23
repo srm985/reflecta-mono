@@ -43,7 +43,7 @@
     "prepare": "husky",
     "start": "npm run develop",
     "storybook": "npm run storybook -w reflecta-components",
-    "typecheck": "npm run typecheck --workspaces",
+    "typecheck": "npm run generate:components && npm run typecheck --workspaces",
     "generate:components": "npm run build -w reflecta-components",
     "wait:components": "node -e \"const url='http://localhost:3003/remoteEntry.js'; const started=Date.now(); const timeout=60000; const poll=async () => { try { const response=await fetch(url, { method: 'HEAD' }); if (response.ok) process.exit(0); } catch (error) {} if (Date.now() - started > timeout) { console.error('Timed out waiting for ' + url); process.exit(1); } setTimeout(poll, 1000); }; poll();\""
   },

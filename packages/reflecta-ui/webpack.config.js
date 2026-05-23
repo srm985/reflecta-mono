@@ -2,8 +2,9 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-const fs = require('fs/promises');
 const path = require('path');
+
+const generateRemoteComponents = require('./scripts/generateRemoteComponents');
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -45,50 +46,8 @@ module.exports = () => {
         }),
         {
             apply: (compiler) => {
-                // This only gets called on build so you need to rebuild any time there are new components
                 compiler.hooks.beforeRun.tapAsync('GenerateRemoteComponentDefinitions', async (_, callback) => {
-                    const DECLARED_COMPONENTS_ROOT_DIRECTORY = '../reflecta-components/declarations/src/components';
-
-                    const results = await fs.readdir(DECLARED_COMPONENTS_ROOT_DIRECTORY, {
-                        withFileTypes: true
-                    });
-
-                    const DECLARATIONS_ROOT_DIRECTORY = './src/components/remotes';
-
-                    try {
-                        console.log(`Attempting to drop ${DECLARATIONS_ROOT_DIRECTORY}...`);
-
-                        await fs.rm(DECLARATIONS_ROOT_DIRECTORY, {
-                            force: true,
-                            recursive: true
-                        });
-                    } catch (error) { }
-
-                    console.log(`Generating ${DECLARATIONS_ROOT_DIRECTORY}...`);
-
-                    await fs.mkdir(DECLARATIONS_ROOT_DIRECTORY, {
-                        recursive: true
-                    });
-
-                    const componentCreationPromiseList = results.filter((result) => result.isDirectory() && result.name !== '_internal').map(async (result) => {
-                        const {
-                            name: componentName
-                        } = result;
-
-                        console.log(`Linking component: ${componentName}...`);
-
-                        const componentDeclaration = `import React from 'react';\nimport {\n    I${componentName}\n} from 'reflecta-components/declarations/src/components/${componentName}/types';\n\nexport default React.memo(React.lazy(() => import('${COMPONENT_REMOTE_NAME}/${componentName}'))) as React.FC<I${componentName}>;\n`;
-
-                        const componentDirectory = `${DECLARATIONS_ROOT_DIRECTORY}/${componentName}`;
-
-                        await fs.mkdir(componentDirectory, {
-                            recursive: true
-                        });
-
-                        await fs.writeFile(`${componentDirectory}/index.tsx`, componentDeclaration);
-                    });
-
-                    await Promise.all(componentCreationPromiseList);
+                    await generateRemoteComponents();
 
                     callback();
                 });
