@@ -1,105 +1,103 @@
-name: Reflecta Backend - Build & Deploy
+name: Reflecta Backend - Build and Deploy
 
 on:
   push:
     branches: [main, develop]
     paths:
+      - .eslintrc.js
+      - package-lock.json
+      - package.json
       - packages/reflecta-backend/**
+      - tsconfig.json
       - .github/**
   workflow_dispatch:
-    branches: [main, develop]
-    paths: [packages/reflecta-backend/**]
 
 jobs:
-  lint:
-    name: Lint JavaScript/TypeScript
+  check:
+    name: Lint and typecheck backend
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - name: Use NodeJS 20.x
-        uses: actions/setup-node@v4
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'npm'
 
-      # Install Node Modules
-      - name: Install
-        run: npm ci --legacy-peer-deps
+      - name: Install dependencies
+        run: npm ci
 
-      # Lint JavaScript/TypeScript
-      - name: Lint
+      - name: Run backend lint
         run: npm run lint -w reflecta-backend
 
+      - name: Run backend typecheck
+        run: npm run typecheck -w reflecta-backend
+
   bundle:
-    name: Bundle
-    needs: [lint]
+    name: Build backend deployment bundle
+    needs: [check]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - name: Use NodeJS 20.x
-        uses: actions/setup-node@v4
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'npm'
 
-      # Install Node Modules
-      - name: Install
-        run: npm ci --legacy-peer-deps
+      - name: Install dependencies
+        run: npm ci
 
-      # Compile TypeScript
-      - name: Build
+      - name: Build backend
         run: npm run build -w reflecta-backend
 
-      # Install Production Packages
-      - name: Install Production Packages
-        run: npm ci --legacy-peer-deps --only-production --ignore-scripts -w reflecta-backend
+      - name: Install backend production dependencies
+        run: npm ci --omit=dev --ignore-scripts -w reflecta-backend
 
-      # Install Production Packages
-      - name: Fully Install bcrypt
+      # bcrypt ships native bindings, so we rebuild it for the runner target before packaging.
+      - name: Rebuild bcrypt native binding
         run: npm explore bcrypt -- npm install
 
-      # Copy Packages
-      - name: Copy Packages Config
+      - name: Stage backend runtime files
         run: |
           cp -r ./node_modules/ ./packages/reflecta-backend/dist/
           cp ./packages/reflecta-backend/package.json ./packages/reflecta-backend/dist/
 
-      # Zip Artifact
-      - name: Zip Artifact
+      - name: Create backend artifact
         run: zip bundle.zip ./packages/reflecta-backend/dist/* -r
 
-      # Upload Artifacts
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v7
         with:
-          name: bundle
+          name: backend-bundle
           path: ./bundle.zip
 
   deploy:
-    name: Deploy
+    name: Deploy backend
     needs: [bundle]
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
+      - name: Download backend artifact
+        uses: actions/download-artifact@v8
         with:
-          name: bundle
+          name: backend-bundle
 
-      # Unzip Artifact
-      - name: Unzip Artifact
+      - name: Extract backend artifact
         run: unzip ./bundle.zip
 
-      # Deploy Backend
-      - name: Deploy
-        uses: appleboy/scp-action@master
+      - name: Deploy backend bundle
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.HOST }}
           key: ${{ secrets.KEY }}

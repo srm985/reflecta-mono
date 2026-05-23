@@ -1,35 +1,40 @@
 {
     "compilerOptions": {
         "rootDir": "./",
-        "baseUrl": "./",
         "esModuleInterop": true,
-        "module": "commonjs",
-        "moduleResolution": "Node",
+        "module": "Node16",
+        "moduleResolution": "node16",
         "noUnusedParameters": false,
         "outDir": "./dist",
         "paths": {
             "@constants": [
-                "src/constants.ts"
+                "./src/constants.ts"
             ],
             "@controllers/*": [
-                "src/controllers/*"
+                "./src/controllers/*"
             ],
             "@middleware/*": [
-                "src/middleware/*"
+                "./src/middleware/*"
             ],
             "@models/*": [
-                "src/models/*"
+                "./src/models/*"
             ],
             "@services/*": [
-                "src/services/*"
+                "./src/services/*"
             ],
             "@utils/*": [
-                "src/utils/*"
+                "./src/utils/*"
             ],
             "@types": [
-                "src/types.ts"
+                "./src/types.ts"
             ]
-        }
+        },
+        "types": [
+            "google.maps",
+            "node"
+        ],
+        "allowJs": false,
+        "noEmit": false
     },
     "exclude": [
         "./dist/**/*"

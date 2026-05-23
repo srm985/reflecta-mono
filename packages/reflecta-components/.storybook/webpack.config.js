@@ -5,6 +5,17 @@ module.exports = async ({
     config
 }) => {
     config.module.rules.push({
+        exclude: /node_modules/,
+        test: /\.tsx?$/i,
+        use: {
+            loader: 'ts-loader',
+            options: {
+                transpileOnly: true
+            }
+        }
+    });
+
+    config.module.rules.push({
         test: /\.scss$/i,
         use: [
             'style-loader',

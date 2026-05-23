@@ -3,7 +3,7 @@
         "declaration": true,
         "jsx": "react-jsx",
         "module": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "outDir": "./declarations",
         "paths": {
             "@components/*": [
@@ -21,7 +21,14 @@
             "@styles/*": [
                 "./src/styles/*"
             ]
-        }
+        },
+        "types": [
+            "google.maps",
+            "node"
+        ],
+        "rootDir": "./",
+        "allowJs": false,
+        "noEmit": false
     },
     "exclude": [
         "./dist/**/*"

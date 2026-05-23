@@ -1,5 +1,3 @@
-const branchName = require('current-git-branch');
-
 const MAIN_BRANCH_NAMES = [
     'develop',
     'main'
@@ -13,7 +11,11 @@ const BRANCH_PREFIX_NAMES = [
     'test'
 ];
 
-(function checkBranchNaming() {
+(async function checkBranchNaming() {
+    const {
+        default: branchName
+    } = await import('current-git-branch');
+
     const branchRegex = new RegExp(`^(${MAIN_BRANCH_NAMES.join('|')})|((${BRANCH_PREFIX_NAMES.join('|')})/(([a-z]+((-[a-z]+)+)?)|(\\d+\\.\\d+\\.\\d+)))$`);
 
     const currentBranchName = branchName();

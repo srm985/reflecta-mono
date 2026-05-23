@@ -5,7 +5,7 @@ import API from './api';
 const middleware = express.Router();
 
 // Append Headers
-middleware.get('/*', (request, response, next) => {
+middleware.use((request, response, next) => {
     response.set('Content-Type', 'application/json');
 
     next();

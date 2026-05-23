@@ -1,0 +1,192 @@
+name: Reflecta Components - Build and Deploy
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - .eslintrc.js
+      - package-lock.json
+      - package.json
+      - packages/reflecta-components/**
+      - tsconfig.json
+      - .github/**
+  workflow_dispatch:
+
+jobs:
+  lint-scss:
+    name: Lint component SCSS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run component SCSS lint
+        run: npm run lint:scss -w reflecta-components
+
+  lint-js:
+    name: Lint component JavaScript and TypeScript
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run component JavaScript and TypeScript lint
+        run: npm run lint:js -w reflecta-components
+
+  typecheck:
+    name: Typecheck components
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run component typecheck
+        run: npm run typecheck -w reflecta-components
+
+  typecheck-ui-consumer:
+    name: Typecheck UI against components
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Component declarations are generated during the component build and consumed by reflecta-ui.
+      - name: Generate component declarations
+        run: npm run build -w reflecta-components
+        env:
+          NODE_ENV: production
+
+      - name: Run UI typecheck with generated component declarations
+        run: npm run typecheck -w reflecta-ui
+
+  build-mf:
+    name: Build component Module Federation bundle
+    needs: [lint-scss, lint-js, typecheck, typecheck-ui-consumer]
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build component remote
+        run: npm run build -w reflecta-components
+        env:
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          WEBPACK_SERVER_PORT_COMPONENTS: ${{ vars.WEBPACK_SERVER_PORT_COMPONENTS }}
+
+      - name: Upload component remote artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: component-remote-bundle
+          path: ./packages/reflecta-components/dist/
+
+  build-storybook:
+    name: Build component Storybook
+    needs: [lint-scss, lint-js, typecheck, typecheck-ui-consumer]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build component Storybook
+        run: npm run build:storybook -w reflecta-components
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: component-storybook-bundle
+          path: ./packages/reflecta-components/storybook-static/
+
+  deploy:
+    name: Deploy components and Storybook
+    needs: [build-mf, build-storybook]
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Download component artifacts
+        uses: actions/download-artifact@v8
+
+      - name: Merge component deployment artifacts
+        run: |
+          mkdir ./bundle/
+          cp -Rf ./component-remote-bundle/* ./bundle/
+          cp -Rf ./component-storybook-bundle/* ./bundle/
+
+      - name: Deploy component bundle
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.KEY }}
+          passphrase: ${{ secrets.KEY_PASSPHRASE }}
+          port: ${{ secrets.PORT }}
+          rm: true
+          source: "./bundle/*"
+          strip_components: 1
+          target: ${{ vars.DEPLOYMENT_LOCATION_COMPONENTS }}
+          timeout: "120s"
+          username: ${{ secrets.USERNAME }}
+          overwrite: true

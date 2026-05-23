@@ -1,0 +1,80 @@
+name: Reflecta UI - Check
+
+on:
+  push:
+    branches: ['*', '!develop', '!main']
+    paths:
+      - .eslintrc.js
+      - package-lock.json
+      - package.json
+      - packages/reflecta-ui/**
+      - tsconfig.json
+      - .github/**
+  workflow_dispatch:
+
+jobs:
+  lint-scss:
+    name: Lint UI SCSS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run UI SCSS lint
+        run: npm run lint:scss -w reflecta-ui
+
+  lint-js:
+    name: Lint UI JavaScript and TypeScript
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run UI JavaScript and TypeScript lint
+        run: npm run lint:js -w reflecta-ui
+
+  typecheck:
+    name: Typecheck UI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Component declarations are generated during the component build and consumed by reflecta-ui.
+      - name: Generate component declarations
+        run: npm run build -w reflecta-components
+        env:
+          NODE_ENV: production
+
+      - name: Run UI typecheck
+        run: npm run typecheck -w reflecta-ui

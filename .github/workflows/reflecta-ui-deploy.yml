@@ -1,117 +1,117 @@
-name: Reflecta UI - Build & Deploy
+name: Reflecta UI - Build and Deploy
 
 on:
   push:
     branches: [main, develop]
     paths:
+      - .eslintrc.js
+      - package-lock.json
+      - package.json
       - packages/reflecta-ui/**
+      - tsconfig.json
       - .github/**
   workflow_dispatch:
-    branches: [main, develop]
-    paths: [packages/reflecta-ui/**]
 
 jobs:
   lint-scss:
-    name: Lint SCSS
+    name: Lint UI SCSS
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - name: Use NodeJS 20.x
-        uses: actions/setup-node@v4
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'npm'
 
-      # Install Node Modules
-      - name: Install
-        run: npm ci --legacy-peer-deps
+      - name: Install dependencies
+        run: npm ci
 
-      # Lint SCSS
-      - name: Lint
+      - name: Run UI SCSS lint
         run: npm run lint:scss -w reflecta-ui
 
   lint-js:
-    name: Lint JavaScript/TypeScript
+    name: Lint UI JavaScript and TypeScript
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - name: Use NodeJS 20.x
-        uses: actions/setup-node@v4
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'npm'
 
-      # Install Node Modules
-      - name: Install
-        run: npm ci --legacy-peer-deps
+      - name: Install dependencies
+        run: npm ci
 
-      # Lint JavaScript/TypeScript
-      - name: Lint
+      - name: Run UI JavaScript and TypeScript lint
         run: npm run lint:js -w reflecta-ui
 
   build-components:
-    name: Build Components
+    name: Generate component declarations for UI
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - name: Use NodeJS 20.x
-        uses: actions/setup-node@v4
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'npm'
 
-      # Install Node Modules
-      - name: Install
-        run: npm ci --legacy-peer-deps
+      - name: Install dependencies
+        run: npm ci
 
-      # Build Reflecta ui
-      - name: Build
+      # Component declarations are generated during the component build and consumed by reflecta-ui.
+      - name: Generate component declarations
         run: npm run build -w reflecta-components
         env:
-          NODE_ENV: ${{ vars.NODE_ENV}}
+          NODE_ENV: ${{ vars.NODE_ENV }}
 
-      # Upload Artifacts
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Run UI typecheck with generated component declarations
+        run: npm run typecheck -w reflecta-ui
+
+      - name: Upload component declarations
+        uses: actions/upload-artifact@v7
         with:
           name: component-declarations
           path: ./packages/reflecta-components/declarations/
 
   build:
-    name: Build
+    name: Build UI deployment bundle
     needs: [lint-scss, lint-js, build-components]
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - name: Use NodeJS 20.x
-        uses: actions/setup-node@v4
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'npm'
 
-      # Install Node Modules
-      - name: Install
-        run: npm ci --legacy-peer-deps
+      - name: Install dependencies
+        run: npm ci
 
-      # Download Artifacts
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
+      - name: Download component declarations
+        uses: actions/download-artifact@v8
         with:
           name: component-declarations
           path: ./packages/reflecta-components/declarations/
 
-      # Build Reflecta UI
-      - name: Build
+      - name: Build UI
         run: npm run build -w reflecta-ui
         env:
           BASE_URL_API: ${{ vars.BASE_URL_API }}
@@ -120,29 +120,30 @@ jobs:
           LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY: ${{ vars.LOCAL_STORAGE_AUTHENTICATION_TOKEN_KEY }}
           NODE_ENV: ${{ vars.NODE_ENV }}
 
-      # Upload Artifacts
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload UI artifact
+        uses: actions/upload-artifact@v7
         with:
-          name: bundle
+          name: ui-bundle
           path: ./packages/reflecta-ui/dist/
 
   deploy:
-    name: Deploy
-    needs: build
+    name: Deploy UI
+    needs: [build]
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      # Download Artifacts
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
+      - name: Download UI artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ui-bundle
+          path: ./bundle/
 
-      # Deploy Reflecta ui
-      - name: Deploy
-        uses: appleboy/scp-action@master
+      - name: Deploy UI bundle
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.HOST }}
           key: ${{ secrets.KEY }}

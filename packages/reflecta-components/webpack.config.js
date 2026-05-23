@@ -95,6 +95,10 @@ module.exports = async () => {
 
     return ({
         devServer: {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Cross-Origin-Resource-Policy': 'cross-origin'
+            },
             historyApiFallback: true,
             hot: true,
             port: WEBPACK_SERVER_PORT_COMPONENTS

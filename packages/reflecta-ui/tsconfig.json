@@ -2,7 +2,7 @@
     "compilerOptions": {
         "jsx": "react-jsx",
         "module": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "outDir": "./dist",
         "paths": {
             "@assets/*": [
@@ -37,8 +37,18 @@
             ],
             "@views/*": [
                 "./src/views/*"
+            ],
+            "@components/*/types": [
+                "../reflecta-components/declarations/src/components/*/types"
             ]
-        }
+        },
+        "types": [
+            "google.maps",
+            "node"
+        ],
+        "rootDir": "./",
+        "allowJs": false,
+        "noEmit": false
     },
     "exclude": [
         "./dist/**/*"

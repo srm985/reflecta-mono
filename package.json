@@ -4,17 +4,18 @@
     "url": "https://github.com/srm985/reflecta-mono/issues"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
-    "concurrently": "^8.2.2",
-    "current-git-branch": "^1.1.0",
-    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.4",
+    "@typescript-eslint/parser": "^8.59.4",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "current-git-branch": "^2.0.2",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^18.0.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-sort-destructure-keys": "^2.0.0",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.0"
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-sort-destructure-keys": "^3.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5"
   },
   "homepage": "https://github.com/srm985/reflecta-mono#readme",
   "keywords": [
@@ -28,23 +29,23 @@
     ]
   },
   "name": "reflecta-mono",
-  "overrides": {
-    "minimatch": "5.1.6"
-  },
   "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/srm985/reflecta-mono.git"
   },
   "scripts": {
-    "develop": "concurrently --raw \"npm start -w reflecta-components\" \"npm start -w reflecta-ui\"",
+    "develop": "npm run generate:components && concurrently --raw --kill-others-on-fail --names backend,components,ui --prefix-colors blue,magenta,green \"npm start -w reflecta-backend\" \"npm start -w reflecta-components\" \"npm run wait:components && npm start -w reflecta-ui\"",
     "lint": "eslint ./*.js ./scripts/*.js && npm run lint --workspaces",
     "lint:fix": "eslint ./*.js ./scripts/*.js --fix && npm run lint:fix --workspaces",
     "pre-commit": "cross-env FORCE_COLOR=true lint-staged && npm run pre-commit --workspaces",
-    "pre-push": "node ./scripts/branchCheck.js",
-    "prepare": "husky install",
+    "pre-push": "node ./scripts/branchCheck.js && npm run lint && npm run typecheck",
+    "prepare": "husky",
     "start": "npm run develop",
-    "storybook": "npm run storybook -w reflecta-components"
+    "storybook": "npm run storybook -w reflecta-components",
+    "typecheck": "npm run typecheck --workspaces",
+    "generate:components": "npm run build -w reflecta-components",
+    "wait:components": "node -e \"const url='http://localhost:3003/remoteEntry.js'; const started=Date.now(); const timeout=60000; const poll=async () => { try { const response=await fetch(url, { method: 'HEAD' }); if (response.ok) process.exit(0); } catch (error) {} if (Date.now() - started > timeout) { console.error('Timed out waiting for ' + url); process.exit(1); } setTimeout(poll, 1000); }; poll();\""
   },
   "version": "1.0.0",
   "workspaces": [

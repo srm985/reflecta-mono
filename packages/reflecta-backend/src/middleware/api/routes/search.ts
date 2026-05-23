@@ -3,12 +3,10 @@ import express, {
     Response
 } from 'express';
 import {
+    ValidationChain,
     query,
     validationResult
 } from 'express-validator';
-import {
-    ValidationChain
-} from 'express-validator/src/chain';
 
 import {
     AuthenticationTokenPayloadLocals

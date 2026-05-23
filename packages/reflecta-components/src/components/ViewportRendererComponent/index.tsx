@@ -24,7 +24,7 @@ const ViewportRendererComponent: FC<IViewportRendererComponent> = (props) => {
         displayName
     } = ViewportRendererComponent;
 
-    const isAwaitingResize = useRef<boolean>();
+    const isAwaitingResize = useRef<boolean>(false);
 
     const [
         viewportWidth,

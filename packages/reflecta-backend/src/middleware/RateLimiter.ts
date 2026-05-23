@@ -1,14 +1,13 @@
 import {
     NextFunction,
     Request,
+    RequestHandler,
     Response
 } from 'express';
-import rateLimit, {
-    RateLimitRequestHandler
-} from 'express-rate-limit';
+import rateLimit from 'express-rate-limit';
 
 class RateLimiter {
-    private apiLimiter: RateLimitRequestHandler;
+    private apiLimiter: RequestHandler;
 
     constructor(permittedTries?: number, timeoutMS?: number) {
         const {
@@ -20,7 +19,7 @@ class RateLimiter {
         this.apiLimiter = rateLimit({
             max: permittedTries || parseInt(RATE_LIMITER_PERMITTED_TRIES, 10),
             windowMs: timeoutMS || parseInt(RATE_LIMITER_TIMEOUT_MS, 10)
-        });
+        }) as unknown as RequestHandler;
     }
 
     public limited = (request: Request, response: Response, next: NextFunction) => {
