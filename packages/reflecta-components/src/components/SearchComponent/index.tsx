@@ -13,7 +13,6 @@ import {
 } from 'react';
 
 import ButtonComponent from '@components/ButtonComponent';
-import CardComponent from '@components/CardComponent';
 import CheckboxComponent from '@components/CheckboxComponent';
 import FlexboxComponent from '@components/FlexboxComponent';
 import InputComponent from '@components/InputComponent';
@@ -136,6 +135,11 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
     const handleSearch = (searchDetails = buildSearchDetails()) => {
         setIsDisplayingSearchResults(true);
         onSearch(searchDetails);
+    };
+
+    const handleApplySearch = () => {
+        handleSearch();
+        setAdvancedSearchVisible(false);
     };
 
     const handleReset = () => {
@@ -321,130 +325,125 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                     />
                 )
             }
-            <CardComponent className={advancedSearchClassNames}>
-                <FlexboxComponent
-                    className={'mb--3'}
-                    layoutDefault={{
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                    }}
+            <div className={advancedSearchClassNames}>
+                <section
+                    aria-labelledby={`${displayName}__advanced-search-title`}
+                    aria-modal={isAdvancedSearchVisible}
+                    className={`${displayName}__advanced-search-panel`}
+                    role={'dialog'}
                 >
-                    <h4>{'Filters'}</h4>
-                    <ButtonComponent
-                        ariaLabel={'Close filters'}
-                        color={'neutral'}
-                        isIconOnly
-                        onClick={() => setAdvancedSearchVisible(false)}
-                        styleType={'inline'}
-                        type={'button'}
-                    >
-                        <FontAwesomeIcon icon={faXmark} />
-                    </ButtonComponent>
-                </FlexboxComponent>
-                <CheckboxComponent
-                    checked={useAISearch}
-                    className={'mb--3'}
-                    label={'Search by meaning'}
-                    name={'aiSearch'}
-                    onChange={setUseAISearch}
-                />
-                <SelectComponent
-                    className={'mb--3'}
-                    label={'Keyword search'}
-                    name={'keywordSearch'}
-                    onChange={(value) => setKeywordSearchOption(value as KeywordSearchOption)}
-                    options={keywordSearchOptionsList}
-                    value={keywordSearchOption}
-                />
-                {
-                    keywordSearchOption !== 'disabled' && (
-                        <InputComponent
+                    <div className={`${displayName}__advanced-search-header`}>
+                        <h4 id={`${displayName}__advanced-search-title`}>{'Filters'}</h4>
+                        <ButtonComponent
+                            ariaLabel={'Close filters'}
+                            color={'neutral'}
+                            isIconOnly
+                            onClick={() => setAdvancedSearchVisible(false)}
+                            styleType={'inline'}
+                            type={'button'}
+                        >
+                            <FontAwesomeIcon icon={faXmark} />
+                        </ButtonComponent>
+                    </div>
+                    <div className={`${displayName}__advanced-search-content`}>
+                        <CheckboxComponent
+                            checked={useAISearch}
                             className={'mb--3'}
-                            label={'Keywords'}
-                            name={'keywords'}
-                            onChange={setSearchKeywordsText}
-                            placeholder={'family, work, lake'}
-                            type={'search'}
-                            value={searchKeywordsText}
+                            label={'Search by meaning'}
+                            name={'aiSearch'}
+                            onChange={setUseAISearch}
                         />
-                    )
-                }
-                <FlexboxComponent
-                    className={'mb--7'}
-                    layoutDefault={{
-                        flexDirection: 'column',
-                        rowGap: 'medium'
-                    }}
-                    layoutDesktop={{
-                        columnGap: 'medium',
-                        flexDirection: 'row'
-                    }}
-                >
-                    <SelectComponent
-                        label={'Date search'}
-                        name={'dateSearch'}
-                        onChange={(value) => setDateSearchOption(value as DateSearchOption)}
-                        options={dateSearchOptionsList}
-                        value={dateSearchOption}
-                    />
-                    {
-                        dateSearchOption === 'entryDate' && (
-                            <InputComponent
-                                label={'Entry date'}
-                                name={'entryDate'}
-                                onChange={setEntryDate}
-                                type={'date'}
-                                value={entryDate}
+                        <SelectComponent
+                            className={'mb--3'}
+                            label={'Keyword search'}
+                            name={'keywordSearch'}
+                            onChange={(value) => setKeywordSearchOption(value as KeywordSearchOption)}
+                            options={keywordSearchOptionsList}
+                            value={keywordSearchOption}
+                        />
+                        {
+                            keywordSearchOption !== 'disabled' && (
+                                <InputComponent
+                                    className={'mb--3'}
+                                    label={'Keywords'}
+                                    name={'keywords'}
+                                    onChange={setSearchKeywordsText}
+                                    placeholder={'family, work, lake'}
+                                    type={'search'}
+                                    value={searchKeywordsText}
+                                />
+                            )
+                        }
+                        <FlexboxComponent
+                            layoutDefault={{
+                                flexDirection: 'column',
+                                rowGap: 'medium'
+                            }}
+                            layoutDesktop={{
+                                columnGap: 'medium',
+                                flexDirection: 'row'
+                            }}
+                        >
+                            <SelectComponent
+                                label={'Date search'}
+                                name={'dateSearch'}
+                                onChange={(value) => setDateSearchOption(value as DateSearchOption)}
+                                options={dateSearchOptionsList}
+                                value={dateSearchOption}
                             />
-                        )
-                    }
-                    {
-                        dateSearchOption === 'dateRange' && (
-                            <>
-                                <InputComponent
-                                    label={'Start date'}
-                                    name={'startDate'}
-                                    onChange={setSearchStartDate}
-                                    type={'date'}
-                                    value={searchStartDate}
-                                />
-                                <InputComponent
-                                    label={'End date'}
-                                    name={'endDate'}
-                                    onChange={setSearchEndDate}
-                                    type={'date'}
-                                    value={searchEndDate}
-                                />
-                            </>
-                        )
-                    }
-                </FlexboxComponent>
-                <FlexboxComponent
-                    layoutDefault={{
-                        flexDirection: 'column-reverse',
-                        rowGap: 'medium'
-                    }}
-                    layoutDesktop={{
-                        columnGap: 'medium',
-                        flexDirection: 'row'
-                    }}
-                >
-                    <ButtonComponent
-                        color={'neutral'}
-                        onClick={handleReset}
-                        styleType={'secondary'}
-                        type={'button'}
-                    >{'Reset'}
-                    </ButtonComponent>
-                    <ButtonComponent
-                        color={'primary'}
-                        onClick={() => handleSearch()}
-                        styleType={'primary'}
-                        type={'button'}
-                    >{'Apply'}
-                    </ButtonComponent>
-                </FlexboxComponent>
-            </CardComponent>
+                            {
+                                dateSearchOption === 'entryDate' && (
+                                    <InputComponent
+                                        label={'Entry date'}
+                                        name={'entryDate'}
+                                        onChange={setEntryDate}
+                                        type={'date'}
+                                        value={entryDate}
+                                    />
+                                )
+                            }
+                            {
+                                dateSearchOption === 'dateRange' && (
+                                    <>
+                                        <InputComponent
+                                            label={'Start date'}
+                                            name={'startDate'}
+                                            onChange={setSearchStartDate}
+                                            type={'date'}
+                                            value={searchStartDate}
+                                        />
+                                        <InputComponent
+                                            label={'End date'}
+                                            name={'endDate'}
+                                            onChange={setSearchEndDate}
+                                            type={'date'}
+                                            value={searchEndDate}
+                                        />
+                                    </>
+                                )
+                            }
+                        </FlexboxComponent>
+                    </div>
+                    <div className={`${displayName}__advanced-search-actions`}>
+                        <ButtonComponent
+                            className={`${displayName}__advanced-search-action`}
+                            color={'neutral'}
+                            onClick={handleReset}
+                            styleType={'secondary'}
+                            type={'button'}
+                        >{'Reset'}
+                        </ButtonComponent>
+                        <ButtonComponent
+                            className={`${displayName}__advanced-search-action`}
+                            color={'primary'}
+                            onClick={handleApplySearch}
+                            styleType={'primary'}
+                            type={'button'}
+                        >{'Apply'}
+                        </ButtonComponent>
+                    </div>
+                </section>
+            </div>
         </div>
     );
 };

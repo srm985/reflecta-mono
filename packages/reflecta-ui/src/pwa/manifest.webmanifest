@@ -2,6 +2,7 @@
   "name": "Reflecta",
   "short_name": "Reflecta",
   "description": "A quiet place for private reflection and journaling.",
+  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -22,12 +23,6 @@
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "/icons/maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }

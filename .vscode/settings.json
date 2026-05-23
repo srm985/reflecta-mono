@@ -26,10 +26,29 @@
     "eslint.enable": true,
     "eslint.format.enable": true,
     "eslint.lintTask.enable": true,
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
     "eslint.workingDirectories": [
-        "packages/reflecta-backend",
-        "packages/reflecta-components",
-        "packages/reflecta-ui",
+        {
+            "directory": "./packages/reflecta-backend",
+            "changeProcessCWD": true
+        },
+        {
+            "directory": "./packages/reflecta-components",
+            "changeProcessCWD": true
+        },
+        {
+            "directory": "./packages/reflecta-ui",
+            "changeProcessCWD": true
+        },
+        {
+            "directory": "./",
+            "changeProcessCWD": true
+        }
     ],
     "stylelint.snippet": [
         "css",

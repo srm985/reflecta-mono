@@ -277,43 +277,46 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         unsaved: undefined
     }[autoSaveStatus];
 
+    const autoSaveStatusClassNames = classNames(
+        `${displayName}__autosave-status`,
+        `${displayName}__autosave-status--${autoSaveStatus}`
+    );
+
     return (
         <FormComponent
             className={componentClassNames}
             onDirty={handleSetDirty}
             onSubmit={handleEntrySubmission}
         >
-            <FlexboxComponent
-                className={`${displayName}__toolbar`}
-                layoutDefault={{
-                    alignItems: 'center',
-                    columnGap: 'medium',
-                    justifyContent: 'space-between'
-                }}
-            >
-                <ButtonComponent
-                    color={'neutral'}
-                    onClick={onDiscard}
-                    styleType={'inline'}
-                    type={'button'}
+            <header className={`${displayName}__toolbar`}>
+                <div className={`${displayName}__toolbar-actions`}>
+                    <ButtonComponent
+                        color={'neutral'}
+                        onClick={onDiscard}
+                        styleType={'inline'}
+                        type={'button'}
+                    >
+                        {'Cancel'}
+                    </ButtonComponent>
+                    <ButtonComponent
+                        className={`${displayName}__submit-button`}
+                        color={'accent'}
+                        type={'submit'}
+                    >
+                        <FontAwesomeIcon icon={faFloppyDisk} />
+                        <span>{'Done'}</span>
+                    </ButtonComponent>
+                </div>
+                <p
+                    aria-live={'polite'}
+                    className={autoSaveStatusClassNames}
                 >
-                    {'Cancel'}
-                </ButtonComponent>
-                <p className={`${displayName}__autosave-status`}>
                     {autoSaveStatusIcon && (
                         <FontAwesomeIcon icon={autoSaveStatusIcon} />
                     )}
                     <span>{autoSaveStatusLabel}</span>
                 </p>
-                <ButtonComponent
-                    className={`${displayName}__submit-button`}
-                    color={'accent'}
-                    type={'submit'}
-                >
-                    <FontAwesomeIcon icon={faFloppyDisk} />
-                    <span>{'Done'}</span>
-                </ButtonComponent>
-            </FlexboxComponent>
+            </header>
             <textarea
                 aria-label={'Journal entry'}
                 className={`${displayName}__textarea`}

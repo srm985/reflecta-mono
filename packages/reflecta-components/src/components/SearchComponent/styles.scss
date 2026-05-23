@@ -59,37 +59,89 @@
 
     &__advanced-search-background {
         position: fixed;
-        top: 0;
-        left: 0;
+        inset: 0;
         z-index: $z-index-popover;
 
         width: 100vw;
         height: 100vh;
 
-        background-color: rgba($color-neutral-600, 0.42);
+        background-color: rgba($color-neutral-600, 0.54);
         border: none;
     }
 
     &__advanced-search {
         display: none;
-        width: 100%;
-        margin-top: $margin-medium;
 
         &--visible {
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
+            right: 0;
             z-index: calc($z-index-popover + 1);
 
-            display: block;
-            max-height: calc(88vh - env(safe-area-inset-bottom));
-            padding-bottom: calc($padding-medium + env(safe-area-inset-bottom));
-            overflow-y: auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: $padding-medium $padding-medium 0;
 
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-            box-shadow: $box-shadow-400;
+            pointer-events: none;
         }
+    }
+
+    &__advanced-search-panel {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        width: 100%;
+        max-width: $max-width-small;
+        height: min(86vh, 680px);
+        max-height: calc(100vh - ($padding-medium * 2));
+
+        overflow: hidden;
+
+        background-color: $color-neutral-100;
+        border: solid 1px rgba($color-neutral-400, 0.22);
+        border-bottom: none;
+        border-radius: $border-radius-large $border-radius-large 0 0;
+        box-shadow: $box-shadow-400;
+        pointer-events: auto;
+    }
+
+    &__advanced-search-header,
+    &__advanced-search-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        column-gap: $margin-medium;
+        padding: $padding-medium;
+    }
+
+    &__advanced-search-header {
+        border-bottom: solid 1px rgba($color-neutral-400, 0.18);
+
+        h4 {
+            color: $color-primary-500;
+            font-size: $font-size-regular;
+        }
+    }
+
+    &__advanced-search-content {
+        min-height: 0;
+        padding: $padding-medium;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    &__advanced-search-actions {
+        flex-direction: column-reverse;
+        row-gap: $margin-medium;
+        padding-bottom: calc($padding-medium + env(safe-area-inset-bottom));
+
+        border-top: solid 1px rgba($color-neutral-400, 0.18);
+    }
+
+    &__advanced-search-action {
+        width: 100%;
     }
 
     @include is-desktop() {
@@ -101,12 +153,48 @@
             &--visible {
                 position: static;
 
-                max-height: none;
-                padding-bottom: $padding-medium;
-                overflow: visible;
+                display: block;
+                margin-top: $margin-medium;
+                padding: 0;
 
-                border-radius: $border-radius-large;
+                pointer-events: auto;
             }
+        }
+
+        &__advanced-search-panel {
+            display: block;
+            max-width: none;
+            height: auto;
+            max-height: none;
+            padding: $padding-medium;
+            overflow: visible;
+
+            border: solid 1px rgba($color-neutral-400, 0.2);
+            border-radius: $border-radius-large;
+            box-shadow: $box-shadow-300;
+        }
+
+        &__advanced-search-header {
+            padding: 0 0 $padding-medium;
+
+            border-bottom: none;
+        }
+
+        &__advanced-search-content {
+            padding: 0;
+            overflow: visible;
+        }
+
+        &__advanced-search-actions {
+            flex-direction: row;
+            justify-content: flex-start;
+            padding: $padding-large 0 0;
+
+            border-top: none;
+        }
+
+        &__advanced-search-action {
+            width: auto;
         }
     }
 }
