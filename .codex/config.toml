@@ -1,0 +1,110 @@
+model = "gpt-5.5"
+# Keep routine implementation balanced, but let Plan mode spend more reasoning on cross-package reviews.
+plan_mode_reasoning_effort = "high"
+model_verbosity = "medium"
+approvals_reviewer = "user"
+
+sandbox_mode = "workspace-write"
+allow_login_shell = false
+default_permissions = "lockeddown"
+history.persistence = "none"
+
+# Disable built-in web search for this repo.
+web_search = "disabled"
+
+[approval_policy.granular]
+sandbox_approval = true
+rules = true
+mcp_elicitations = false
+request_permissions = false
+skill_approval = false
+
+[sandbox_workspace_write]
+network_access = false
+exclude_slash_tmp = true
+exclude_tmpdir_env_var = true
+
+[shell_environment_policy]
+inherit = "core"
+ignore_default_excludes = false
+include_only = [
+  "PATH",
+  "HOME",
+  "USER",
+  "SHELL",
+  "TERM",
+  "LANG",
+  "LC_ALL",
+  "PWD",
+  "CI",
+  "FORCE_COLOR",
+  "NO_COLOR",
+  "NODE_ENV",
+  "PORT",
+  "HOST",
+  "PM2_HOME",
+  "npm_config_user_agent",
+  "npm_execpath",
+  "npm_node_execpath",
+  "AWS_PROFILE",
+  "AWS_REGION",
+  "AWS_DEFAULT_REGION",
+  "AWS_SDK_LOAD_CONFIG",
+  "VITE_API_BASE_URL"
+]
+exclude = [
+  "AWS_ACCESS_KEY_ID",
+  "AWS_SECRET_ACCESS_KEY",
+  "AWS_SESSION_TOKEN",
+  "OPENAI_API_KEY",
+  "NPM_TOKEN",
+  "NODE_AUTH_TOKEN",
+  "GH_TOKEN",
+  "GITHUB_TOKEN",
+  "SENTRY_AUTH_TOKEN",
+  "DATABASE_URL",
+  "JWT_SECRET",
+  "SESSION_SECRET",
+  "COOKIE_SECRET",
+  "STRIPE_SECRET_KEY"
+]
+
+[permissions.lockeddown.filesystem]
+glob_scan_max_depth = 6
+
+"/home/node/.aws/**" = "deny"
+"/root/.aws/**" = "deny"
+"/home/node/.ssh/**" = "deny"
+"/root/.ssh/**" = "deny"
+"/home/node/.docker/**" = "deny"
+"/root/.docker/**" = "deny"
+"/home/node/.npmrc" = "deny"
+"/root/.npmrc" = "deny"
+
+[permissions.lockeddown.filesystem.":workspace_roots"]
+"." = "write"
+
+# Exact root-level secret/config files.
+".env" = "deny"
+".env.local" = "deny"
+".env.development" = "deny"
+".env.production" = "deny"
+".env.test" = "deny"
+".npmrc" = "deny"
+".yarnrc" = "deny"
+".yarnrc.yml" = "deny"
+".netrc" = "deny"
+
+# Common secret/cert directories. These use the trailing /** subtree form
+# that the current parser error explicitly accepts.
+".secrets/**" = "deny"
+"secrets/**" = "deny"
+"certs/**" = "deny"
+"certificates/**" = "deny"
+"keys/**" = "deny"
+".aws/**" = "deny"
+".ssh/**" = "deny"
+".docker/**" = "deny"
+
+[features]
+apps = false

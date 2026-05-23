@@ -7,9 +7,6 @@ import journalEntriesReducer from './slices/journalEntriesSlice';
 import loadingReducer from './slices/loadingSlice';
 import locationReducer from './slices/locationSlice';
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
 const store = configureStore({
     reducer: {
         accountDetails: accountDetailsReducer,
@@ -18,5 +15,8 @@ const store = configureStore({
         location: locationReducer
     }
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export default store;

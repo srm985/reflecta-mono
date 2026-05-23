@@ -5,15 +5,11 @@ import type {
 const config: StorybookConfig = {
     addons: [
         '@storybook/addon-links',
-        '@storybook/addon-essentials',
-        '@storybook/addon-interactions'
+        '@storybook/addon-docs'
     ],
     core: {
         disableTelemetry: true,
         enableCrashReports: false
-    },
-    docs: {
-        autodocs: 'tag'
     },
     framework: {
         name: '@storybook/react-webpack5',

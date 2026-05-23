@@ -1,29 +1,45 @@
 {
-	"name": "Debian",
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
-	"postCreateCommand": "bash -i ./scripts/postCreateCommand.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"amazonwebservices.aws-toolkit-vscode",
 				"Asuka.insertnumbers",
-				"cssho.vscode-svgviewer",
 				"dbaeumer.vscode-eslint",
 				"deerawan.vscode-faker",
 				"eamodio.gitlens",
 				"GitHub.vscode-github-actions",
-				"mrmlnc.vscode-csscomb",
-				"mrmlnc.vscode-scss",
+				"jock.svg",
+				"Lokalise.i18n-ally",
+				"mikestead.dotenv",
+				"openai.chatgpt",
 				"streetsidesoftware.code-spell-checker",
-				"stylelint.vscode-stylelint",
 				"Tyriar.lorem-ipsum",
 				"Tyriar.sort-lines",
 				"zengxingxin.sort-js-object-keys"
 			]
 		}
 	},
+	"dockerComposeFile": "docker-compose.yml",
+	"features": {
+		"ghcr.io/devcontainers/features/aws-cli:1": {},
+		"ghcr.io/devcontainers/features/node:1": {
+			"nodeGypDependencies": true,
+			"version": "lts"
+		}
+	},
 	"forwardPorts": [
-		3306,
 		3100,
 		3000
-	]
+	],
+	"name": "Reflecta",
+	"overrideCommand": false,
+	"postCreateCommand": "bash ./.devcontainer/post-create-command.sh",
+	"remoteUser": "node",
+	"runServices": [
+		"workspace",
+		"mysql"
+	],
+	"service": "workspace",
+	"shutdownAction": "stopCompose",
+	"workspaceFolder": "/workspaces/reflecta-mono"
 }

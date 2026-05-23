@@ -5,15 +5,19 @@ module.exports = {
     },
     extends: [
         'airbnb-base',
-        'airbnb-typescript/base'
+        'plugin:@typescript-eslint/recommended'
     ],
     overrides: [
         {
             files: [
                 './scripts/*.js',
-                './*.js'
+                './*.js',
+                '**/*.js'
             ],
             rules: {
+                '@typescript-eslint/no-require-imports': [
+                    0
+                ],
                 'import/no-extraneous-dependencies': [
                     0
                 ],
@@ -23,26 +27,23 @@ module.exports = {
             }
         }
     ],
-    parserOptions: {
-        project: './tsconfig.json'
-    },
+    parser: '@typescript-eslint/parser',
     plugins: [
         'sort-destructure-keys'
     ],
 
     rules: {
-        '@typescript-eslint/comma-dangle': [
-            'error',
-            'never'
-        ],
-        '@typescript-eslint/indent': [
-            'error',
-            4,
-            {
-                SwitchCase: 1
-            }
+        '@typescript-eslint/no-empty-object-type': [
+            0
         ],
         '@typescript-eslint/no-explicit-any': 'error',
+        '@typescript-eslint/no-unused-vars': [
+            'error',
+            {
+                argsIgnorePattern: '^_',
+                caughtErrors: 'none'
+            }
+        ],
         'array-bracket-newline': [
             'error',
             {
@@ -66,6 +67,24 @@ module.exports = {
         curly: [
             'error',
             'all'
+        ],
+        'import/extensions': [
+            'error',
+            'ignorePackages',
+            {
+                js: 'never',
+                jsx: 'never',
+                ts: 'never',
+                tsx: 'never'
+            }
+        ],
+        'import/no-unresolved': [
+            'error',
+            {
+                ignore: [
+                    '^reflecta-components-module-federation/'
+                ]
+            }
         ],
         'import/order': [
             'error',
@@ -156,5 +175,27 @@ module.exports = {
                 natural: true
             }
         ]
+    },
+    settings: {
+        'import/parsers': {
+            '@typescript-eslint/parser': [
+                '.ts',
+                '.tsx'
+            ]
+        },
+        'import/resolver': {
+            node: {
+                extensions: [
+                    '.js',
+                    '.jsx',
+                    '.ts',
+                    '.tsx'
+                ]
+            },
+            typescript: {
+                alwaysTryTypes: true,
+                project: './tsconfig.json'
+            }
+        }
     }
 };

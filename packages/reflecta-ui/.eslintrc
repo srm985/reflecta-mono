@@ -6,7 +6,6 @@
     },
     "extends": [
         "airbnb",
-        "airbnb-typescript",
         "../../.eslintrc.js"
     ],
     "overrides": [
@@ -24,9 +23,6 @@
             }
         }
     ],
-    "parserOptions": {
-        "project": "./tsconfig.json"
-    },
     "root": true,
     "rules": {
         "@typescript-eslint/no-throw-literal": [

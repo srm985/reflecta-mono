@@ -1,13 +1,11 @@
 {
     "extends": [
-        "stylelint-config-standard-scss",
-        "stylelint-config-rational-order"
+        "stylelint-config-standard-scss"
     ],
     "plugins": [
         "stylelint-scss",
         "stylelint-declaration-block-no-ignored-properties",
-        "stylelint-order",
-        "stylelint-config-rational-order/plugin"
+        "stylelint-order"
     ],
     "rules": {
         "at-rule-empty-line-before": [
@@ -60,13 +58,6 @@
         "number-max-precision": 4,
         "order/properties-order": [],
         "plugin/declaration-block-no-ignored-properties": true,
-        "plugin/rational-order": [
-            true,
-            {
-                "border-in-box-model": false,
-                "empty-line-between-groups": true
-            }
-        ],
         "property-no-unknown": true,
         "property-no-vendor-prefix": true,
         "rule-empty-line-before": [
@@ -89,7 +80,6 @@
         "scss/at-if-closing-brace-newline-after": "always-last-in-chain",
         "scss/at-if-closing-brace-space-after": "always-intermediate",
         "scss/at-if-no-null": true,
-        "scss/at-import-partial-extension": "never",
         "scss/at-mixin-argumentless-call-parentheses": "always",
         "scss/at-mixin-named-arguments": "never",
         "scss/at-mixin-parentheses-space-before": "never",
@@ -170,6 +160,7 @@
         ],
         "unit-no-unknown": true,
         "value-keyword-case": "lower",
-        "value-no-vendor-prefix": true
+        "value-no-vendor-prefix": true,
+        "scss/load-partial-extension": "never"
     }
 }

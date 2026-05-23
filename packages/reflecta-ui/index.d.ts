@@ -1,1 +1,1 @@
-/// <reference path="../reflecta-components/declarations/index.d.ts"/>
+import 'reflecta-components/declarations';

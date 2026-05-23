@@ -3,6 +3,7 @@ import cors from 'cors';
 import express, {
     Application,
     Request,
+    RequestHandler,
     Response
 } from 'express';
 import helmet from 'helmet';
@@ -32,7 +33,7 @@ const {
 
 // App Configurations
 app.disable('x-powered-by');
-app.use(cookieParser());
+app.use(cookieParser() as unknown as RequestHandler);
 app.use(cors({
     credentials: true,
     methods: [

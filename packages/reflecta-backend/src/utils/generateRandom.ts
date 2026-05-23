@@ -1,7 +1,7 @@
 import {
-    v4
-} from 'uuid';
+    randomUUID
+} from 'node:crypto';
 
-const generateRandom = (): string => v4();
+const generateRandom = (): string => randomUUID();
 
 export default generateRandom;
