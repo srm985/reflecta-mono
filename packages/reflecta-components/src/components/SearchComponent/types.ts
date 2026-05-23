@@ -1,6 +1,6 @@
 export type KeywordSearchOption = 'disabled' | 'matchesAny' | 'matchesAll';
 export type DateSearchOption = 'disabled' | 'entryDate' | 'dateRange';
-export type SearchKeyword = string | number;
+export type SearchKeyword = string;
 
 export type Search = {
     dateSearchOption: DateSearchOption;

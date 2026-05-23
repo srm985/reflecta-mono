@@ -14,6 +14,7 @@ export type SharedButtonProps = {
     disabled?: boolean;
     isIconOnly?: boolean;
     onClick?: () => void;
+    title?: string;
 };
 
 export type ButtonFunctionality = {

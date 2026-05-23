@@ -34,6 +34,8 @@ import {
     LoginResponsePayload
 } from './types';
 
+import './styles.scss';
+
 const authentication = new Authentication();
 const client = new Client();
 

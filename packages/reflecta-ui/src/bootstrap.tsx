@@ -11,6 +11,7 @@ import {
 import store from '@store/index';
 
 import App from './App';
+import registerServiceWorker from './serviceWorkerRegistration';
 
 const rootElement = document.getElementById('root');
 
@@ -29,3 +30,5 @@ root.render(
         </Provider>
     </StrictMode>
 );
+
+registerServiceWorker();

@@ -1,6 +1,7 @@
 import {
     faSearch,
-    faSliders
+    faSliders,
+    faXmark
 } from '@fortawesome/free-solid-svg-icons';
 import {
     FontAwesomeIcon
@@ -11,7 +12,6 @@ import {
     useState
 } from 'react';
 
-import ButtonBlockComponent from '@components/ButtonBlockComponent';
 import ButtonComponent from '@components/ButtonComponent';
 import CardComponent from '@components/CardComponent';
 import CheckboxComponent from '@components/CheckboxComponent';
@@ -26,6 +26,7 @@ import {
     DateSearchOption,
     ISearchComponent,
     KeywordSearchOption,
+    Search,
     SearchKeyword
 } from './types';
 
@@ -50,9 +51,9 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
     ] = useState<string>('');
 
     const [
-        searchKeywordsList,
-        updateSearchKeywordsList
-    ] = useState<SearchKeyword[]>([]);
+        searchKeywordsText,
+        setSearchKeywordsText
+    ] = useState<string>('');
 
     const [
         isAdvancedSearchVisible,
@@ -94,16 +95,6 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
         setIsDisplayingSearchResults
     ] = useState<boolean>(false);
 
-    const handleSearchChange = (value: string) => {
-        if (!value.trim() && isDisplayingSearchResults) {
-            setIsDisplayingSearchResults(false);
-
-            onReset();
-        }
-
-        setSearchString(value);
-    };
-
     const componentClassNames = classNames(
         displayName,
         className
@@ -116,26 +107,73 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
         }
     );
 
-    const handleSearch = () => {
-        setIsDisplayingSearchResults(true);
+    const searchKeywordsList = useMemo<SearchKeyword[]>(() => searchKeywordsText.split(',').map((keyword) => keyword.trim()).filter(Boolean), [
+        searchKeywordsText
+    ]);
 
-        onSearch({
-            dateSearchOption,
-            entryDate,
-            keywordSearchOption,
-            searchEndDate,
-            searchKeywordsList,
-            searchStartDate,
-            searchString,
-            useAISearch
-        });
+    const buildSearchDetails = (overrides: Partial<Search> = {}): Search => ({
+        dateSearchOption,
+        entryDate,
+        keywordSearchOption,
+        searchEndDate,
+        searchKeywordsList,
+        searchStartDate,
+        searchString: searchString.trim(),
+        useAISearch,
+        ...overrides
+    });
+
+    const handleSearchChange = (value: string) => {
+        if (!value.trim() && isDisplayingSearchResults) {
+            setIsDisplayingSearchResults(false);
+
+            onReset();
+        }
+
+        setSearchString(value);
+    };
+
+    const handleSearch = (searchDetails = buildSearchDetails()) => {
+        setIsDisplayingSearchResults(true);
+        onSearch(searchDetails);
     };
 
     const handleReset = () => {
-        setUseAISearch(true);
+        setSearchString('');
+        setUseAISearch(false);
         setKeywordSearchOption('disabled');
         setDateSearchOption('disabled');
-        updateSearchKeywordsList([]);
+        setEntryDate(now);
+        setSearchStartDate(now);
+        setSearchEndDate(now);
+        setSearchKeywordsText('');
+        setIsDisplayingSearchResults(false);
+        setAdvancedSearchVisible(false);
+        onReset();
+    };
+
+    const handleDateShortcutSearch = (searchStartDateOverride: string, labelSearchEndDate = now) => {
+        setDateSearchOption('dateRange');
+        setSearchStartDate(searchStartDateOverride);
+        setSearchEndDate(labelSearchEndDate);
+        handleSearch(buildSearchDetails({
+            dateSearchOption: 'dateRange',
+            searchEndDate: labelSearchEndDate,
+            searchStartDate: searchStartDateOverride
+        }));
+    };
+
+    const handleMeaningSearch = () => {
+        setUseAISearch(true);
+
+        if (!searchString.trim()) {
+            return;
+        }
+
+        handleSearch(buildSearchDetails({
+            searchString: searchString.trim(),
+            useAISearch: true
+        }));
     };
 
     const keywordSearchOptionsList = [
@@ -168,47 +206,145 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
         }
     ];
 
+    const weekStartDate = useMemo(() => {
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+
+        return dateStamp(date);
+    }, []);
+
+    const monthStartDate = useMemo(() => {
+        const date = new Date();
+        date.setDate(1);
+
+        return dateStamp(date);
+    }, []);
+
+    const activeFiltersList = [
+        searchString.trim() ? `Text: ${searchString.trim()}` : undefined,
+        useAISearch ? 'Search by meaning' : undefined,
+        keywordSearchOption !== 'disabled' && searchKeywordsList.length ? `Keywords: ${keywordSearchOption === 'matchesAll' ? 'all' : 'any'} (${searchKeywordsList.join(', ')})` : undefined,
+        dateSearchOption === 'entryDate' ? `Date: ${entryDate}` : undefined,
+        dateSearchOption === 'dateRange' ? `${searchStartDate} to ${searchEndDate}` : undefined
+    ].filter(Boolean);
+
     return (
         <div className={componentClassNames}>
             <FlexboxComponent
                 className={`${displayName}__basic-search`}
                 layoutDefault={{
-                    alignItems: 'flex-end'
+                    alignItems: 'flex-end',
+                    columnGap: 'small'
                 }}
             >
                 <InputComponent
-                    className={'mr--2'}
-                    label={'Search your entries'}
+                    className={`${displayName}__basic-search-input`}
+                    label={'Find a memory'}
                     name={'entrySearch'}
                     onChange={handleSearchChange}
+                    placeholder={'Search words, places, or moments'}
                     type={'search'}
                     value={searchString}
                 />
                 <ButtonComponent
-                    className={'mr--1'}
+                    ariaLabel={'Search entries'}
+                    className={`${displayName}__basic-search-button`}
                     color={'primary'}
                     isIconOnly
-                    onClick={handleSearch}
+                    onClick={() => handleSearch()}
                     styleType={'primary'}
-                    type={'submit'}
+                    type={'button'}
                 >
                     <FontAwesomeIcon icon={faSearch} />
                 </ButtonComponent>
                 <ButtonComponent
+                    ariaLabel={'Open filters'}
+                    className={`${displayName}__basic-search-button`}
                     color={'neutral'}
                     isIconOnly
                     onClick={() => setAdvancedSearchVisible(!isAdvancedSearchVisible)}
                     styleType={'secondary'}
+                    type={'button'}
                 >
                     <FontAwesomeIcon icon={faSliders} />
                 </ButtonComponent>
             </FlexboxComponent>
+            <div className={`${displayName}__quick-filters`}>
+                <ButtonComponent
+                    className={`${displayName}__quick-filter-button`}
+                    color={'neutral'}
+                    onClick={() => handleDateShortcutSearch(weekStartDate)}
+                    styleType={'secondary'}
+                    type={'button'}
+                >{'Past week'}
+                </ButtonComponent>
+                <ButtonComponent
+                    className={`${displayName}__quick-filter-button`}
+                    color={'neutral'}
+                    onClick={() => handleDateShortcutSearch(monthStartDate)}
+                    styleType={'secondary'}
+                    type={'button'}
+                >{'This month'}
+                </ButtonComponent>
+                <ButtonComponent
+                    className={`${displayName}__quick-filter-button`}
+                    color={'secondary'}
+                    disabled={!searchString.trim()}
+                    onClick={handleMeaningSearch}
+                    styleType={'secondary'}
+                    type={'button'}
+                >{'Search by meaning'}
+                </ButtonComponent>
+            </div>
+            {
+                activeFiltersList.length > 0 && (
+                    <div className={`${displayName}__active-filters`}>
+                        {activeFiltersList.map((activeFilter) => (
+                            <span key={activeFilter}>{activeFilter}</span>
+                        ))}
+                        <button
+                            onClick={handleReset}
+                            type={'button'}
+                        >
+                            {'Clear'}
+                        </button>
+                    </div>
+                )
+            }
+            {
+                isAdvancedSearchVisible && (
+                    <button
+                        aria-label={'Close filters'}
+                        className={`${displayName}__advanced-search-background`}
+                        onClick={() => setAdvancedSearchVisible(false)}
+                        type={'button'}
+                    />
+                )
+            }
             <CardComponent className={advancedSearchClassNames}>
-                <h4 className={'mb--3'}>{'Advanced search toolbar'}</h4>
+                <FlexboxComponent
+                    className={'mb--3'}
+                    layoutDefault={{
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}
+                >
+                    <h4>{'Filters'}</h4>
+                    <ButtonComponent
+                        ariaLabel={'Close filters'}
+                        color={'neutral'}
+                        isIconOnly
+                        onClick={() => setAdvancedSearchVisible(false)}
+                        styleType={'inline'}
+                        type={'button'}
+                    >
+                        <FontAwesomeIcon icon={faXmark} />
+                    </ButtonComponent>
+                </FlexboxComponent>
                 <CheckboxComponent
                     checked={useAISearch}
                     className={'mb--3'}
-                    label={'AI search'}
+                    label={'Search by meaning'}
                     name={'aiSearch'}
                     onChange={setUseAISearch}
                 />
@@ -220,6 +356,19 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                     options={keywordSearchOptionsList}
                     value={keywordSearchOption}
                 />
+                {
+                    keywordSearchOption !== 'disabled' && (
+                        <InputComponent
+                            className={'mb--3'}
+                            label={'Keywords'}
+                            name={'keywords'}
+                            onChange={setSearchKeywordsText}
+                            placeholder={'family, work, lake'}
+                            type={'search'}
+                            value={searchKeywordsText}
+                        />
+                    )
+                }
                 <FlexboxComponent
                     className={'mb--7'}
                     layoutDefault={{
@@ -270,20 +419,31 @@ const SearchComponent: FC<ISearchComponent> = (props) => {
                         )
                     }
                 </FlexboxComponent>
-                <ButtonBlockComponent>
+                <FlexboxComponent
+                    layoutDefault={{
+                        flexDirection: 'column-reverse',
+                        rowGap: 'medium'
+                    }}
+                    layoutDesktop={{
+                        columnGap: 'medium',
+                        flexDirection: 'row'
+                    }}
+                >
                     <ButtonComponent
-                        color={'warning'}
+                        color={'neutral'}
                         onClick={handleReset}
                         styleType={'secondary'}
+                        type={'button'}
                     >{'Reset'}
                     </ButtonComponent>
                     <ButtonComponent
                         color={'primary'}
-                        onClick={handleSearch}
+                        onClick={() => handleSearch()}
                         styleType={'primary'}
+                        type={'button'}
                     >{'Apply'}
                     </ButtonComponent>
-                </ButtonBlockComponent>
+                </FlexboxComponent>
             </CardComponent>
         </div>
     );

@@ -5,6 +5,8 @@ import express, {
 import {
     ValidationChain,
     body,
+    param,
+    query,
     validationResult
 } from 'express-validator';
 
@@ -12,6 +14,8 @@ import {
     AuthenticationTokenPayloadLocals
 } from '@controllers/AuthenticationController';
 import JournalingController, {
+    JournalEntriesPageResponse,
+    JournalEntriesPagination,
     JournalEntryResponse
 } from '@controllers/JournalingController';
 
@@ -38,6 +42,10 @@ export interface RequestBodyDelete {
     entryID: number;
 }
 
+export interface RequestParamsRead {
+    entryID?: string;
+}
+
 const router = express.Router();
 
 const authentication = new Authentication();
@@ -59,6 +67,23 @@ const inputValidationsUpdate: ValidationChain[] = [
 
 const inputValidationsDelete: ValidationChain[] = [
     body('entryID').isNumeric()
+];
+
+const inputValidationsPage: ValidationChain[] = [
+    query('cursorEntryID').optional().isInt({
+        min: 1
+    }).toInt(),
+    query('cursorOccurredAt').optional().isString().trim(),
+    query('limit').optional().isInt({
+        max: 30,
+        min: 1
+    }).toInt()
+];
+
+const inputValidationsRead: ValidationChain[] = [
+    param('entryID').isInt({
+        min: 1
+    }).toInt()
 ];
 
 router.post('/journal-entry', [
@@ -150,11 +175,26 @@ router.patch('/journal-entry', [
     }
 });
 
-router.get('/journal-entry', [
+router.get('/journal-entry/:entryID', [
     rateLimiter.limited,
-    authentication.required
-], async (request: Request, response: Response<JournalEntryResponse[], AuthenticationTokenPayloadLocals>) => {
+    authentication.required,
+    ...inputValidationsRead
+], async (request: Request<RequestParamsRead>, response: Response<JournalEntryResponse | ErrorMessageDetails[], AuthenticationTokenPayloadLocals>) => {
+    const errors = validationResult(request);
+
+    if (!errors.isEmpty()) {
+        const errorMessagesList = validationResponseHandle(errors.array());
+
+        return response.status(422).send(errorMessagesList);
+    }
+
     try {
+        const {
+            params: {
+                entryID
+            }
+        } = request;
+
         const {
             locals: {
                 authenticationTokenPayload: {
@@ -163,9 +203,43 @@ router.get('/journal-entry', [
             }
         } = response;
 
-        const journalEntriesList = await journalingController.getAllEntriesByUserID(userID);
+        const journalEntry = await journalingController.getEntryByID(userID, parseInt(entryID || '', 10));
 
-        return response.status(200).send(journalEntriesList);
+        return response.status(200).send(journalEntry);
+    } catch (error) {
+        return errorResponseHandler(error, response);
+    }
+});
+
+router.get('/journal-entry', [
+    rateLimiter.limited,
+    authentication.required,
+    ...inputValidationsPage
+], async (request: Request<{}, {}, {}, JournalEntriesPagination>, response: Response<JournalEntriesPageResponse | ErrorMessageDetails[], AuthenticationTokenPayloadLocals>) => {
+    const errors = validationResult(request);
+
+    if (!errors.isEmpty()) {
+        const errorMessagesList = validationResponseHandle(errors.array());
+
+        return response.status(422).send(errorMessagesList);
+    }
+
+    try {
+        const {
+            query: pagination
+        } = request;
+
+        const {
+            locals: {
+                authenticationTokenPayload: {
+                    userID
+                }
+            }
+        } = response;
+
+        const journalEntriesPage = await journalingController.getAllEntriesByUserID(userID, pagination);
+
+        return response.status(200).send(journalEntriesPage);
     } catch (error) {
         return errorResponseHandler(error, response);
     }

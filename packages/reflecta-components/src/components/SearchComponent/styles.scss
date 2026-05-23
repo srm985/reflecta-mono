@@ -1,10 +1,73 @@
 @import '../../styles/styles';
 
 .SearchComponent {
-    &__basic-search {
+    position: relative;
+
+    &__basic-search-input {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    &__basic-search-button {
+        flex: 0 0 calc($planck-length * 5);
+        width: calc($planck-length * 5);
+    }
+
+    &__quick-filters,
+    &__active-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $margin-small;
+        margin-top: $margin-medium;
+    }
+
+    &__quick-filter-button {
+        min-height: calc($planck-length * 4);
+        padding: $padding-small $padding-medium;
+
+        font-size: $font-size-xsmall;
+    }
+
+    &__active-filters {
+        align-items: center;
+
+        span,
         button {
-            width: calc($planck-length * 5);
+            padding: calc($padding-small / 2) $padding-small;
+
+            font-size: $font-size-xsmall;
+
+            border-radius: $border-radius-small;
         }
+
+        span {
+            color: $color-primary-400;
+
+            background-color: $color-primary-100;
+        }
+
+        button {
+            color: $color-danger-400;
+            font-weight: bold;
+            font-family: $font-family-default;
+
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+    }
+
+    &__advanced-search-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: $z-index-popover;
+
+        width: 100vw;
+        height: 100vh;
+
+        background-color: rgba($color-neutral-600, 0.42);
+        border: none;
     }
 
     &__advanced-search {
@@ -13,7 +76,37 @@
         margin-top: $margin-medium;
 
         &--visible {
-            display: inline-block;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: calc($z-index-popover + 1);
+
+            display: block;
+            max-height: calc(88vh - env(safe-area-inset-bottom));
+            padding-bottom: calc($padding-medium + env(safe-area-inset-bottom));
+            overflow-y: auto;
+
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+            box-shadow: $box-shadow-400;
+        }
+    }
+
+    @include is-desktop() {
+        &__advanced-search-background {
+            display: none;
+        }
+
+        &__advanced-search {
+            &--visible {
+                position: static;
+
+                max-height: none;
+                padding-bottom: $padding-medium;
+                overflow: visible;
+
+                border-radius: $border-radius-large;
+            }
         }
     }
 }

@@ -1,0 +1,167 @@
+@import 'reflecta-components/src/styles/styles';
+
+.JournalEntryReadView {
+    width: 100%;
+    max-width: 740px;
+    margin: 0
+        auto;
+    padding-bottom: calc(
+        (
+                $planck-length *
+                    10
+            ) +
+            env(
+                safe-area-inset-bottom
+            )
+    );
+
+    &__toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: calc(
+                $margin-medium *
+                    -1
+            )
+            calc(
+                $margin-medium *
+                    -1
+            )
+            $margin-large;
+        padding: $padding-medium;
+
+        background-color: rgba(
+            $color-neutral-200,
+            0.96
+        );
+        border-bottom: solid
+            1px
+            rgba(
+                $color-neutral-400,
+                0.18
+            );
+        backdrop-filter: blur(
+            12px
+        );
+    }
+
+    &__back-button {
+        display: inline-flex;
+        align-items: center;
+        column-gap: $margin-small;
+    }
+
+    &__actions {
+        display: flex;
+        column-gap: $margin-small;
+    }
+
+    &__entry {
+        padding: $padding-medium;
+
+        background-color: $color-neutral-100;
+        border: solid
+            1px
+            rgba(
+                $color-neutral-400,
+                0.2
+            );
+        border-radius: $border-radius-large;
+        box-shadow: $box-shadow-100;
+
+        header {
+            margin-bottom: $margin-large;
+        }
+
+        h1 {
+            margin-top: $margin-medium;
+
+            color: $color-primary-500;
+            font-size: calc(
+                $font-size-large +
+                    8px
+            );
+            line-height: 1.15;
+        }
+    }
+
+    &__date {
+        display: flex;
+        align-items: center;
+        column-gap: $margin-small;
+
+        color: $color-accent-400;
+        font-weight: bold;
+        font-size: $font-size-small;
+    }
+
+    &__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $margin-small;
+        margin-top: $margin-medium;
+    }
+
+    &__edited,
+    &__location-link {
+        display: inline-flex;
+        align-items: center;
+        column-gap: calc(
+            $planck-length /
+                2
+        );
+        padding: calc(
+                $padding-small /
+                    2
+            )
+            $padding-small;
+
+        font-size: $font-size-xsmall;
+
+        background-color: $color-neutral-200;
+        border-radius: $border-radius-small;
+    }
+
+    &__body {
+        display: grid;
+        row-gap: $margin-medium;
+
+        p {
+            color: $color-neutral-500;
+            font-size: calc(
+                $font-size-large +
+                    2px
+            );
+            font-family: $font-family-text-block;
+            line-height: 1.62;
+        }
+    }
+
+    &__empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: $margin-medium;
+        padding: $padding-large
+            $padding-medium;
+
+        background-color: $color-neutral-100;
+        border: solid
+            1px
+            rgba(
+                $color-neutral-400,
+                0.22
+            );
+        border-radius: $border-radius-large;
+        box-shadow: $box-shadow-100;
+
+        h1 {
+            color: $color-primary-500;
+            font-size: $font-size-large;
+        }
+    }
+}

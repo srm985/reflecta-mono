@@ -1,4 +1,3 @@
-
 import {
     RowDataPacket
 } from 'mysql2';
@@ -48,8 +47,95 @@ export interface JournalEntry {
     userID?: UserID;
 }
 
+export type SearchableColumn = 'body' | 'keywords' | 'location' | 'title';
+export type SearchJoin = 'AND' | 'OR';
+
+export type JournalEntriesPageCursor = {
+    entryID: EntryID;
+    occurredAt: OccurredAt;
+};
+
+export type JournalEntriesPageDetails = {
+    cursor?: JournalEntriesPageCursor;
+    limit: number;
+};
+
+export type JournalEntriesPageResult = {
+    entriesList: JournalEntriesSchema[];
+    hasMore: boolean;
+    nextCursor?: JournalEntriesPageCursor;
+};
+
+export type JournalEntrySearchDetails = {
+    dateSearchOption: 'disabled' | 'entryDate' | 'dateRange';
+    entryDate: string;
+    keywordSearchOption: 'disabled' | 'matchesAny' | 'matchesAll';
+    searchEndDate: string;
+    searchKeywordsList: string[];
+    searchStartDate: string;
+    textKeywordsList: string[];
+};
+
+export type SearchClause = {
+    clause: string;
+    values: Array<string | number>;
+};
+
 class JournalEntriesModel {
+    private readonly SEARCHABLE_COLUMNS: SearchableColumn[] = [
+        'title',
+        'body',
+        'keywords',
+        'location'
+    ];
+
     private readonly TABLE_NAME = 'journal_entries';
+
+    private buildKeywordSearch = (keywordList: string[], join: SearchJoin): SearchClause | undefined => {
+        const cleanedKeywordList = keywordList.map((keyword) => keyword.trim()).filter(Boolean);
+
+        if (!cleanedKeywordList.length) {
+            return undefined;
+        }
+
+        const clause = cleanedKeywordList.map(() => `(${this.SEARCHABLE_COLUMNS.map((column) => `${column} LIKE ?`).join(' OR ')})`).join(` ${join} `);
+        const values = cleanedKeywordList.flatMap((keyword) => this.SEARCHABLE_COLUMNS.map(() => `%${keyword}%`));
+
+        return {
+            clause: `(${clause})`,
+            values
+        };
+    };
+
+    private buildPageResult = (results: JournalEntriesSchema[], limit: number): JournalEntriesPageResult => {
+        const entriesList = results.slice(0, limit);
+        const hasMore = results.length > limit;
+        const lastEntry = entriesList[entriesList.length - 1];
+
+        return {
+            entriesList,
+            hasMore,
+            nextCursor: hasMore && lastEntry?.entry_id ? {
+                entryID: lastEntry.entry_id,
+                occurredAt: lastEntry.occurred_at
+            } : undefined
+        };
+    };
+
+    private buildPageCursorSearch = (cursor?: JournalEntriesPageCursor): SearchClause | undefined => {
+        if (!cursor) {
+            return undefined;
+        }
+
+        return {
+            clause: '(occurred_at < ? OR (occurred_at = ? AND entry_id < ?))',
+            values: [
+                cursor.occurredAt,
+                cursor.occurredAt,
+                cursor.entryID
+            ]
+        };
+    };
 
     insertJournalEntry = async (userID: UserID, entryDetails: JournalEntry) => {
         const {
@@ -134,18 +220,36 @@ class JournalEntriesModel {
         await pool.query(query, values);
     };
 
-    allJournalEntriesByUserID = async (userID: UserID): Promise<JournalEntriesSchema[]> => {
-        const query = 'SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL ORDER BY occurred_at DESC';
-        const values = [
+    allJournalEntriesByUserID = async (userID: UserID, pageDetails: JournalEntriesPageDetails): Promise<JournalEntriesPageResult> => {
+        const {
+            cursor,
+            limit
+        } = pageDetails;
+
+        const whereClauses = [
+            'user_id = ?',
+            'deleted_at IS NULL'
+        ];
+        const values: Array<string | number> = [
             this.TABLE_NAME,
             userID
         ];
+        const cursorSearchClause = this.buildPageCursorSearch(cursor);
+
+        if (cursorSearchClause) {
+            whereClauses.push(cursorSearchClause.clause);
+            values.push(...cursorSearchClause.values);
+        }
+
+        values.push(limit + 1);
+
+        const query = `SELECT * FROM ?? WHERE ${whereClauses.join(' AND ')} ORDER BY occurred_at DESC, entry_id DESC LIMIT ?`;
 
         const [
             results = []
         ] = await pool.query<JournalEntriesSchema[] & RowDataPacket[][]>(query, values);
 
-        return results;
+        return this.buildPageResult(results, limit);
     };
 
     journalEntry = async (entryID: number): Promise<JournalEntriesSchema | undefined> => {
@@ -162,25 +266,19 @@ class JournalEntriesModel {
         return results[0];
     };
 
-    journalEntryByKeywords = async (userID: UserID, keywordList: string[], join: 'AND' | 'OR'): Promise<JournalEntriesSchema[]> => {
-        const keywordSearch = keywordList.map(() => 'keywords LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
-        const bodySearch = keywordList.map(() => 'body LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
-        const locationSearch = keywordList.map(() => 'location LIKE ?').join(`${join === 'AND' ? ' AND ' : ' OR '}`);
+    journalEntryByKeywords = async (userID: UserID, keywordList: string[], join: SearchJoin): Promise<JournalEntriesSchema[]> => {
+        const searchClause = this.buildKeywordSearch(keywordList, join);
 
-        const preparedSearch = `${bodySearch} ${join === 'AND' ? ' AND ' : ' OR '} ${keywordSearch} ${join === 'AND' ? ' AND ' : ' OR '} ${locationSearch}`;
+        if (!searchClause) {
+            return [];
+        }
 
-        console.log(preparedSearch);
-
-        const searchValues = keywordList.map((keyword) => `%${keyword}%`);
-
-        // Template literal is safe here because it's coming from hard coded values above
-        const query = `SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND (${preparedSearch})`;
+        // Template literal is safe here because the clause is built from hard-coded column names.
+        const query = `SELECT * FROM ?? WHERE user_id = ? AND deleted_at IS NULL AND ${searchClause.clause} ORDER BY occurred_at DESC, entry_id DESC`;
         const values = [
             this.TABLE_NAME,
             userID,
-            ...searchValues,
-            ...searchValues,
-            ...searchValues
+            ...searchClause.values
         ];
 
         const [
@@ -188,6 +286,71 @@ class JournalEntriesModel {
         ] = await pool.query<JournalEntriesSchema[] & RowDataPacket[][]>(query, values);
 
         return results;
+    };
+
+    searchJournalEntries = async (userID: UserID, searchDetails: JournalEntrySearchDetails, pageDetails: JournalEntriesPageDetails): Promise<JournalEntriesPageResult> => {
+        const {
+            dateSearchOption,
+            entryDate,
+            keywordSearchOption,
+            searchEndDate,
+            searchKeywordsList,
+            searchStartDate,
+            textKeywordsList
+        } = searchDetails;
+        const {
+            cursor,
+            limit
+        } = pageDetails;
+
+        const whereClauses = [
+            'user_id = ?',
+            'deleted_at IS NULL'
+        ];
+        const values: Array<string | number> = [
+            this.TABLE_NAME,
+            userID
+        ];
+
+        if (dateSearchOption === 'entryDate' && entryDate) {
+            whereClauses.push('occurred_at = ?');
+            values.push(entryDate);
+        }
+
+        if (dateSearchOption === 'dateRange' && searchStartDate && searchEndDate) {
+            whereClauses.push('(occurred_at >= ? AND occurred_at <= ?)');
+            values.push(searchStartDate, searchEndDate);
+        }
+
+        const keywordSearchJoin = keywordSearchOption === 'matchesAll' ? 'AND' : 'OR';
+        const keywordSearchClause = keywordSearchOption === 'disabled' ? undefined : this.buildKeywordSearch(searchKeywordsList, keywordSearchJoin);
+        const textSearchClause = this.buildKeywordSearch(textKeywordsList, 'OR');
+        const cursorSearchClause = this.buildPageCursorSearch(cursor);
+
+        if (keywordSearchClause) {
+            whereClauses.push(keywordSearchClause.clause);
+            values.push(...keywordSearchClause.values);
+        }
+
+        if (textSearchClause) {
+            whereClauses.push(textSearchClause.clause);
+            values.push(...textSearchClause.values);
+        }
+
+        if (cursorSearchClause) {
+            whereClauses.push(cursorSearchClause.clause);
+            values.push(...cursorSearchClause.values);
+        }
+
+        values.push(limit + 1);
+
+        const query = `SELECT * FROM ?? WHERE ${whereClauses.join(' AND ')} ORDER BY occurred_at DESC, entry_id DESC LIMIT ?`;
+
+        const [
+            results = []
+        ] = await pool.query<JournalEntriesSchema[] & RowDataPacket[][]>(query, values);
+
+        return this.buildPageResult(results, limit);
     };
 
     journalEntriesByDate = async (userID: UserID, entryDate: string): Promise<JournalEntriesSchema[]> => {

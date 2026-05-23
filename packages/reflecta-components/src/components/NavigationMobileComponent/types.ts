@@ -1,9 +1,10 @@
 import {
     IconDefinition
-} from '@fortawesome/free-regular-svg-icons';
+} from '@fortawesome/fontawesome-svg-core';
 
 export type NavigationItem = {
     icon: IconDefinition;
+    isActive?: boolean;
     label: string;
     onClick: () => void;
 };

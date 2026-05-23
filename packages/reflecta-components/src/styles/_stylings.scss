@@ -1,13 +1,13 @@
 // Border Radiuses
 $border-radius-small: calc($planck-length / 2);
-$border-radius-medium: $planck-length;
-$border-radius-large: calc($planck-length * 2);
+$border-radius-medium: calc($planck-length * 0.75);
+$border-radius-large: $planck-length;
 
 // Box Shadows
-$box-shadow-100: 3px 3px 6px $color-neutral-300;
-$box-shadow-200: 3px 3px 6px $color-neutral-400;
-$box-shadow-300: calc($planck-length / 2) calc($planck-length / 2) $planck-length $color-neutral-300;
-$box-shadow-400: calc($planck-length / 2) calc($planck-length / 2) $planck-length calc($planck-length / 2) $color-neutral-400;
+$box-shadow-100: 0 1px 2px rgba($color-neutral-600, 0.08);
+$box-shadow-200: 0 4px 10px rgba($color-neutral-600, 0.1);
+$box-shadow-300: 0 6px 18px rgba($color-neutral-600, 0.08);
+$box-shadow-400: 0 12px 30px rgba($color-neutral-600, 0.16);
 
 // Opacities
 $opacity-disabled: 0.35;

@@ -27,6 +27,9 @@ import {
 } from '@constants';
 
 import {
+    JournalEntriesPageCursor,
+    JournalEntriesPageRequest,
+    JournalEntriesPageResponse,
     JournalEntry,
     JournalEntryID,
     JournalEntrySubmissionPayload
@@ -41,14 +44,74 @@ const client = new Client();
 
 const storage = new Storage();
 
+const JOURNAL_ENTRIES_PAGE_LIMIT = 12;
+
+type JournalEntriesMode = 'partial' | 'search' | 'timeline';
+
+type FetchJournalEntriesOptions = {
+    shouldAppend?: boolean;
+    shouldReload?: boolean;
+};
+
+type JournalEntriesFetchedPayload = JournalEntriesPageResponse & {
+    mode: JournalEntriesMode;
+    shouldAppend: boolean;
+};
+
+type SearchJournalEntriesOptions = {
+    shouldAppend?: boolean;
+};
+
 type State = {
-    autoSavedJournalEntriesList: JournalEntrySubmissionPayload[],
-    journalEntriesList: JournalEntry[]
+    activeMode: JournalEntriesMode;
+    autoSavedJournalEntriesList: JournalEntrySubmissionPayload[];
+    hasMoreJournalEntries: boolean;
+    isJournalEntriesPageLoading: boolean;
+    journalEntriesList: JournalEntry[];
+    nextJournalEntriesCursor: JournalEntriesPageCursor | null;
 };
 
 const initialState: State = {
+    activeMode: 'timeline',
     autoSavedJournalEntriesList: [],
-    journalEntriesList: []
+    hasMoreJournalEntries: false,
+    isJournalEntriesPageLoading: false,
+    journalEntriesList: [],
+    nextJournalEntriesCursor: null
+};
+
+const buildPageRequest = (cursor: JournalEntriesPageCursor | null): JournalEntriesPageRequest => ({
+    ...(cursor ? {
+        cursorEntryID: cursor.entryID,
+        cursorOccurredAt: cursor.occurredAt
+    } : {}),
+    limit: JOURNAL_ENTRIES_PAGE_LIMIT
+});
+
+const sortJournalEntriesList = (journalEntriesList: JournalEntry[]): JournalEntry[] => [
+    ...journalEntriesList
+].sort((firstEntry, secondEntry) => {
+    const dateSort = secondEntry.occurredAt.localeCompare(firstEntry.occurredAt);
+
+    if (dateSort !== 0) {
+        return dateSort;
+    }
+
+    return secondEntry.entryID - firstEntry.entryID;
+});
+
+const mergeJournalEntriesList = (currentJournalEntriesList: JournalEntry[], nextJournalEntriesList: JournalEntry[]): JournalEntry[] => {
+    const journalEntriesByID = new Map<JournalEntryID, JournalEntry>();
+
+    currentJournalEntriesList.forEach((journalEntryDetails) => {
+        journalEntriesByID.set(journalEntryDetails.entryID, journalEntryDetails);
+    });
+
+    nextJournalEntriesList.forEach((journalEntryDetails) => {
+        journalEntriesByID.set(journalEntryDetails.entryID, journalEntryDetails);
+    });
+
+    return sortJournalEntriesList(Array.from(journalEntriesByID.values()));
 };
 
 export const dashboardSlice = createSlice({
@@ -59,32 +122,111 @@ export const dashboardSlice = createSlice({
             ...state,
             autoSavedJournalEntriesList: action.payload
         }),
-        journalEntriesFetched: (state, action: PayloadAction<JournalEntry[]>) => ({
+        journalEntriesFetched: (state, action: PayloadAction<JournalEntriesFetchedPayload>) => ({
             ...state,
-            journalEntriesList: action.payload
+            activeMode: action.payload.mode,
+            hasMoreJournalEntries: action.payload.hasMore,
+            isJournalEntriesPageLoading: false,
+            journalEntriesList: action.payload.shouldAppend ? mergeJournalEntriesList(state.journalEntriesList, action.payload.journalEntriesList) : sortJournalEntriesList(action.payload.journalEntriesList),
+            nextJournalEntriesCursor: action.payload.nextCursor
+        }),
+        journalEntriesPageLoadFinished: (state) => ({
+            ...state,
+            isJournalEntriesPageLoading: false
+        }),
+        journalEntriesPageLoadStarted: (state) => ({
+            ...state,
+            isJournalEntriesPageLoading: true
+        }),
+        journalEntryFetched: (state, action: PayloadAction<JournalEntry>) => ({
+            ...state,
+            activeMode: 'partial',
+            journalEntriesList: mergeJournalEntriesList(state.journalEntriesList, [
+                action.payload
+            ])
         })
     }
 });
 
 export const {
     autoSavedJournalEntriesFetched,
-    journalEntriesFetched
+    journalEntriesFetched,
+    journalEntriesPageLoadFinished,
+    journalEntriesPageLoadStarted,
+    journalEntryFetched
 } = dashboardSlice.actions;
 
-export const fetchJournalEntries = (shouldReload?: boolean): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
-    if (!shouldReload && state().journalEntries.journalEntriesList.length) {
+export const fetchJournalEntries = (options: FetchJournalEntriesOptions = {}): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
+    const {
+        shouldAppend = false,
+        shouldReload = false
+    } = options;
+
+    const {
+        activeMode,
+        hasMoreJournalEntries,
+        isJournalEntriesPageLoading,
+        journalEntriesList,
+        nextJournalEntriesCursor
+    } = state().journalEntries;
+
+    if (isJournalEntriesPageLoading) {
+        return undefined;
+    }
+
+    if (shouldAppend && !hasMoreJournalEntries) {
+        return undefined;
+    }
+
+    if (!shouldReload && !shouldAppend && activeMode === 'timeline' && journalEntriesList.length) {
+        return undefined;
+    }
+
+    dispatch(journalEntriesPageLoadStarted());
+
+    if (!shouldAppend) {
+        dispatch(requestLoadingShow());
+    }
+
+    try {
+        const payload = await client.get<JournalEntriesPageResponse>(ROUTE_API_JOURNAL_ENTRY, buildPageRequest(shouldAppend ? nextJournalEntriesCursor : null));
+
+        if ('errorMessage' in payload) {
+            console.log(payload.errorMessage);
+        } else {
+            dispatch(journalEntriesFetched({
+                ...payload,
+                mode: 'timeline',
+                shouldAppend
+            }));
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    if (!shouldAppend) {
+        dispatch(requestLoadingHide());
+    }
+
+    return dispatch(journalEntriesPageLoadFinished());
+};
+
+export const fetchJournalEntryByID = (entryID: JournalEntryID): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
+    const existingEntryDetails = state().journalEntries.journalEntriesList.find((journalEntryDetails) => journalEntryDetails.entryID === entryID);
+
+    if (existingEntryDetails) {
         return undefined;
     }
 
     dispatch(requestLoadingShow());
 
     try {
-        const payload = await client.get<JournalEntry[]>(ROUTE_API_JOURNAL_ENTRY);
+        const payload = await client.get<JournalEntry>(`${ROUTE_API_JOURNAL_ENTRY}/${entryID}`);
 
         if ('errorMessage' in payload) {
             console.log(payload.errorMessage);
         } else {
-            dispatch(journalEntriesFetched(payload));
+            dispatch(journalEntryFetched(payload));
         }
     } catch (error) {
         console.log(error);
@@ -122,7 +264,9 @@ export const createJournalEntry = (submissionPayload: JournalEntrySubmissionPayl
 
         dispatch(requestLoadingHide());
 
-        dispatch(fetchJournalEntries(true));
+        dispatch(fetchJournalEntries({
+            shouldReload: true
+        }));
 
         return response;
     } catch (error) {
@@ -146,7 +290,9 @@ export const updateJournalEntry = (submissionPayload: JournalEntrySubmissionPayl
 
         dispatch(requestLoadingHide());
 
-        dispatch(fetchJournalEntries(true));
+        dispatch(fetchJournalEntries({
+            shouldReload: true
+        }));
 
         return response;
     } catch (error) {
@@ -164,7 +310,9 @@ export const deleteJournalEntry = (entryID: JournalEntryID): ThunkAction<void, R
             entryID
         });
 
-        dispatch(fetchJournalEntries(true));
+        dispatch(fetchJournalEntries({
+            shouldReload: true
+        }));
     } catch (error) {
         console.log(error);
     }
@@ -172,7 +320,7 @@ export const deleteJournalEntry = (entryID: JournalEntryID): ThunkAction<void, R
     dispatch(requestLoadingHide());
 };
 
-export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload): ThunkAction<void, RootState, unknown, AnyAction> => async (_dispatch, state) => {
+export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload): ThunkAction<Promise<boolean>, RootState, unknown, AnyAction> => async (dispatch, state) => {
     try {
         const {
             autoSavedJournalEntriesList
@@ -198,8 +346,13 @@ export const autoSaveJournalEntry = (entryDetails: JournalEntrySubmissionPayload
         }
 
         storage.writeKeyLocal(LOCAL_STORAGE_AUTO_SAVE_KEY, entriesList);
+        dispatch(autoSavedJournalEntriesFetched(entriesList));
+
+        return true;
     } catch (error) {
         console.log(error);
+
+        return false;
     }
 };
 
@@ -212,8 +365,6 @@ export const deleteAutoSaveJournalEntry = (entryID: JournalEntryID | undefined):
         } = state().journalEntries;
 
         const entriesList: JournalEntrySubmissionPayload[] = JSON.parse(JSON.stringify(autoSavedJournalEntriesList));
-
-        console.log(entriesList);
 
         // See if we have an existing value to update - new entries use 0 as their ID
         const entryIndex = entriesList.findIndex((existingEntryDetails) => existingEntryDetails.entryID === (entryID || 0));
@@ -239,6 +390,10 @@ export const selectAllJournalEntries = (state: RootState): JournalEntry[] => sta
 
 export const selectAllAutoSavedJournalEntries = (state: RootState): JournalEntrySubmissionPayload[] => state.journalEntries.autoSavedJournalEntriesList;
 
+export const selectJournalEntriesHasMore = (state: RootState): boolean => state.journalEntries.hasMoreJournalEntries;
+
+export const selectJournalEntriesPageLoading = (state: RootState): boolean => state.journalEntries.isJournalEntriesPageLoading;
+
 // Fetching ID-specific entries
 export const selectJournalEntryByID = (state: RootState, entryID: JournalEntryID | undefined): JournalEntry | undefined => {
     if (entryID === undefined) {
@@ -250,22 +405,55 @@ export const selectJournalEntryByID = (state: RootState, entryID: JournalEntryID
 
 export const selectAutoSavedJournalEntryByID = (state: RootState, entryID: JournalEntryID): JournalEntrySubmissionPayload | undefined => state.journalEntries.autoSavedJournalEntriesList.find((entryDetails) => entryDetails.entryID === entryID);
 
-export const searchJournalEntries = (searchDetails: Search): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
-    dispatch(requestLoadingShow());
+export const searchJournalEntries = (searchDetails: Search, options: SearchJournalEntriesOptions = {}): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, state) => {
+    const {
+        shouldAppend = false
+    } = options;
+
+    const {
+        hasMoreJournalEntries,
+        isJournalEntriesPageLoading,
+        nextJournalEntriesCursor
+    } = state().journalEntries;
+
+    if (isJournalEntriesPageLoading) {
+        return undefined;
+    }
+
+    if (shouldAppend && !hasMoreJournalEntries) {
+        return undefined;
+    }
+
+    dispatch(journalEntriesPageLoadStarted());
+
+    if (!shouldAppend) {
+        dispatch(requestLoadingShow());
+    }
 
     try {
-        const payload = await client.get<JournalEntry[]>(ROUTE_API_SEARCH, searchDetails);
+        const payload = await client.get<JournalEntriesPageResponse>(ROUTE_API_SEARCH, {
+            ...searchDetails,
+            ...buildPageRequest(shouldAppend ? nextJournalEntriesCursor : null)
+        });
 
         if ('errorMessage' in payload) {
             console.log(payload.errorMessage);
         } else {
-            dispatch(journalEntriesFetched(payload));
+            dispatch(journalEntriesFetched({
+                ...payload,
+                mode: 'search',
+                shouldAppend
+            }));
         }
     } catch (error) {
         console.log(error);
     }
 
-    dispatch(requestLoadingHide());
+    if (!shouldAppend) {
+        dispatch(requestLoadingHide());
+    }
+
+    return dispatch(journalEntriesPageLoadFinished());
 };
 
 export default dashboardSlice.reducer;

@@ -2,9 +2,15 @@ import {
     faFloppyDisk
 } from '@fortawesome/free-regular-svg-icons';
 import {
+    faChevronDown,
+    faCircleCheck,
+    faTriangleExclamation
+} from '@fortawesome/free-solid-svg-icons';
+import {
     FontAwesomeIcon
 } from '@fortawesome/react-fontawesome';
 import {
+    ChangeEvent,
     FormEvent,
     useEffect,
     useRef,
@@ -14,7 +20,6 @@ import {
     usePlacesWidget
 } from 'react-google-autocomplete';
 
-import ButtonBlockComponent from '@components/ButtonBlockComponent';
 import ButtonComponent from '@components/ButtonComponent';
 import FlexboxComponent from '@components/FlexboxComponent';
 import FormComponent from '@components/FormComponent';
@@ -23,6 +28,7 @@ import classNames from '@utils/classNames';
 import dateStamp from '@utils/dateStamp';
 
 import {
+    AutoSaveStatus,
     IJournalEntryInputComponent,
     Location
 } from './types';
@@ -71,15 +77,21 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     ] = useState<Location | undefined>();
 
     const [
-        intervalID,
-        setIntervalID
-    ] = useState<NodeJS.Timeout | null>(null);
-
-    const [
         isDirty,
         setIsDirty
     ] = useState<boolean>(false);
 
+    const [
+        isDetailsOpen,
+        setDetailsOpen
+    ] = useState<boolean>(false);
+
+    const [
+        autoSaveStatus,
+        setAutoSaveStatus
+    ] = useState<AutoSaveStatus>('idle');
+
+    const autoSaveStatusTimerReference = useRef<NodeJS.Timeout | null>(null);
     const entryIDReference = useRef(entryID);
     const titleReference = useRef(title);
     const occurredAtReference = useRef(occurredAt);
@@ -116,30 +128,56 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         body
     ]);
 
+    const clearAutoSaveStatusTimer = () => {
+        if (autoSaveStatusTimerReference.current) {
+            clearTimeout(autoSaveStatusTimerReference.current);
+        }
+    };
+
+    const markDirty = () => {
+        clearAutoSaveStatusTimer();
+        setIsDirty(true);
+        setAutoSaveStatus('unsaved');
+    };
+
     const {
         ref
     } = usePlacesWidget<HTMLInputElement>({
         apiKey: googleMapsAPIKey,
         onPlaceSelected: () => {
             setLocation(ref.current?.value);
+            markDirty();
         },
         options: {
             types: []
         }
     });
 
-    const handleSave = () => {
-        onAutoSave({
-            body: bodyReference.current,
-            entryID: entryIDReference.current,
-            location: locationReference.current,
-            occurredAt: occurredAtReference.current,
-            title: titleReference.current
-        });
+    const handleSave = async () => {
+        clearAutoSaveStatusTimer();
+        setAutoSaveStatus('saving');
+
+        try {
+            const saveResult = await onAutoSave({
+                body: bodyReference.current,
+                entryID: entryIDReference.current,
+                location: locationReference.current,
+                occurredAt: occurredAtReference.current,
+                title: titleReference.current
+            });
+
+            setAutoSaveStatus(saveResult === false ? 'failed' : 'saved');
+
+            autoSaveStatusTimerReference.current = setTimeout(() => {
+                setAutoSaveStatus('idle');
+            }, 3000);
+        } catch (error) {
+            setAutoSaveStatus('failed');
+        }
     };
 
     useEffect(() => {
-        if (!isDirty || (isDirty && intervalID)) {
+        if (!isDirty) {
             return undefined;
         }
 
@@ -147,12 +185,14 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
             handleSave();
         }, autoSaveIntervalMS);
 
-        setIntervalID(autoSaveInterval);
-
         return () => clearInterval(autoSaveInterval);
     }, [
-        isDirty
+        autoSaveIntervalMS,
+        isDirty,
+        onAutoSave
     ]);
+
+    useEffect(() => () => clearAutoSaveStatusTimer(), []);
 
     useEffect(() => {
         setTitle(initialTitle || '');
@@ -167,7 +207,27 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
     ]);
 
     const handleSetDirty = () => {
-        setIsDirty(true);
+        markDirty();
+    };
+
+    const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setTitle(event.target.value);
+        markDirty();
+    };
+
+    const handleOccurredAtChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setOccurredAt(event.target.value);
+        markDirty();
+    };
+
+    const handleLocationChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setLocation(event.target.value);
+        markDirty();
+    };
+
+    const handleBodyChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setBody(event.target.value);
+        markDirty();
     };
 
     const handleEntrySubmission = (event: FormEvent) => {
@@ -187,101 +247,149 @@ const JournalEntryInputComponent: React.FC<IJournalEntryInputComponent> = (props
         className
     );
 
+    const detailsClassNames = classNames(
+        `${displayName}__details`,
+        {
+            [`${displayName}__details--open`]: isDetailsOpen
+        }
+    );
+
+    const detailsToggleIconClassNames = classNames(
+        `${displayName}__details-toggle-icon`,
+        {
+            [`${displayName}__details-toggle-icon--open`]: isDetailsOpen
+        }
+    );
+
+    const autoSaveStatusLabel = {
+        failed: 'Draft could not save',
+        idle: entryID ? 'Editing reflection' : 'New reflection',
+        saved: 'Draft saved just now',
+        saving: 'Saving draft...',
+        unsaved: 'Unsaved changes'
+    }[autoSaveStatus];
+
+    const autoSaveStatusIcon = {
+        failed: faTriangleExclamation,
+        idle: undefined,
+        saved: faCircleCheck,
+        saving: undefined,
+        unsaved: undefined
+    }[autoSaveStatus];
+
     return (
         <FormComponent
             className={componentClassNames}
             onDirty={handleSetDirty}
             onSubmit={handleEntrySubmission}
         >
-            <FlexboxComponent>
-                <ButtonBlockComponent
-                    className={'mb--2'}
-                    isAlwaysInline
+            <FlexboxComponent
+                className={`${displayName}__toolbar`}
+                layoutDefault={{
+                    alignItems: 'center',
+                    columnGap: 'medium',
+                    justifyContent: 'space-between'
+                }}
+            >
+                <ButtonComponent
+                    color={'neutral'}
+                    onClick={onDiscard}
+                    styleType={'inline'}
+                    type={'button'}
                 >
-                    <ButtonComponent
-                        color={'danger'}
-                        onClick={onDiscard}
-                        styleType={'inline'}
-                        type={'button'}
-                    >
-                        {'discard'}
-                    </ButtonComponent>
-                    <ButtonComponent
-                        color={'accent'}
-                        styleType={'inline'}
-                        type={'submit'}
-                    >
-                        <FontAwesomeIcon
-                            className={'font--large'}
-                            icon={faFloppyDisk}
-                        />
-                    </ButtonComponent>
-                </ButtonBlockComponent>
-            </FlexboxComponent>
-            <FlexboxComponent
-                className={`${displayName}__input`}
-                layoutDefault={{
-                    alignItems: 'center'
-                }}
-            >
-                <label htmlFor={'title'}>
-                    <span>{'Title (optional):'}</span>
-                </label>
-                <input
-                    id={'title'}
-                    name={'title'}
-                    onChange={(event) => setTitle(event.target.value)}
-                    type={'search'}
-                    value={title}
-                />
-            </FlexboxComponent>
-            <FlexboxComponent
-                className={`${displayName}__input`}
-                layoutDefault={{
-                    alignItems: 'center'
-                }}
-            >
-                <label htmlFor={'date'}>
-                    <span>{'Entry date:'}</span>
-                </label>
-                <input
-                    id={'date'}
-                    name={'date'}
-                    onChange={(event) => setOccurredAt(event.target.value)}
-                    type={'date'}
-                    value={occurredAt}
-                />
-            </FlexboxComponent>
-            <FlexboxComponent
-                className={`${displayName}__input`}
-                layoutDefault={{
-                    alignItems: 'center'
-                }}
-            >
-                <label htmlFor={'location'}>
-                    <span>{'Location:'}</span>
-                </label>
-                <input
-                    id={'location'}
-                    name={'location'}
-                    onInput={(event) => {
-                        const {
-                            value
-                        } = (event.target as HTMLInputElement);
-
-                        setLocation(value);
-                    }}
-                    ref={ref}
-                    type={'search'}
-                    value={location}
-                />
+                    {'Cancel'}
+                </ButtonComponent>
+                <p className={`${displayName}__autosave-status`}>
+                    {autoSaveStatusIcon && (
+                        <FontAwesomeIcon icon={autoSaveStatusIcon} />
+                    )}
+                    <span>{autoSaveStatusLabel}</span>
+                </p>
+                <ButtonComponent
+                    className={`${displayName}__submit-button`}
+                    color={'accent'}
+                    type={'submit'}
+                >
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                    <span>{'Done'}</span>
+                </ButtonComponent>
             </FlexboxComponent>
             <textarea
+                aria-label={'Journal entry'}
                 className={`${displayName}__textarea`}
                 name={'body'}
-                onChange={(event) => setBody(event.target.value)}
+                onChange={handleBodyChange}
+                placeholder={'What do you want to remember?'}
                 value={body}
             />
+            <button
+                aria-expanded={isDetailsOpen}
+                className={`${displayName}__details-toggle`}
+                onClick={() => setDetailsOpen(!isDetailsOpen)}
+                type={'button'}
+            >
+                <span>{'Details'}</span>
+                <FontAwesomeIcon
+                    className={detailsToggleIconClassNames}
+                    icon={faChevronDown}
+                />
+            </button>
+            <div className={detailsClassNames}>
+                <FlexboxComponent
+                    className={`${displayName}__input`}
+                    layoutDefault={{
+                        alignItems: 'center'
+                    }}
+                >
+                    <label htmlFor={'title'}>
+                        <span>{'Title'}</span>
+                    </label>
+                    <input
+                        id={'title'}
+                        name={'title'}
+                        onChange={handleTitleChange}
+                        placeholder={'Optional'}
+                        type={'text'}
+                        value={title}
+                    />
+                </FlexboxComponent>
+                <FlexboxComponent
+                    className={`${displayName}__input`}
+                    layoutDefault={{
+                        alignItems: 'center'
+                    }}
+                >
+                    <label htmlFor={'date'}>
+                        <span>{'Entry date'}</span>
+                    </label>
+                    <input
+                        id={'date'}
+                        name={'date'}
+                        onChange={handleOccurredAtChange}
+                        type={'date'}
+                        value={occurredAt}
+                    />
+                </FlexboxComponent>
+                <FlexboxComponent
+                    className={`${displayName}__input`}
+                    layoutDefault={{
+                        alignItems: 'center'
+                    }}
+                >
+                    <label htmlFor={'location'}>
+                        <span>{'Location'}</span>
+                    </label>
+                    <input
+                        id={'location'}
+                        name={'location'}
+                        onChange={handleLocationChange}
+                        placeholder={'Optional'}
+                        ref={ref}
+                        type={'search'}
+                        value={location || ''}
+                    />
+                </FlexboxComponent>
+            </div>
         </FormComponent>
     );
 };

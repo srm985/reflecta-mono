@@ -7,6 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {
     Outlet,
+    useLocation,
     useNavigate
 } from 'react-router-dom';
 import {
@@ -26,9 +27,12 @@ import {
     ROUTE_UI_JOURNAL_ENTRY
 } from '@routes';
 
+import './styles.scss';
+
 const authentication = new Authentication();
 
 const ContainerComponent = () => {
+    const location = useLocation();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -41,6 +45,7 @@ const ContainerComponent = () => {
 
     const primaryNavigationItem: NavigationItem = {
         icon: faPenToSquare,
+        isActive: location.pathname === `${ROUTE_UI_JOURNAL_ENTRY}/create`,
         label: 'New Entry',
         onClick: () => navigate(`${ROUTE_UI_JOURNAL_ENTRY}/create`)
     };
@@ -48,18 +53,23 @@ const ContainerComponent = () => {
     const navigationItemsList: NavigationItem[] = [
         {
             icon: faHouse,
+            isActive: location.pathname === ROUTE_UI_DASHBOARD,
             label: 'Home',
             onClick: () => navigate(ROUTE_UI_DASHBOARD)
         },
         {
             icon: faGear,
+            isActive: location.pathname === ROUTE_UI_ACCOUNT,
             label: 'Settings',
             onClick: () => navigate(ROUTE_UI_ACCOUNT)
         }
     ];
 
     const navigationComponent = (
-        <ViewportRendererComponent>
+        <ViewportRendererComponent viewportOptions={{
+            breakpointBeginMedium: <span />
+        }}
+        >
             <NavigationMobileComponent
                 navigationItems={navigationItemsList}
                 primaryNavigationItem={primaryNavigationItem}
@@ -68,18 +78,20 @@ const ContainerComponent = () => {
     );
 
     return (
-        <>
+        <div className={'ContainerComponent'}>
             {isAuthenticated && (
                 <>
-                    <NavigationBarComponent onLogout={handleLogout} />
+                    <div className={'ContainerComponent__top-navigation'}>
+                        <NavigationBarComponent onLogout={handleLogout} />
+                    </div>
                     {navigationComponent}
                 </>
             )}
-            <div className={'mx--2 my--10'}>
+            <div className={'ContainerComponent__content'}>
                 <Outlet />
             </div>
             <footer />
-        </>
+        </div>
     );
 };
 

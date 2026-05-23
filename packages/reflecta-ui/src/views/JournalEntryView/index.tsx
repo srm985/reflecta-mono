@@ -21,7 +21,7 @@ import {
     createJournalEntry,
     deleteAutoSaveJournalEntry,
     fetchAutoSavedJournalEntries,
-    fetchJournalEntries,
+    fetchJournalEntryByID,
     selectAutoSavedJournalEntryByID,
     selectJournalEntryByID,
     updateJournalEntry
@@ -70,11 +70,15 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
     const entryID: number | undefined = !entryIDString ? undefined : parseInt(entryIDString, 10);
 
     useEffect(() => {
-        dispatch(fetchJournalEntries());
+        if (entryID) {
+            dispatch(fetchJournalEntryByID(entryID));
+        }
+
         dispatch(fetchAutoSavedJournalEntries());
         dispatch(fetchLocation());
     }, [
-        dispatch
+        dispatch,
+        entryID
     ]);
 
     const location = useAppSelector((state) => selectLocation(state));
@@ -86,9 +90,7 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
 
     const selectedEntryDetails: JournalEntry | JournalEntrySubmissionPayload | undefined = autoSavedEntryDetails || existingEntryDetails;
 
-    const handleAutoSave = (entryDetails: JournalEntrySubmissionPayload) => {
-        dispatch(autoSaveJournalEntry(entryDetails));
-    };
+    const handleAutoSave = (entryDetails: JournalEntrySubmissionPayload) => dispatch(autoSaveJournalEntry(entryDetails));
 
     const handleSubmit = async (journalEntry: JournalEntrySubmissionPayload) => {
         // We're either creating or updating
@@ -129,15 +131,15 @@ const JournalEntryView: FC<IJournalEntryView> = () => {
             {
                 isPromptOpen && (
                     <PromptComponent
-                        label={entryID ? 'Discard changes?' : 'Discard entry?'}
-                        message={entryID ? 'Are you sure you want to discard these changes? If you would like to save it for later, simply close this message and hit the Home button.' : 'Are you sure you want to discard this entry? If you would like to save it for later, simply close this message and hit the Home button.'}
+                        label={entryID ? 'Discard changes?' : 'Discard draft?'}
+                        message={entryID ? 'This removes the autosaved changes and keeps the last saved version.' : 'This removes the autosaved draft. You can keep writing to preserve it.'}
                         promptPrimary={{
                             color: 'danger',
-                            label: entryID ? 'Discard changes' : 'Discard entry',
+                            label: entryID ? 'Discard changes' : 'Discard draft',
                             onClick: handleDiscard
                         }}
                         promptSecondary={{
-                            label: entryID ? 'Continue editing' : 'Continue journaling',
+                            label: 'Keep writing',
                             onClick: () => setPromptOpen(false)
                         }}
                     />

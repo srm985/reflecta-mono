@@ -13,6 +13,7 @@ export type IJournalEntryDisplayComponent = {
     occurredAt: string;
     onDelete: (entryID: number) => void;
     onEdit: (entryID: EntryID) => void;
+    onOpen?: (entryID: EntryID) => void;
     title: string;
     updatedAt: string | null;
 };

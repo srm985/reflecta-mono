@@ -34,6 +34,7 @@ import {
 } from '@routes';
 
 const DashboardView = React.lazy(() => import('@views/DashboardView') as unknown as Promise<{ default: FC }>);
+const JournalEntryReadView = React.lazy(() => import('@views/JournalEntryReadView') as unknown as Promise<{ default: FC }>);
 const JournalEntryView = React.lazy(() => import('@views/JournalEntryView') as unknown as Promise<{ default: FC }>);
 const LoginView = React.lazy(() => import('@views/LoginView') as unknown as Promise<{ default: FC }>);
 
@@ -62,6 +63,10 @@ const App = () => {
                                 path={ROUTE_UI_DASHBOARD}
                             />
                             <Route path={ROUTE_UI_JOURNAL_ENTRY}>
+                                <Route
+                                    element={<JournalEntryReadView />}
+                                    path={':entryID'}
+                                />
                                 <Route
                                     element={<JournalEntryView />}
                                     path={'edit/:entryID'}

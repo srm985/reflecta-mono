@@ -14,6 +14,7 @@ export type IInputComponent = {
     label: string;
     name: string;
     onChange: (argument: string) => void;
+    placeholder?: string;
     required?: boolean;
     type?: HTMLInputTypeAttribute;
     value: Value;
