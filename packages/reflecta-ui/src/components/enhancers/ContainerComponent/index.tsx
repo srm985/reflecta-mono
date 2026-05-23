@@ -44,9 +44,9 @@ const ContainerComponent = () => {
     const isAuthenticated = authentication.isAuthenticated();
 
     const primaryNavigationItem: NavigationItem = {
+        ariaLabel: 'Create journal entry',
         icon: faPenToSquare,
         isActive: location.pathname === `${ROUTE_UI_JOURNAL_ENTRY}/create`,
-        label: 'New Entry',
         onClick: () => navigate(`${ROUTE_UI_JOURNAL_ENTRY}/create`)
     };
 

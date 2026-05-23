@@ -26,8 +26,8 @@ const meta: Meta = {
 };
 
 const primaryNavigationItem = {
+    ariaLabel: 'Create journal entry',
     icon: faPenToSquare,
-    label: 'New Entry',
     onClick: () => {}
 };
 

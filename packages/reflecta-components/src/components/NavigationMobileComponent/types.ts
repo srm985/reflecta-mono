@@ -2,12 +2,23 @@ import {
     IconDefinition
 } from '@fortawesome/fontawesome-svg-core';
 
-export type NavigationItem = {
+type NavigationItemBase = {
     icon: IconDefinition;
     isActive?: boolean;
-    label: string;
     onClick: () => void;
 };
+
+type NavigationItemWithAriaLabel = NavigationItemBase & {
+    ariaLabel: string;
+    label?: string;
+};
+
+type NavigationItemWithLabel = NavigationItemBase & {
+    ariaLabel?: string;
+    label: string;
+};
+
+export type NavigationItem = NavigationItemWithAriaLabel | NavigationItemWithLabel;
 
 export type INavigationMobileComponent = {
     className?: string;

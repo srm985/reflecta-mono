@@ -27,6 +27,8 @@ const NavigationMobileComponent: FC<INavigationMobileComponent> = (props) => {
     } = NavigationMobileComponent;
 
     const renderNavigationItem = (navigationItem: NavigationItem, isPrimary = false) => {
+        const label = navigationItem.ariaLabel || navigationItem.label;
+
         const navigationItemClassNames = classNames(
             `${displayName}__navigation-item`,
             {
@@ -36,17 +38,19 @@ const NavigationMobileComponent: FC<INavigationMobileComponent> = (props) => {
         );
 
         return (
-            <div key={navigationItem.label}>
+            <div key={label || navigationItem.icon.iconName}>
                 <button
                     aria-current={navigationItem.isActive ? 'page' : undefined}
-                    aria-label={navigationItem.label}
+                    aria-label={label}
                     className={navigationItemClassNames}
                     onClick={navigationItem.onClick}
-                    title={navigationItem.label}
+                    title={label}
                     type={'button'}
                 >
                     <FontAwesomeIcon icon={navigationItem.icon} />
-                    <span>{navigationItem.label}</span>
+                    {navigationItem.label && (
+                        <span>{navigationItem.label}</span>
+                    )}
                 </button>
             </div>
         );
