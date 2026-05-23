@@ -1,0 +1,31 @@
+@import 'reflecta-components/src/styles/styles';
+
+.ContainerComponent {
+    min-height: 100vh;
+
+    &__top-navigation {
+        display: none;
+    }
+
+    &__content {
+        width: 100%;
+        padding: $padding-medium;
+    }
+
+    @include is-desktop(
+
+    ) {
+        &__top-navigation {
+            display: block;
+        }
+
+        &__content {
+            padding: calc(
+                    $planck-length *
+                        10
+                )
+                $padding-large
+                $padding-large;
+        }
+    }
+}

@@ -19,6 +19,7 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
         isIconOnly,
         onClick,
         styleType = 'primary',
+        title,
         type
     } = props;
 
@@ -47,14 +48,17 @@ const ButtonComponent: React.FC<IButtonComponent> = (props) => {
                 href={href}
                 rel={'noreferrer'}
                 target={isExternalLink ? '_blank' : '_self'}
+                title={title || ariaLabel}
             >
                 {children}
             </a>
         ) : (
             <button
+                aria-label={ariaLabel}
                 className={componentClassNames}
                 disabled={disabled}
                 onClick={onClick}
+                title={title || ariaLabel}
                 // eslint-disable-next-line react/button-has-type
                 type={type}
             >

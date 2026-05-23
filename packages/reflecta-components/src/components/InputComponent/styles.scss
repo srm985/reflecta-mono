@@ -12,10 +12,21 @@
         height: calc($planck-length * 5);
         padding: 0 $planck-length;
 
-        background-color: $color-neutral-200;
-        border: solid 1px $color-neutral-500;
+        color: $font-color-default;
+
+        background-color: $color-neutral-100;
+        border: solid 1px rgba($color-neutral-400, 0.55);
         border-radius: $border-radius-small;
         box-shadow: $box-shadow-100;
+
+        &::placeholder {
+            color: $color-neutral-400;
+        }
+
+        &:focus {
+            border-color: $color-accent-300;
+            outline: solid rgba($color-accent-300, 0.24) 3px;
+        }
     }
 
     &--disabled {

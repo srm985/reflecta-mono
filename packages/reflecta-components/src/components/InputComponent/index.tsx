@@ -21,6 +21,7 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
         label,
         name,
         onChange,
+        placeholder,
         required,
         type,
         value
@@ -67,6 +68,7 @@ const InputComponent: React.FC<IInputComponent> = (props) => {
                 disabled={disabled}
                 id={componentID}
                 onChange={handleChange}
+                placeholder={placeholder}
                 required={required}
                 type={type}
                 value={value}

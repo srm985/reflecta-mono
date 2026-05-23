@@ -14,6 +14,23 @@ export type JournalEntry = {
     updatedAt: string | null;
 };
 
+export type JournalEntriesPageCursor = {
+    entryID: JournalEntryID;
+    occurredAt: JournalEntryDate;
+};
+
+export type JournalEntriesPageRequest = {
+    cursorEntryID?: JournalEntryID;
+    cursorOccurredAt?: JournalEntryDate;
+    limit?: number;
+};
+
+export type JournalEntriesPageResponse = {
+    hasMore: boolean;
+    journalEntriesList: JournalEntry[];
+    nextCursor: JournalEntriesPageCursor | null;
+};
+
 export type JournalEntrySubmissionPayload = {
     body: JournalEntryBody;
     entryID?: JournalEntryID;

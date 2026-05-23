@@ -3,16 +3,18 @@ import {
     faTrashCan
 } from '@fortawesome/free-regular-svg-icons';
 import {
+    faCalendarDay,
     faLocationDot
 } from '@fortawesome/free-solid-svg-icons';
 import {
     FontAwesomeIcon
 } from '@fortawesome/react-fontawesome';
 import {
-    FC
+    FC,
+    KeyboardEvent,
+    MouseEvent
 } from 'react';
 
-import ButtonComponent from '@components/ButtonComponent';
 import CardComponent from '@components/CardComponent';
 import FlexboxComponent from '@components/FlexboxComponent';
 import PopoverComponent from '@components/PopoverComponent';
@@ -22,6 +24,8 @@ import classNames from '@utils/classNames';
 import {
     IJournalEntryDisplayComponent
 } from './types';
+
+import './styles.scss';
 
 const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) => {
     const {
@@ -33,6 +37,7 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
         occurredAt,
         onDelete,
         onEdit,
+        onOpen,
         title,
         updatedAt
     } = props;
@@ -42,6 +47,8 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
     } = JournalEntryDisplayComponent;
 
     const bodySummary = body.split(/(?<=[.!?])\s+(?=[A-Z¡¿])/).slice(0, isHighInterest ? 8 : 3).join(' ');
+    const previewBody = bodySummary || body.slice(0, isHighInterest ? 420 : 220);
+    const previewTitle = title.trim() || 'Untitled reflection';
 
     const dateOptions: Intl.DateTimeFormatOptions = {
         day: 'numeric',
@@ -59,78 +66,112 @@ const JournalEntryDisplayComponent: FC<IJournalEntryDisplayComponent> = (props) 
     const dateTimeUpdatedAt = new Date(updatedAt || '');
 
     const formattedOccurredAt = dateTimeOccurredAt.toLocaleDateString(undefined, dateOptions);
-    const formattedUpdatedAt = dateTimeUpdatedAt.toLocaleDateString(undefined, {
+    const formattedUpdatedAt = updatedAt ? dateTimeUpdatedAt.toLocaleDateString(undefined, {
         ...dateOptions,
         hour: '2-digit',
         hour12: false,
         minute: '2-digit'
-    }).replace(' at ', ' ');
+    }).replace(' at ', ' ') : undefined;
 
     const componentClassNames = classNames(
         displayName,
-        className
+        className,
+        {
+            [`${displayName}--interactive`]: !!onOpen,
+            [`${displayName}--high-interest`]: isHighInterest
+        }
     );
 
     const [
         locationName
     ] = (location || '').split(',');
 
+    const handleOpen = (event?: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
+        const target = event?.target as HTMLElement | undefined;
+
+        if (target?.closest(`.${displayName}__actions`)) {
+            return;
+        }
+
+        if (onOpen) {
+            onOpen(entryID);
+        }
+    };
+
+    const handleOpenKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            handleOpen(event);
+        }
+    };
+
     return (
         <CardComponent className={componentClassNames}>
-            <div className={`${displayName}__content-wrapper`}>
-                <FlexboxComponent layoutDefault={{
-                    justifyContent: 'space-between'
-                }}
+            <div
+                aria-label={`Open ${previewTitle}`}
+                className={`${displayName}__content-wrapper`}
+                onClick={handleOpen}
+                onKeyDown={handleOpenKeyDown}
+                role={'button'}
+                tabIndex={0}
+            >
+                <FlexboxComponent
+                    className={`${displayName}__header`}
+                    layoutDefault={{
+                        alignItems: 'flex-start',
+                        columnGap: 'medium',
+                        justifyContent: 'space-between'
+                    }}
                 >
-                    <h3>{title}</h3>
-                    <PopoverComponent
-                        actions={[
-                            {
-                                groupActions: [
-                                    {
-                                        actionLabel: 'edit',
-                                        label: <><FontAwesomeIcon icon={faPenToSquare} /> {'Edit'}</>,
-                                        onClick: () => onEdit(entryID)
-                                    },
-                                    {
-                                        actionLabel: 'delete',
-                                        label: <span className={'color--danger'}><FontAwesomeIcon icon={faTrashCan} /> {'Delete'}</span>,
-                                        onClick: () => onDelete(entryID)
-                                    }
-                                ],
-                                groupLabel: 'actions'
-                            }
-                        ]}
-                        label={'Actions'}
-                    />
-                </FlexboxComponent>
-                {
-                    locationName && (
-                        <p className={'font--xsmall mt--1 mb--2'}>
-                            <ButtonComponent
-                                ariaLabel={'entry location'}
-                                href={`https://www.google.com/maps/place/${location}`}
-                                isExternalLink
-                                isIconOnly
-                                styleType={'inline'}
-                            >
-                                <FontAwesomeIcon
-                                    className={'color--accent'}
-                                    icon={faLocationDot}
-                                />
-
-                            </ButtonComponent>
-                            <span title={location}>{` ${locationName}`}</span>
+                    <div>
+                        <h3 className={`${displayName}__title`}>{previewTitle}</h3>
+                        <p className={`${displayName}__date`}>
+                            <FontAwesomeIcon icon={faCalendarDay} />
+                            <span>{formattedOccurredAt}</span>
                         </p>
-                    )
-                }
-                <p className={'font--small bold color--accent mt--1'}>{formattedOccurredAt}</p>
-                {
-                    updatedAt && (
-                        <p className={'font--xsmall italic'}><span>{'Edited: '}</span><span className={'bold'}>{formattedUpdatedAt}</span></p>
-                    )
-                }
-                <p className={'mt--3'}>{bodySummary}</p>
+                    </div>
+                    <div className={`${displayName}__actions`}>
+                        <PopoverComponent
+                            actions={[
+                                {
+                                    groupActions: [
+                                        {
+                                            actionLabel: 'edit',
+                                            label: <><FontAwesomeIcon icon={faPenToSquare} /> {'Edit'}</>,
+                                            onClick: () => onEdit(entryID)
+                                        },
+                                        {
+                                            actionLabel: 'delete',
+                                            label: <span className={'color--danger'}><FontAwesomeIcon icon={faTrashCan} /> {'Delete'}</span>,
+                                            onClick: () => onDelete(entryID)
+                                        }
+                                    ],
+                                    groupLabel: 'actions'
+                                }
+                            ]}
+                            label={'Actions'}
+                        />
+                    </div>
+                </FlexboxComponent>
+                <div className={`${displayName}__meta`}>
+                    {
+                        locationName && (
+                            <span
+                                className={`${displayName}__location`}
+                                title={location}
+                            >
+                                <FontAwesomeIcon icon={faLocationDot} />
+                                <span>{locationName}</span>
+                            </span>
+                        )
+                    }
+                    {
+                        formattedUpdatedAt && (
+                            <span className={`${displayName}__edited`}>{`Edited ${formattedUpdatedAt}`}</span>
+                        )
+                    }
+                </div>
+                <p className={`${displayName}__body`}>{previewBody || 'No words yet.'}</p>
             </div>
         </CardComponent>
     );

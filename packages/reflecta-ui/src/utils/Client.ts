@@ -45,20 +45,36 @@ class Client {
                 data: method !== 'GET' ? payload : undefined,
                 method,
                 params: method === 'GET' ? payload : undefined,
-                paramsSerializer: (params) => Object.entries(params).map(([
-                    key,
-                    value
-                ]) => {
-                    if (value === undefined) {
-                        return undefined;
+                paramsSerializer: (params) => {
+                    const searchParams = new URLSearchParams();
+
+                    if (!params) {
+                        return searchParams.toString();
                     }
 
-                    if (Array.isArray(value) && !value.length) {
-                        return undefined;
-                    }
+                    Object.entries(params).forEach(([
+                        key,
+                        value
+                    ]) => {
+                        if (value === undefined || value === null) {
+                            return;
+                        }
 
-                    return Array.isArray(value) ? `${key}=${value.join(`&${key}=`)}` : `${key}=${value}`;
-                }).filter((param) => param).join('&'),
+                        if (Array.isArray(value)) {
+                            value.forEach((item) => {
+                                if (item !== undefined && item !== null && String(item).trim()) {
+                                    searchParams.append(key, String(item));
+                                }
+                            });
+
+                            return;
+                        }
+
+                        searchParams.append(key, String(value));
+                    });
+
+                    return searchParams.toString();
+                },
                 url: serviceURL,
                 withCredentials: true
             });

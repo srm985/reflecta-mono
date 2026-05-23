@@ -1,4 +1,7 @@
 import JournalEntriesModel, {
+    EntryID,
+    JournalEntriesPageDetails,
+    JournalEntriesPageResult,
     JournalEntriesSchema,
     JournalEntry
 } from '@models/JournalEntriesModel';
@@ -20,9 +23,26 @@ export type AnalyzedEntry = Pick<JournalEntry, 'isHighInterest' | 'keywords' | '
 
 export type KeywordSearchOption = 'disabled' | 'matchesAny' | 'matchesAll';
 export type DateSearchOption = 'disabled' | 'entryDate' | 'dateRange';
-export type SearchKeyword = string | number;
+export type SearchKeyword = string;
 
-export type Search = {
+export type JournalEntriesPagination = {
+    cursorEntryID?: EntryID | string;
+    cursorOccurredAt?: string;
+    limit?: number | string;
+};
+
+export type JournalEntriesPageCursorResponse = {
+    entryID: EntryID;
+    occurredAt: string;
+};
+
+export type JournalEntriesPageResponse = {
+    hasMore: boolean;
+    journalEntriesList: JournalEntryResponse[];
+    nextCursor: JournalEntriesPageCursorResponse | null;
+};
+
+export type Search = JournalEntriesPagination & {
     dateSearchOption: DateSearchOption;
     entryDate: string;
     keywordSearchOption: KeywordSearchOption;
@@ -32,6 +52,9 @@ export type Search = {
     searchString: string;
     useAISearch: boolean | string;
 };
+
+const DEFAULT_PAGE_LIMIT = 12;
+const MAX_PAGE_LIMIT = 30;
 
 class JournalingController {
     private readonly journalEntriesModel: JournalEntriesModel;
@@ -80,10 +103,51 @@ class JournalingController {
         entryID: rawJournalEntry.entry_id,
         isHighInterest: rawJournalEntry.is_high_interest,
         location: rawJournalEntry.location,
-        occurredAt: rawJournalEntry.occurred_at,
+        occurredAt: dateStamp(rawJournalEntry.occurred_at),
         title: rawJournalEntry.title,
         updatedAt: rawJournalEntry.updated_at
     });
+
+    private mapEntriesPageForResponse = (journalEntriesPage: JournalEntriesPageResult): JournalEntriesPageResponse => ({
+        hasMore: journalEntriesPage.hasMore,
+        journalEntriesList: journalEntriesPage.entriesList.map(this.mapEntryForResponse),
+        nextCursor: journalEntriesPage.nextCursor ? {
+            entryID: journalEntriesPage.nextCursor.entryID,
+            occurredAt: dateStamp(journalEntriesPage.nextCursor.occurredAt)
+        } : null
+    });
+
+    private emptyEntriesPage = (): JournalEntriesPageResponse => ({
+        hasMore: false,
+        journalEntriesList: [],
+        nextCursor: null
+    });
+
+    private normalizePageDetails = (pagination: JournalEntriesPagination = {}): JournalEntriesPageDetails => {
+        const {
+            cursorEntryID,
+            cursorOccurredAt,
+            limit
+        } = pagination;
+
+        const parsedLimit = typeof limit === 'number' ? limit : parseInt(limit || '', 10);
+        const pageLimit = Number.isInteger(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), MAX_PAGE_LIMIT) : DEFAULT_PAGE_LIMIT;
+        const parsedCursorEntryID = typeof cursorEntryID === 'number' ? cursorEntryID : parseInt(cursorEntryID || '', 10);
+
+        if (!cursorOccurredAt || !Number.isInteger(parsedCursorEntryID)) {
+            return {
+                limit: pageLimit
+            };
+        }
+
+        return {
+            cursor: {
+                entryID: parsedCursorEntryID,
+                occurredAt: dateStamp(cursorOccurredAt)
+            },
+            limit: pageLimit
+        };
+    };
 
     // Scan for diffs to save time only updating necessary parts of entry
     private changeLog = (entrySubmissionDetails: JournalEntryAPIInput, existingEntryDetails: JournalEntriesSchema): JournalEntryChangeLog => {
@@ -182,7 +246,28 @@ class JournalingController {
         return Promise.all(quickUpdatesPromiseList);
     };
 
-    getAllEntriesByUserID = async (userID: UserID): Promise<JournalEntryResponse[]> => (await this.journalEntriesModel.allJournalEntriesByUserID(userID)).map(this.mapEntryForResponse);
+    getAllEntriesByUserID = async (userID: UserID, pagination?: JournalEntriesPagination): Promise<JournalEntriesPageResponse> => this.mapEntriesPageForResponse(await this.journalEntriesModel.allJournalEntriesByUserID(userID, this.normalizePageDetails(pagination)));
+
+    getEntryByID = async (userID: UserID, entryID: number): Promise<JournalEntryResponse> => {
+        const existingEntryDetails = await this.journalEntriesModel.journalEntry(entryID);
+
+        if (!existingEntryDetails) {
+            throw new CustomError({
+                privateMessage: `Journal entry ID: ${entryID} not found or has been marked deleted...`,
+                statusCode: 404,
+                userMessage: 'Your journal entry could not be found or has been deleted...'
+            });
+        }
+
+        if (existingEntryDetails.user_id !== userID) {
+            throw new CustomError({
+                privateMessage: `User ID: ${userID} attempted to open journal entry ID: ${entryID} which is assigned to user ID: ${existingEntryDetails.user_id}...`,
+                statusCode: 401
+            });
+        }
+
+        return this.mapEntryForResponse(existingEntryDetails);
+    };
 
     deleteJournalEntry = async (userID: UserID, entryID: number) => {
         const existingEntryDetails = await this.journalEntriesModel.journalEntry(entryID);
@@ -208,7 +293,7 @@ class JournalingController {
         await this.journalEntriesModel.deleteJournalEntry(entryID);
     };
 
-    search = async (userID: UserID, searchDetails: Search): Promise<JournalEntryResponse[]> => {
+    search = async (userID: UserID, searchDetails: Search): Promise<JournalEntriesPageResponse> => {
         const {
             dateSearchOption,
             entryDate,
@@ -220,40 +305,36 @@ class JournalingController {
             useAISearch
         } = searchDetails;
 
-        // Return all journal entries matching the date - there could be more than one
-        if (dateSearchOption === 'entryDate' && entryDate) {
-            return (await this.journalEntriesModel.journalEntriesByDate(userID, entryDate)).map(this.mapEntryForResponse);
+        const trimmedSearchString = (searchString || '').trim();
+        const manualKeywordsList = searchKeywordsList.map((keyword) => keyword.trim()).filter(Boolean);
+        const textKeywordsList: string[] = trimmedSearchString ? [
+            trimmedSearchString
+        ] : [];
+
+        if (trimmedSearchString && (useAISearch === true || useAISearch === 'true')) {
+            const generatedKeywordsList = await this.openAIService.generateSearchKeywords(trimmedSearchString);
+
+            textKeywordsList.push(...generatedKeywordsList.map((keyword) => keyword.trim()).filter(Boolean));
         }
 
-        // Return all entries in the range (inclusive) with no additional filtering
-        if (dateSearchOption === 'dateRange' && searchStartDate && searchEndDate) {
-            return (await this.journalEntriesModel.journalEntriesByDateRange(userID, searchStartDate, searchEndDate)).map(this.mapEntryForResponse);
+        const hasEntryDateFilter = dateSearchOption === 'entryDate' && !!entryDate;
+        const hasDateRangeFilter = dateSearchOption === 'dateRange' && !!searchStartDate && !!searchEndDate;
+        const hasKeywordFilter = keywordSearchOption !== 'disabled' && manualKeywordsList.length > 0;
+        const hasTextFilter = textKeywordsList.length > 0;
+
+        if (!hasEntryDateFilter && !hasDateRangeFilter && !hasKeywordFilter && !hasTextFilter) {
+            return this.emptyEntriesPage();
         }
 
-        if (keywordSearchOption === 'matchesAll' && searchKeywordsList.length) {
-            console.log('keyword all search...');
-        }
-
-        if (keywordSearchOption === 'matchesAny' && searchKeywordsList.length) {
-            console.log('keyword any search...');
-        }
-
-        if (searchString) {
-            const fuzzyKeywordsList: string[] = [];
-
-            if (useAISearch) {
-                const generatedKeywordsList = await this.openAIService.generateSearchKeywords(searchString);
-
-                fuzzyKeywordsList.push(...generatedKeywordsList);
-            }
-
-            return (await this.journalEntriesModel.journalEntryByKeywords(userID, [
-                searchString,
-                ...fuzzyKeywordsList
-            ], 'OR')).map(this.mapEntryForResponse);
-        }
-
-        return ([]);
+        return this.mapEntriesPageForResponse(await this.journalEntriesModel.searchJournalEntries(userID, {
+            dateSearchOption,
+            entryDate,
+            keywordSearchOption,
+            searchEndDate,
+            searchKeywordsList: manualKeywordsList,
+            searchStartDate,
+            textKeywordsList
+        }, this.normalizePageDetails(searchDetails)));
     };
 }
 

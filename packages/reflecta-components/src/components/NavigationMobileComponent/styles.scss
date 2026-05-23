@@ -1,12 +1,11 @@
 @import '../../styles/styles';
 
-// Variables
-$primary-button-diameter: calc($planck-length * 7);
-$background-color: $color-neutral-500;
+$primary-button-diameter: calc($planck-length * 8);
+$background-color: rgba($color-neutral-600, 0.94);
 
 %button-default {
-    width: calc($planck-length * 5);
-    height: calc($planck-length * 5);
+    width: calc($planck-length * 8);
+    min-height: calc($planck-length * 6);
     margin: 0;
     padding: 0;
 
@@ -23,29 +22,45 @@ $background-color: $color-neutral-500;
     z-index: $z-index-navigation;
 
     width: 100%;
-    height: calc($planck-length * 6);
+    height: calc(($planck-length * 8) + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
 
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(12px);
 
     &__side-navigation {
         background-color: $background-color;
 
-        button {
-            @extend %button-default;
-
-            color: $color-neutral-100;
-            font-size: $font-size-large;
+        & > div {
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
     }
 
-    &__primary-navigation {
-        position: relative;
+    &__navigation-item {
+        @extend %button-default;
 
-        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        row-gap: calc($planck-length / 2);
 
-        button {
-            @extend %button-default;
+        color: $color-neutral-200;
+        font-weight: bold;
+        font-size: $font-size-large;
+        font-family: $font-family-default;
 
+        span {
+            font-size: $font-size-xsmall;
+            line-height: 1;
+        }
+
+        &--active {
+            color: $color-secondary-200;
+        }
+
+        &--primary {
             position: absolute;
             top: calc($primary-button-diameter / -2);
             left: calc(50% - ($primary-button-diameter / 2));
@@ -53,13 +68,29 @@ $background-color: $color-neutral-500;
 
             width: $primary-button-diameter;
             height: $primary-button-diameter;
+            min-height: $primary-button-diameter;
+            padding: $padding-small;
 
             color: $color-neutral-100;
             font-size: $font-size-large;
 
             background-color: $color-accent-300;
             border-radius: 50%;
+            box-shadow: $box-shadow-400;
+
+            span {
+                max-width: calc($primary-button-diameter - ($planck-length * 2));
+
+                font-size: 10px;
+                text-align: center;
+            }
         }
+    }
+
+    &__primary-navigation {
+        position: relative;
+
+        width: 50%;
     }
 
     &__center-background {

@@ -4,55 +4,55 @@
 
 /* stylelint-disable scss/declaration-nested-properties */
 
-// Midnight Orchid (Primary)
-$color-primary-100: #1f1db2;
-$color-primary-200: #1b1999;
-$color-primary-300: #161580;
-$color-primary-400: #121166;
-$color-primary-500: #0d0c4d;
+// Stillwater Ink (Primary)
+$color-primary-100: #e6ebf2;
+$color-primary-200: #b8c5d6;
+$color-primary-300: #465a78;
+$color-primary-400: #33445f;
+$color-primary-500: #1f2c42;
 
-// Aquatic Breeze (Secondary)
-$color-secondary-100: #bff6ff;
-$color-secondary-200: #80eeff;
-$color-secondary-300: #00dcff;
-$color-secondary-400: #00a5bf;
-$color-secondary-500: #006e80;
+// Quiet Teal (Secondary)
+$color-secondary-100: #e4f2ef;
+$color-secondary-200: #add6cf;
+$color-secondary-300: #4f9f92;
+$color-secondary-400: #317b70;
+$color-secondary-500: #1f544d;
 
-// Luminous Azure (Accent)
-$color-accent-100: #bfdfff;
-$color-accent-200: #80c0ff;
-$color-accent-300: #0081ff;
-$color-accent-400: #0061bf;
-$color-accent-500: #004180;
+// Clear Sky (Accent)
+$color-accent-100: #e2eff6;
+$color-accent-200: #a8cfe3;
+$color-accent-300: #3d7ea6;
+$color-accent-400: #286487;
+$color-accent-500: #184661;
 
-// Enchanted Moss (Success)
-$color-success-100: #a6ffbd;
-$color-success-200: #76f497;
-$color-success-300: #32c95a;
-$color-success-400: #0b9c31;
-$color-success-500: #005918;
+// Fresh Sage (Success)
+$color-success-100: #e7f2df;
+$color-success-200: #b9d7a0;
+$color-success-300: #6d9b48;
+$color-success-400: #4e7b31;
+$color-success-500: #34591f;
 
-// Gilded Radiance (Warning)
-$color-warning-100: #ffe69a;
-$color-warning-200: #fdd350;
-$color-warning-300: #e4b217;
-$color-warning-400: #b48a08;
-$color-warning-500: #997300;
+// Soft Amber (Warning)
+$color-warning-100: #fff1cf;
+$color-warning-200: #f4cf75;
+$color-warning-300: #c3872d;
+$color-warning-400: #91631f;
+$color-warning-500: #684515;
 
-// Ember Glow (Danger)
-$color-danger-100: #ff9999;
-$color-danger-200: #eb4f4f;
-$color-danger-300: #cf2e2e;
-$color-danger-400: #9d0c0c;
-$color-danger-500: #660000;
+// Rosewood (Danger)
+$color-danger-100: #f8dddd;
+$color-danger-200: #e5a3a3;
+$color-danger-300: #b54b4b;
+$color-danger-400: #893232;
+$color-danger-500: #5f2020;
 
 // Neutrals
-$color-neutral-100: #f8f8ff;
-$color-neutral-200: #f0f0fc;
-$color-neutral-300: #ceced9;
-$color-neutral-400: #797980;
-$color-neutral-500: #303033;
-$color-neutral-600: #020203;
+$color-neutral-100: #fffefa;
+$color-neutral-200: #f4f5f2;
+$color-neutral-300: #d7d9d1;
+$color-neutral-400: #858a82;
+$color-neutral-500: #303633;
+$color-neutral-600: #161a18;
 
 // Base Color Names
 $color-names-list: (
@@ -71,42 +71,42 @@ $color-names-list: (
         _3_color-primary-300: $color-primary-300;
         _4_color-primary-400: $color-primary-400;
         _5_color-primary-500: $color-primary-500;
-    };
+    }
     _2_secondary-aquatic-breeze: {
         _1_color-secondary-100: $color-secondary-100;
         _2_color-secondary-200: $color-secondary-200;
         _3_color-secondary-300: $color-secondary-300;
         _4_color-secondary-400: $color-secondary-400;
         _5_color-secondary-500: $color-secondary-500;
-    };
+    }
     _3_accent-luminous-azure: {
         _1_color-accent-100: $color-accent-100;
         _2_color-accent-200: $color-accent-200;
         _3_color-accent-300: $color-accent-300;
         _4_color-accent-400: $color-accent-400;
         _5_color-accent-500: $color-accent-500;
-    };
+    }
     _4_success-enchanted-moss: {
         _1_color-success-100: $color-success-100;
         _2_color-success-200: $color-success-200;
         _3_color-success-300: $color-success-300;
         _4_color-success-400: $color-success-400;
         _5_color-success-500: $color-success-500;
-    };
+    }
     _5_warning-gilded-radiance: {
         _1_color-warning-100: $color-warning-100;
         _2_color-warning-200: $color-warning-200;
         _3_color-warning-300: $color-warning-300;
         _4_color-warning-400: $color-warning-400;
         _5_color-warning-500: $color-warning-500;
-    };
+    }
     _6_danger-ember-glow: {
         _1_color-danger-100: $color-danger-100;
         _2_color-danger-200: $color-danger-200;
         _3_color-danger-300: $color-danger-300;
         _4_color-danger-400: $color-danger-400;
         _5_color-danger-500: $color-danger-500;
-    };
+    }
     _7_neutral: {
         _1_color-neutral-100: $color-neutral-100;
         _2_color-neutral-200: $color-neutral-200;

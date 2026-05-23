@@ -1,0 +1,60 @@
+@import 'reflecta-components/src/styles/styles';
+
+.AccountView {
+    display: grid;
+    row-gap: $margin-medium;
+    width: 100%;
+    max-width: 720px;
+    margin: 0
+        auto;
+    padding-bottom: calc(
+        (
+                $planck-length *
+                    10
+            ) +
+            env(
+                safe-area-inset-bottom
+            )
+    );
+
+    &__section {
+        padding: $padding-medium;
+
+        background-color: $color-neutral-100;
+        border: solid
+            1px
+            rgba(
+                $color-neutral-400,
+                0.2
+            );
+        border-radius: $border-radius-large;
+        box-shadow: $box-shadow-100;
+    }
+
+    &__heading {
+        margin-bottom: $margin-medium;
+
+        h1,
+        h2 {
+            color: $color-primary-500;
+            font-size: $font-size-large;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: $font-size-regular;
+        }
+
+        p {
+            margin-top: $margin-small;
+
+            color: $color-neutral-400;
+            font-size: $font-size-small;
+        }
+    }
+
+    &__fields {
+        display: grid;
+        row-gap: $margin-medium;
+    }
+}
