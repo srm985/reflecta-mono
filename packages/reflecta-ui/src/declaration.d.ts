@@ -10,6 +10,11 @@ type BeforeInstallPromptEvent = Event & {
     userChoice: Promise<BeforeInstallPromptChoice>;
 };
 
+interface Window {
+    reflectaInstallPromptEvent?: BeforeInstallPromptEvent;
+}
+
 interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent;
+    'reflecta-install-prompt-available': Event;
 }

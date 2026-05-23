@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-const CACHE_VERSION = 'reflecta-pwa-v1';
+const CACHE_VERSION = 'reflecta-pwa-v2';
 const APP_SHELL_URLS = [
     '/',
     '/index.html',

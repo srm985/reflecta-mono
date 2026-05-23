@@ -3,8 +3,18 @@ const registerServiceWorker = () => {
         return;
     }
 
-    window.addEventListener('load', () => {
+    const register = () => {
         navigator.serviceWorker.register('/service-worker.js').catch(() => undefined);
+    };
+
+    if (document.readyState === 'complete') {
+        register();
+
+        return;
+    }
+
+    window.addEventListener('load', register, {
+        once: true
     });
 };
 

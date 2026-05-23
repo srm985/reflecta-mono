@@ -3,6 +3,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 import {
     faDownload,
+    faEllipsisVertical,
     faGear,
     faHouse,
     faShareFromSquare,
@@ -42,6 +43,7 @@ import {
 } from '@routes';
 
 import {
+    INSTALL_PROMPT_AVAILABLE_EVENT,
     LOCAL_STORAGE_INSTALL_PROMPT_DISMISSED_KEY
 } from '@constants';
 
@@ -54,6 +56,10 @@ type NavigatorStandalone = Navigator & {
 const authentication = new Authentication();
 const storage = new Storage();
 const containerComponentClassName = 'ContainerComponent';
+const ANDROID_MANUAL_PROMPT_DELAY = 1800;
+const INSTALL_PROMPT_DISMISSAL_DURATION = 1000 * 60 * 60 * 24 * 7;
+
+const getIsAndroidDevice = (): boolean => /Android/.test(window.navigator.userAgent);
 
 const getIsIOSDevice = (): boolean => {
     const {
@@ -71,9 +77,19 @@ const getIsAppInstalled = (): boolean => {
     return window.matchMedia('(display-mode: standalone)').matches || navigatorStandalone.standalone === true;
 };
 
-const getIsInstallPromptDismissed = (): boolean => (
-    storage.readKeyLocal<string>(LOCAL_STORAGE_INSTALL_PROMPT_DISMISSED_KEY) === 'dismissed'
-);
+const getIsInstallPromptDismissed = (): boolean => {
+    const dismissedAt = Number(storage.readKeyLocal<string>(LOCAL_STORAGE_INSTALL_PROMPT_DISMISSED_KEY));
+
+    if (!Number.isFinite(dismissedAt)) {
+        return false;
+    }
+
+    return Date.now() - dismissedAt < INSTALL_PROMPT_DISMISSAL_DURATION;
+};
+
+const dismissInstallPrompt = () => {
+    storage.writeKeyLocal(LOCAL_STORAGE_INSTALL_PROMPT_DISMISSED_KEY, Date.now().toString());
+};
 
 const InstallAppPrompt: FC = () => {
     const [
@@ -86,6 +102,7 @@ const InstallAppPrompt: FC = () => {
         setVisible
     ] = useState<boolean>(false);
 
+    const isAndroidDevice = useMemo(getIsAndroidDevice, []);
     const isAppInstalled = useMemo(getIsAppInstalled, []);
     const isIOSDevice = useMemo(getIsIOSDevice, []);
 
@@ -94,36 +111,69 @@ const InstallAppPrompt: FC = () => {
             return undefined;
         }
 
-        const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
-            event.preventDefault();
+        const showInstallPrompt = (event: BeforeInstallPromptEvent) => {
             setInstallPromptEvent(event);
             setVisible(true);
         };
 
-        const handleAppInstalled = () => {
-            setInstallPromptEvent(undefined);
-            setVisible(false);
-            storage.writeKeyLocal(LOCAL_STORAGE_INSTALL_PROMPT_DISMISSED_KEY, 'dismissed');
+        const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
+            event.preventDefault();
+            window.reflectaInstallPromptEvent = event;
+            showInstallPrompt(event);
         };
 
-        if (isIOSDevice && window.isSecureContext) {
+        const handleInstallPromptAvailable = () => {
+            const event = window.reflectaInstallPromptEvent;
+
+            if (!event) {
+                return;
+            }
+
+            showInstallPrompt(event);
+        };
+
+        const handleAppInstalled = () => {
+            window.reflectaInstallPromptEvent = undefined;
+            setInstallPromptEvent(undefined);
+            setVisible(false);
+            dismissInstallPrompt();
+        };
+
+        let androidManualPromptTimeoutID: number | undefined;
+
+        if (isIOSDevice || (isAndroidDevice && !window.isSecureContext)) {
             setVisible(true);
+        } else if (isAndroidDevice) {
+            androidManualPromptTimeoutID = window.setTimeout(() => {
+                if (!window.reflectaInstallPromptEvent) {
+                    setVisible(true);
+                }
+            }, ANDROID_MANUAL_PROMPT_DELAY);
         }
 
+        handleInstallPromptAvailable();
+
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.addEventListener(INSTALL_PROMPT_AVAILABLE_EVENT, handleInstallPromptAvailable);
         window.addEventListener('appinstalled', handleAppInstalled);
 
         return () => {
+            if (androidManualPromptTimeoutID) {
+                window.clearTimeout(androidManualPromptTimeoutID);
+            }
+
             window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            window.removeEventListener(INSTALL_PROMPT_AVAILABLE_EVENT, handleInstallPromptAvailable);
             window.removeEventListener('appinstalled', handleAppInstalled);
         };
     }, [
+        isAndroidDevice,
         isAppInstalled,
         isIOSDevice
     ]);
 
     const handleDismiss = () => {
-        storage.writeKeyLocal(LOCAL_STORAGE_INSTALL_PROMPT_DISMISSED_KEY, 'dismissed');
+        dismissInstallPrompt();
         setVisible(false);
     };
 
@@ -138,11 +188,12 @@ const InstallAppPrompt: FC = () => {
             outcome
         } = await installPromptEvent.userChoice;
 
+        window.reflectaInstallPromptEvent = undefined;
         setInstallPromptEvent(undefined);
         setVisible(false);
 
         if (outcome === 'dismissed') {
-            storage.writeKeyLocal(LOCAL_STORAGE_INSTALL_PROMPT_DISMISSED_KEY, 'dismissed');
+            dismissInstallPrompt();
         }
     };
 
@@ -150,18 +201,33 @@ const InstallAppPrompt: FC = () => {
         handleInstall().catch(() => undefined);
     };
 
+    const isAndroidManualPrompt = isAndroidDevice && !installPromptEvent;
     const isIOSManualPrompt = isIOSDevice && !installPromptEvent;
+    const isManualPrompt = isAndroidManualPrompt || isIOSManualPrompt;
 
-    if (!isVisible || (!isIOSManualPrompt && !installPromptEvent)) {
+    if (!isVisible || (!isManualPrompt && !installPromptEvent)) {
         return null;
     }
 
     let description = 'Open Reflecta from your home screen and keep writing with fewer browser distractions.';
+    let manualPromptIcon = faEllipsisVertical;
+    let manualPromptLabel = 'Chrome menu, then Install app';
     let title = 'Install Reflecta';
 
     if (isIOSManualPrompt) {
         description = "Use Safari's share button, then choose Add to Home Screen.";
+        manualPromptIcon = faShareFromSquare;
+        manualPromptLabel = 'Share, then Add to Home Screen';
         title = 'Add Reflecta to your home screen';
+    } else if (isAndroidManualPrompt) {
+        title = 'Install Reflecta from Chrome';
+
+        if (window.isSecureContext) {
+            description = "Open Chrome's menu, then choose Install app or Add to Home screen.";
+        } else {
+            description = 'Open the HTTPS Reflecta site in Chrome to install it on Android.';
+            manualPromptLabel = 'Open the HTTPS site in Chrome';
+        }
     }
 
     return (
@@ -185,8 +251,8 @@ const InstallAppPrompt: FC = () => {
                     </ButtonComponent>
                 ) : (
                     <div className={`${containerComponentClassName}__install-manual-action`}>
-                        <FontAwesomeIcon icon={faShareFromSquare} />
-                        <span>{'Share, then Add to Home Screen'}</span>
+                        <FontAwesomeIcon icon={manualPromptIcon} />
+                        <span>{manualPromptLabel}</span>
                     </div>
                 )}
                 <ButtonComponent
