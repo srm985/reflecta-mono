@@ -2,9 +2,46 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
+const fs = require('fs');
 const path = require('path');
 
 const generateRemoteComponents = require('./scripts/generateRemoteComponents');
+
+const PWA_ASSETS_DIRECTORY = path.resolve(__dirname, 'src/pwa');
+
+class PWAAssetsPlugin {
+    apply(compiler) {
+        compiler.hooks.thisCompilation.tap('PWAAssetsPlugin', (compilation) => {
+            const {
+                RawSource
+            } = compiler.webpack.sources;
+
+            compilation.hooks.processAssets.tap({
+                name: 'PWAAssetsPlugin',
+                stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+            }, () => {
+                const emitDirectory = (directoryPath, outputPrefix = '') => {
+                    fs.readdirSync(directoryPath, {
+                        withFileTypes: true
+                    }).forEach((directoryEntry) => {
+                        const sourcePath = path.join(directoryPath, directoryEntry.name);
+                        const outputPath = path.join(outputPrefix, directoryEntry.name).replace(/\\/g, '/');
+
+                        if (directoryEntry.isDirectory()) {
+                            emitDirectory(sourcePath, outputPath);
+
+                            return;
+                        }
+
+                        compilation.emitAsset(outputPath, new RawSource(fs.readFileSync(sourcePath)));
+                    });
+                };
+
+                emitDirectory(PWA_ASSETS_DIRECTORY);
+            });
+        });
+    }
+}
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -26,11 +63,11 @@ module.exports = () => {
             systemvars: true
         }),
         new HtmlWebpackPlugin({
-            // favicon: './src/assets/icons/favicon.ico',
             filename: 'index.html',
             path: path.join(__dirname, '../dist/'),
             template: './src/index.html'
         }),
+        new PWAAssetsPlugin(),
         new webpack.container.ModuleFederationPlugin({
             remotes: {
                 [COMPONENT_REMOTE_NAME]: FEDERATED_COMPONENTS_URL
