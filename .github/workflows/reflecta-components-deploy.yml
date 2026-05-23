@@ -2,7 +2,7 @@ name: Reflecta Components - Build and Deploy
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
     paths:
       - .eslintrc.js
       - package-lock.json
@@ -160,6 +160,7 @@ jobs:
   deploy:
     name: Deploy components and Storybook
     needs: [build-mf, build-storybook]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
 

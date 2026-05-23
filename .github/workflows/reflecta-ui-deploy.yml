@@ -2,7 +2,7 @@ name: Reflecta UI - Build and Deploy
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
     paths:
       - .eslintrc.js
       - package-lock.json
@@ -129,6 +129,7 @@ jobs:
   deploy:
     name: Deploy UI
     needs: [build]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
 
