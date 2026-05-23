@@ -2,7 +2,7 @@ name: Reflecta Components - Check
 
 on:
   push:
-    branches: ['*', '!develop', '!main']
+    branches: ['*', '!main']
     paths:
       - .eslintrc.js
       - package-lock.json
