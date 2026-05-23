@@ -36,8 +36,8 @@
   },
   "scripts": {
     "develop": "npm run generate:components && concurrently --raw --kill-others-on-fail --names backend,components,ui --prefix-colors blue,magenta,green \"npm start -w reflecta-backend\" \"npm start -w reflecta-components\" \"npm run wait:components && npm start -w reflecta-ui\"",
-    "lint": "eslint ./*.js ./scripts/*.js && npm run lint --workspaces",
-    "lint:fix": "eslint ./*.js ./scripts/*.js --fix && npm run lint:fix --workspaces",
+    "lint": "npm run generate:components && eslint ./*.js ./scripts/*.js && npm run lint --workspaces",
+    "lint:fix": "npm run generate:components && eslint ./*.js ./scripts/*.js --fix && npm run lint:fix --workspaces",
     "pre-commit": "cross-env FORCE_COLOR=true lint-staged && npm run pre-commit --workspaces",
     "pre-push": "node ./scripts/branchCheck.js && npm run lint && npm run typecheck",
     "prepare": "husky",
