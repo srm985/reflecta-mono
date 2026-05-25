@@ -136,6 +136,13 @@ class OpenAIService {
 
         this.prompts = DEFAULT_PROMPTS;
 
+        logger.info(JSON.stringify({
+            hasAPIKey: !!this.openAI,
+            hasModel: !!this.OPENAI_MODEL,
+            message: 'OpenAIService initialized',
+            model: this.OPENAI_MODEL || null
+        }));
+
         if (!this.openAI || !this.OPENAI_MODEL) {
             logger.warn('OpenAIService is disabled because OpenAI API configuration is incomplete.');
         }

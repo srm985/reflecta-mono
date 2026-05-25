@@ -10,6 +10,7 @@ import OpenAIService from '@services/OpenAIService';
 
 import CustomError from '@utils/CustomError';
 import dateStamp from '@utils/dateStamp';
+import logger from '@utils/logger';
 
 import {
     UserID
@@ -70,17 +71,39 @@ class JournalingController {
     private sanitize = (body: string = ''): string => body.replace(/\t+/g, ' ').replace(/[ ]{2, }/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
 
     private prepareAnalyzeEntry = async (sanitizedTitle: string, sanitizedBody: string): Promise<AnalyzedEntry> => {
+        logger.info(JSON.stringify({
+            bodyCharacters: sanitizedBody.length,
+            hasBody: !!sanitizedBody,
+            hasManualTitle: !!sanitizedTitle,
+            message: 'Journal entry analysis requested'
+        }));
+
         if (sanitizedBody) {
             const analyzedEntryDetails = await this.openAIService.analyze(sanitizedBody);
 
             if (analyzedEntryDetails) {
+                logger.info(JSON.stringify({
+                    hasGeneratedTitle: !!analyzedEntryDetails.title,
+                    isHighInterest: analyzedEntryDetails.isHighInterest,
+                    keywordCount: analyzedEntryDetails.keywords.length,
+                    message: 'Journal entry analysis completed'
+                }));
+
                 return ({
                     isHighInterest: analyzedEntryDetails.isHighInterest,
                     keywords: analyzedEntryDetails.keywords.map((keyword) => keyword.toLowerCase()).join(', '),
                     title: sanitizedTitle || this.sanitize(analyzedEntryDetails.title)
                 });
             }
+
+            logger.warn(JSON.stringify({
+                message: 'Journal entry analysis did not return results'
+            }));
         }
+
+        logger.info(JSON.stringify({
+            message: 'Journal entry analysis skipped or fell back to submitted title'
+        }));
 
         return ({
             isHighInterest: false,
@@ -165,6 +188,14 @@ class JournalingController {
             title
         } = await this.prepareAnalyzeEntry(sanitizedTitle, sanitizedBody);
 
+        logger.info(JSON.stringify({
+            hasKeywords: !!keywords,
+            hasTitle: !!title,
+            isHighInterest,
+            keywordCount: keywords ? keywords.split(',').filter(Boolean).length : 0,
+            message: 'Journal entry insert prepared'
+        }));
+
         await this.journalEntriesModel.insertJournalEntry(userID, {
             ...entryDetails,
             body: sanitizedBody,
@@ -205,6 +236,15 @@ class JournalingController {
                 keywords,
                 title
             } = await this.prepareAnalyzeEntry(entryDetails.title, entryDetails.body);
+
+            logger.info(JSON.stringify({
+                entryID,
+                hasKeywords: !!keywords,
+                hasTitle: !!title,
+                isHighInterest,
+                keywordCount: keywords ? keywords.split(',').filter(Boolean).length : 0,
+                message: 'Journal entry full update prepared'
+            }));
 
             // Everything looks good so we can go ahead and update the journal entry
             return this.journalEntriesModel.modifyJournalEntry(entryID, {
