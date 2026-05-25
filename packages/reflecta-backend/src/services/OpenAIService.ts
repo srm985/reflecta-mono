@@ -195,7 +195,7 @@ class OpenAIService {
         const arrayMatch = cleanedValue.match(/\[[\s\S]*\]/);
         const objectMatch = cleanedValue.match(/\{[\s\S]*\}/);
 
-        return arrayMatch?.[0] || objectMatch?.[0] || cleanedValue;
+        return objectMatch?.[0] || arrayMatch?.[0] || cleanedValue;
     };
 
     private normalizeKeywords = (keywordsList: unknown[], maxKeywords: number = MAX_SEARCH_KEYWORDS): string[] => {
@@ -287,10 +287,18 @@ class OpenAIService {
         });
 
         if (!analysisMessage?.content) {
+            logger.warn('OpenAIService analysis returned no content.');
+
             return undefined;
         }
 
-        return this.parseAnalysisResponse(analysisMessage.content);
+        const analysisResponse = this.parseAnalysisResponse(analysisMessage.content);
+
+        if (!analysisResponse) {
+            logger.warn('OpenAIService could not parse journal analysis response.');
+        }
+
+        return analysisResponse;
     };
 
     generateSearchKeywords = async (searchString: string): Promise<string[]> => {
@@ -321,6 +329,8 @@ class OpenAIService {
         });
 
         if (!message?.content) {
+            logger.warn('OpenAIService keyword generation returned no content.');
+
             return [];
         }
 
@@ -338,10 +348,18 @@ class OpenAIService {
         });
 
         if (!finalMessage?.content) {
+            logger.warn('OpenAIService keyword expansion returned no content.');
+
             return [];
         }
 
-        return this.parseKeywordsResponse(finalMessage.content);
+        const keywordsList = this.parseKeywordsResponse(finalMessage.content);
+
+        if (!keywordsList.length) {
+            logger.warn('OpenAIService could not parse keyword expansion response.');
+        }
+
+        return keywordsList;
     };
 }
 

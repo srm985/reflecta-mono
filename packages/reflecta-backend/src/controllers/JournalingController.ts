@@ -70,16 +70,7 @@ class JournalingController {
     private sanitize = (body: string = ''): string => body.replace(/\t+/g, ' ').replace(/[ ]{2, }/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
 
     private prepareAnalyzeEntry = async (sanitizedTitle: string, sanitizedBody: string): Promise<AnalyzedEntry> => {
-        const {
-            env: {
-                JOURNAL_ENTRY_MINIMUM_BODY_WORDS_FOR_TITLE = ''
-            }
-        } = process;
-
-        const minimumWordCount = parseInt(JOURNAL_ENTRY_MINIMUM_BODY_WORDS_FOR_TITLE, 10);
-        const isBodyMinimumWordCount = sanitizedBody.split(' ').length >= minimumWordCount;
-
-        if (isBodyMinimumWordCount) {
+        if (sanitizedBody) {
             const analyzedEntryDetails = await this.openAIService.analyze(sanitizedBody);
 
             if (analyzedEntryDetails) {
